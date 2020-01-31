@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "980916273727",
+    "firebase_url": "https://quicoffee-2cfab.firebaseio.com",
+    "project_id": "quicoffee-2cfab",
+    "storage_bucket": "quicoffee-2cfab.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:980916273727:android:c024207b70628f02ba2e8a",
+        "android_client_info": {
+          "package_name": "com.example.quicoffee"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "980916273727-8t571gk2cjahhb8lhnaig37jd7h75abu.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.quicoffee",
+            "certificate_hash": "f0dabea922e3ced1730c047e3a2acfb5625a4110"
+          }
+        },
+        {
+          "client_id": "980916273727-tjn6m80gmp5f9tg9f30232sj1bgt48ge.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDqHuObPUKNjzvYWJRYOwGgKcT1rjz_6Bk"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "980916273727-tjn6m80gmp5f9tg9f30232sj1bgt48ge.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

@@ -13,12 +13,18 @@ public class MainActivity extends AppCompatActivity {
     private int usernameTextboxID;
     private int passwordTextboxID;
     private int mainActivityWitdh;
+    private int mainActivityHeight;
     private LinearLayout linearLayout;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+    }
+    private void InititalVariablesOfLocalActivity(){
+        mainActivityWitdh = getResources().getDisplayMetrics().widthPixels;
+        mainActivityHeight = getResources().getDisplayMetrics().heightPixels;
     }
     private EditText createTextBox(LinearLayout.LayoutParams lparams) {
         //Set EditText Setting
