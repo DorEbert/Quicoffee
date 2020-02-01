@@ -39,20 +39,23 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     }
     private void BuildActivityUI(){
         LinearLayout.LayoutParams lparams = new LinearLayout.LayoutParams((int)(mainActivityWitdh *0.9),mainActivityHeight/20);
+        lparams.gravity = Gravity.CENTER;
         //Email label and textBox
         TextView emailTextView = CreateTextView(Global_Variable.EMAIL);
+        emailTextView.setPadding(50,10,50,10);
         EditText emailEditText = CreateEditText(lparams);
         emailEditText.setId(Global_Variable.GetID());
         usernameTextboxID = emailEditText.getId();
         //Password label and textBox
-        TextView passwordTextViiew = CreateTextView(Global_Variable.PASSWORD);
+        TextView passwordTextView = CreateTextView(Global_Variable.PASSWORD);
+        passwordTextView.setPadding(50,10,50,10);
         EditText passwordEditText = CreateEditText(lparams);
         passwordEditText.setId(Global_Variable.GetID());
         passwordTextboxID = passwordEditText.getId();
         //Add Views to LinearLayout
         linearLayout.addView(emailTextView);
         linearLayout.addView(emailEditText);
-        linearLayout.addView(passwordTextViiew);
+        linearLayout.addView(passwordTextView);
         linearLayout.addView(passwordEditText);
         addLoginButton();
     }
