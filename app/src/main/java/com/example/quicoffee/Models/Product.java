@@ -1,4 +1,5 @@
 package com.example.quicoffee.Models;
 
-class Product {
+public class Product {
+    private String productName;
 }

@@ -1,4 +1,9 @@
 package com.example.quicoffee.Models;
 
-public abstract class User {
+public interface User {
+    String firstName = "";
+    String lastName = "";
+    String email = "";
+    String password = "";
+
 }
