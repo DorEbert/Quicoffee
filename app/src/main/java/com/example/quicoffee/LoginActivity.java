@@ -65,15 +65,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         linearLayout = findViewById(R.id.linear_layout);
         auth = FirebaseAuth.getInstance();
     }
-    private EditText CreateEditText(LinearLayout.LayoutParams lparams) {
-        //Set EditText Setting
-        EditText editText = new EditText(this);
-        editText.setMaxLines(1);
-        editText.setImeOptions(EditorInfo.IME_ACTION_NEXT);
-        editText.setBackgroundColor(getApplication().getResources().getColor(R.color.textViewColor));
-        editText.setLayoutParams(lparams);
-        return editText;
-    }
+
     private void addLoginButton() {
         //Set Button Settings
         Button loginButton = new Button(this);
@@ -87,7 +79,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                 ,0
                 ,mainActivityHeight/40);
         loginButton.setLayoutParams(loginButtonLayoutParams);
-        loginButton.setBackgroundResource(R.color.loginViewColor);
+        loginButton.setBackgroundResource(R.color.buttonColor);
         loginButton.setTextColor(getApplication().getResources().getColor(R.color.colorBlack));
         linearLayout.addView(loginButton);
     }
@@ -99,7 +91,15 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         textView.setTextSize(mainActivityWitdh/40);
         return textView;
     }
-
+    private EditText CreateEditText(LinearLayout.LayoutParams lparams) {
+        //Set EditText Setting
+        EditText editText = new EditText(this);
+        editText.setMaxLines(1);
+        editText.setImeOptions(EditorInfo.IME_ACTION_NEXT);
+        editText.setBackgroundColor(getApplication().getResources().getColor(R.color.textViewColor));
+        editText.setLayoutParams(lparams);
+        return editText;
+    }
     @Override
     public void onClick(View v) {
         String email = ((EditText)findViewById(usernameTextboxID)).getText().toString();

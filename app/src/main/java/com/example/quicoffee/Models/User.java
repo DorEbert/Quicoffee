@@ -20,6 +20,7 @@ public class User {
             shops = new ArrayList<>();
         shops.add(shop);
     }
+
     public String getFirstName() {
         return firstName;
     }
