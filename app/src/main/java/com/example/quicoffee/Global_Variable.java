@@ -12,6 +12,7 @@ public class Global_Variable {
     public static final String SHOP_NAME = "Shop Name";
     public static final String ADD_SHOP = "Add Shop";
     public static final String CHOOSE_LOCATION = "Choose Location";
+    public static final String ADD_LOCATION = "Add Location";
     public static int index = 0;
     // in order to save shared preferences-> used to login only once
     public static final String PREFS_NAME = "MyPrefsFile";
