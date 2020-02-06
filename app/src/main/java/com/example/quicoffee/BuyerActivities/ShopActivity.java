@@ -68,6 +68,28 @@ public class ShopActivity extends AppCompatActivity implements View.OnClickListe
         editText.setLayoutParams(lparams);
         return editText;
     }
+    private void addLocationButton() {
+        //Set Button Settings
+        Button loginButton = new Button(this);
+        loginButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                
+            }
+        });
+        loginButton.setText(Global_Variable.ADD_LOCATION);
+        LinearLayout.LayoutParams loginButtonLayoutParams =
+                new LinearLayout.LayoutParams((int)(mainActivityWitdh *0.5),mainActivityHeight/20);
+        loginButtonLayoutParams.gravity = Gravity.CENTER;
+        loginButtonLayoutParams.setMargins(0
+                ,mainActivityHeight/20
+                ,0
+                ,mainActivityHeight/40);
+        loginButton.setLayoutParams(loginButtonLayoutParams);
+        loginButton.setBackgroundResource(R.color.buttonColor);
+        loginButton.setTextColor(getApplication().getResources().getColor(R.color.colorBlack));
+        linearLayout.addView(loginButton);
+    }
     private void addShopButton() {
         //Set Button Settings
         Button loginButton = new Button(this);
