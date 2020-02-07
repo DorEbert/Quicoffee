@@ -2,10 +2,11 @@ package com.example.quicoffee.Models;
 
 import android.location.Location;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class Shop {
-    private int ID;
+    private String ID;
     private String shopName;
     // location of the shop
     private Location location;
@@ -14,10 +15,15 @@ public class Shop {
     // ingredients will contain for example: Coconut milk, almond milk in order to find
     // my favorite coffee by ingredients
     private List<String> ingredients;
+
+
     private String description;
-    public Shop(String shopName,Location location){
+    public Shop(String shopName,Location location,String description){
         this.shopName = shopName;
         this.location = location;
+        this.description = description;
+        products = new ArrayList<>();
+        ingredients = new ArrayList<>();
     }
     public void UpdateLocation(Location location){
         this.location = location;
@@ -38,7 +44,7 @@ public class Shop {
         return ingredients;
     }
 
-    public int getID() {
+    public String getID() {
         return ID;
     }
 
@@ -46,11 +52,19 @@ public class Shop {
         return shopName;
     }
 
-    public void setID(int ID) {
+    public void setID(String ID) {
         this.ID = ID;
     }
 
     public void setShopName(String shopName) {
         this.shopName = shopName;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    public String getDescription() {
+        return description;
     }
 }

@@ -15,18 +15,29 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.quicoffee.Models.Shop;
+import com.example.quicoffee.Models.User;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.ValueEventListener;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class LoginActivity extends AppCompatActivity implements View.OnClickListener {
+    private User user;
     private int usernameTextboxID;
     private int passwordTextboxID;
     private int mainActivityWitdh;
     private int mainActivityHeight;
     private LinearLayout linearLayout;
     private FirebaseAuth auth;
+    private FireBaseUtill fireBaseUtill = new FireBaseUtill();
 
 
     @Override
@@ -41,23 +52,19 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         LinearLayout.LayoutParams lparams = new LinearLayout.LayoutParams((int)(mainActivityWitdh *0.9),mainActivityHeight/20);
         lparams.gravity = Gravity.CENTER;
         //Email label and textBox
-        TextView emailTextView = CreateTextView(Global_Variable.EMAIL);
-        emailTextView.setPadding(50,10,50,10);
-        EditText emailEditText = CreateEditText(lparams);
-        emailEditText.setId(Global_Variable.GetID());
-        usernameTextboxID = emailEditText.getId();
+        usernameTextboxID = addPairOfTextViewAndEditText(Global_Variable.EMAIL,lparams);
         //Password label and textBox
-        TextView passwordTextView = CreateTextView(Global_Variable.PASSWORD);
-        passwordTextView.setPadding(50,10,50,10);
-        EditText passwordEditText = CreateEditText(lparams);
-        passwordEditText.setId(Global_Variable.GetID());
-        passwordTextboxID = passwordEditText.getId();
-        //Add Views to LinearLayout
-        linearLayout.addView(emailTextView);
-        linearLayout.addView(emailEditText);
-        linearLayout.addView(passwordTextView);
-        linearLayout.addView(passwordEditText);
+        passwordTextboxID = addPairOfTextViewAndEditText(Global_Variable.PASSWORD,lparams);
         addLoginButton();
+    }
+    private int addPairOfTextViewAndEditText(String labelText,LinearLayout.LayoutParams lparams){
+        TextView textView = CreateTextView(labelText);
+        textView.setPadding(50,10,50,10);
+        EditText editText = CreateEditText(lparams);
+        editText.setId(Global_Variable.GetID());
+        linearLayout.addView(textView);
+        linearLayout.addView(editText);
+        return editText.getId();
     }
     private void InititalVariablesOfLocalActivity(){
         mainActivityWitdh = getResources().getDisplayMetrics().widthPixels;
@@ -102,6 +109,10 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     }
     @Override
     public void onClick(View v) {
+        //todo change to which activity
+        Intent intent = new Intent(LoginActivity.this, ShopActivity.class);
+        startActivity(intent);
+        finish();
         String email = ((EditText)findViewById(usernameTextboxID)).getText().toString();
         final String password = ((EditText)findViewById(passwordTextboxID)).getText().toString();
 
@@ -137,6 +148,32 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                             startActivity(intent);
                             finish();
                         }
+                    }
+                });
+    }
+    private void getUser(String userID){
+        DatabaseReference databaseReference = fireBaseUtill.getRefrencesUsers();
+        databaseReference.orderByChild(Global_Variable.ID).equalTo(userID)
+                .addListenerForSingleValueEvent(new ValueEventListener(){
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                        for(DataSnapshot usersSnapShot: dataSnapshot.getChildren()){
+                            try {
+                                String firstName = usersSnapShot.child(Global_Variable.COLUMN_FIRSTNAME).getValue().toString();
+                                String lastName = usersSnapShot.child(Global_Variable.COLUMN_LASTNAME.toLowerCase()).getValue().toString();
+                                String email = usersSnapShot.child(Global_Variable.COLUMN_EMAIL.toLowerCase()).getValue().toString();
+                                String password = usersSnapShot.child(Global_Variable.COLUMN_PASSWORD.toLowerCase()).getValue().toString();
+                                Shop shop = (Shop)usersSnapShot.child(Global_Variable.COLUMN_SHOPS.toLowerCase()).getValue();
+                                user = new User(firstName,lastName,email,password,shop);
+                                break;
+                            }
+                            catch(Exception e){
+                                e.getMessage();
+                            }
+                        }
+                    }
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError databaseError) {
                     }
                 });
     }

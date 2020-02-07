@@ -13,6 +13,24 @@ public class Global_Variable {
     public static final String ADD_SHOP = "Add Shop";
     public static final String CHOOSE_LOCATION = "Choose Location";
     public static final String ADD_LOCATION = "Add Location";
+    public static final String LATITUDE = "Latitude";
+    public static final String LONGITUDE = "Longitude";
+    public static final String MISSING_SHOP_NAME_INFORMATION = "Enter shop name!" ;
+    public static final String MISSING_LATITUDE_INFORMATION = "Enter latitude!" ;
+    public static final String MISSING_LONGITUDE_INFORMATION = "Enter longitude!" ;
+    public static final String INVALID_LOCATION_IFORMATION = "Location must be by numbers";
+    //TABLES IN FIREBASE
+    //  USER TABLE
+    public static final String TABLE_USERS = "Users";
+    public static final String ID = "ID";
+    public static final String COLUMN_FIRSTNAME = "firstName";
+    public static final String COLUMN_LASTNAME = "lastName";
+    public static final String COLUMN_EMAIL = "email";
+    public static final String COLUMN_PASSWORD = "password";
+    public static final String COLUMN_SHOPS = "shops";
+    //  SHOP TABLE
+    public static final String TABLE_SHOP = "Shops";
+    public static final String DESCRIPTION = "Description";
     public static int index = 0;
     // in order to save shared preferences-> used to login only once
     public static final String PREFS_NAME = "MyPrefsFile";

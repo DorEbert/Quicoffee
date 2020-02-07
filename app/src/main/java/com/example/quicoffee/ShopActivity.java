@@ -1,9 +1,11 @@
-package com.example.quicoffee.BuyerActivities;
+package com.example.quicoffee;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.location.Address;
 import android.location.Geocoder;
+import android.location.Location;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.view.Gravity;
 import android.view.View;
 import android.view.inputmethod.EditorInfo;
@@ -13,8 +15,8 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.example.quicoffee.Global_Variable;
-import com.example.quicoffee.R;
+import com.example.quicoffee.Models.Shop;
+import com.example.quicoffee.Models.User;
 
 import java.io.IOException;
 import java.util.List;
@@ -25,28 +27,48 @@ public class ShopActivity extends AppCompatActivity implements View.OnClickListe
     private int mainActivityHeight;
     private LinearLayout linearLayout;
     private int shopNameTextboxID;
+    private int latitudeTextboxID;
+    private int longitudeTextboxID;
+    private int descriptionTextboxID;
+    private User user;
+    private FireBaseUtill fireBaseUtill = new FireBaseUtill();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_shop);
         InititalVariablesOfLocalActivity();
+        BuildActivityUI();
+    }
+    private void FillExistingShop(){
+        ((EditText)findViewById(shopNameTextboxID)).setText(user.getShop().getShopName());
+        ((EditText)findViewById(descriptionTextboxID)).setText(user.getShop().getDescription());
+        ((EditText)findViewById(latitudeTextboxID)).setText(String.valueOf(user.getShop().GetLocation().getLatitude()));
+        ((EditText)findViewById(longitudeTextboxID)).setText(String.valueOf(user.getShop().GetLocation().getLatitude()));
     }
     private void BuildActivityUI() {
         LinearLayout.LayoutParams lparams = new LinearLayout.LayoutParams((int)(mainActivityWitdh *0.9),mainActivityHeight/20);
         lparams.gravity = Gravity.CENTER;
-        //Email label and textBox
-        TextView shopNameTextView = CreateTextView(Global_Variable.SHOP_NAME);
-        shopNameTextView.setPadding(50,10,50,10);
-        EditText shopNameEditText = CreateEditText(lparams);
-        shopNameEditText.setId(Global_Variable.GetID());
-        shopNameTextboxID = shopNameEditText.getId();
-        linearLayout.addView(shopNameTextView);
-        linearLayout.addView(shopNameEditText);
-        TextView chooseLocationTextView = CreateTextView(Global_Variable.CHOOSE_LOCATION);
+        //shop Name TextView and EditText
+        shopNameTextboxID = addPairOfTextViewAndEditText(Global_Variable.SHOP_NAME,lparams);
+        //Description TextView and EditText
+        descriptionTextboxID = addPairOfTextViewAndEditText(Global_Variable.DESCRIPTION,lparams);
+        //  latitude TextView and EditText
+        latitudeTextboxID = addPairOfTextViewAndEditText(Global_Variable.LATITUDE,lparams);
+        //  longitude TextView and EditText
+        longitudeTextboxID = addPairOfTextViewAndEditText(Global_Variable.LONGITUDE,lparams);
         addShopButton();
     }
-        private void InititalVariablesOfLocalActivity(){
+    private int addPairOfTextViewAndEditText(String labelText,LinearLayout.LayoutParams lparams){
+        TextView textView = CreateTextView(labelText);
+        textView.setPadding(50,10,50,10);
+        EditText editText = CreateEditText(lparams);
+        editText.setId(Global_Variable.GetID());
+        linearLayout.addView(textView);
+        linearLayout.addView(editText);
+        return editText.getId();
+    }
+    private void InititalVariablesOfLocalActivity(){
         mainActivityWitdh = getResources().getDisplayMetrics().widthPixels;
         mainActivityHeight = getResources().getDisplayMetrics().heightPixels;
         linearLayout = findViewById(R.id.linear_layout);
@@ -67,28 +89,6 @@ public class ShopActivity extends AppCompatActivity implements View.OnClickListe
         editText.setBackgroundColor(getApplication().getResources().getColor(R.color.textViewColor));
         editText.setLayoutParams(lparams);
         return editText;
-    }
-    private void addLocationButton() {
-        //Set Button Settings
-        Button loginButton = new Button(this);
-        loginButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                
-            }
-        });
-        loginButton.setText(Global_Variable.ADD_LOCATION);
-        LinearLayout.LayoutParams loginButtonLayoutParams =
-                new LinearLayout.LayoutParams((int)(mainActivityWitdh *0.5),mainActivityHeight/20);
-        loginButtonLayoutParams.gravity = Gravity.CENTER;
-        loginButtonLayoutParams.setMargins(0
-                ,mainActivityHeight/20
-                ,0
-                ,mainActivityHeight/40);
-        loginButton.setLayoutParams(loginButtonLayoutParams);
-        loginButton.setBackgroundResource(R.color.buttonColor);
-        loginButton.setTextColor(getApplication().getResources().getColor(R.color.colorBlack));
-        linearLayout.addView(loginButton);
     }
     private void addShopButton() {
         //Set Button Settings
@@ -127,9 +127,30 @@ public class ShopActivity extends AppCompatActivity implements View.OnClickListe
         String postalCode = addresses.get(0).getPostalCode();
         String knownName = addresses.get(0).getFeatureName(); // Only if available else return NULL
     }
-
+    //add shop on click
     @Override
     public void onClick(View v) {
-
+        String shopName = ((EditText)findViewById(shopNameTextboxID)).getText().toString();
+        String description = ((EditText)findViewById(descriptionTextboxID)).getText().toString();
+        Double latitude;
+        Double longitude;
+        try {
+             latitude = Double.valueOf(((EditText) findViewById(latitudeTextboxID)).getText().toString());
+             longitude = Double.valueOf(((EditText) findViewById(longitudeTextboxID)).getText().toString());
+        }catch (Exception e){
+            Toast.makeText(getApplicationContext(), Global_Variable.INVALID_LOCATION_IFORMATION, Toast.LENGTH_SHORT).show();
+            return;
+        }
+        if (TextUtils.isEmpty(shopName)) {
+            Toast.makeText(getApplicationContext(), Global_Variable.MISSING_SHOP_NAME_INFORMATION, Toast.LENGTH_SHORT).show();
+            return;
+        }
+        //todo -DO WE NEED VALIDATION AGAINST DUPLICATES?
+        Location location = new Location(shopName);
+        location.setLatitude(latitude);
+        location.setLongitude(longitude);
+        Shop shop = new Shop(shopName,location,description);
+        user.addShop(shop);
+        fireBaseUtill.AddShopToUser(user);
     }
 }
