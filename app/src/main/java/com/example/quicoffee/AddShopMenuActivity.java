@@ -177,7 +177,7 @@ public class AddShopMenuActivity extends AppCompatActivity {
             ReturnToManagerShopActivity();
         }
         linearLayout.addView(buttonLinearLayout);
-
+        
     }
     private TextView CreateTextView(String labelText){
         //Set Label Setting
