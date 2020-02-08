@@ -34,8 +34,23 @@ public class Shop {
     public void AddProduct(Product product){
         products.add(product);
     }
-    public void AddIngredients(String ingredient){
-        ingredients.add(ingredient);
+    public void AddOrUpdateIngredient(String oldIngredient, String ingredient){
+        if(oldIngredient != null) {
+            for (int i = 0; i < ingredients.size(); i++)
+                if (ingredients.get(i) == oldIngredient) {
+                    ingredients.set(i, ingredient);
+                    return;
+                }
+        }else{
+            ingredients.add(ingredient);
+        }
+    }
+    public void RemoveIngredient(String ingredientTextToUpdate) {
+        for (int i = 0; i < ingredients.size(); i++)
+            if (ingredients.get(i) == ingredientTextToUpdate) {
+                ingredients.remove(i);
+                return;
+            }
     }
     public List<Product> GetProducts(){
         return  products;
@@ -66,5 +81,26 @@ public class Shop {
 
     public String getDescription() {
         return description;
+    }
+
+
+    public void AddOrUpdateProduct(String productIDToUpdate, Product product) {
+        if(productIDToUpdate != null) {
+            for (int i = 0; i < products.size(); i++)
+                if (products.get(i).getID() == productIDToUpdate) {
+                    products.set(i, product);
+                    return;
+                }
+        }else{
+            products.add(product);
+        }
+    }
+
+    public void RemoveProduct(String productIDToUpdate) {
+        for (int i = 0; i < products.size(); i++)
+            if (products.get(i).getID() == productIDToUpdate) {
+                products.remove(i);
+                return;
+            }
     }
 }

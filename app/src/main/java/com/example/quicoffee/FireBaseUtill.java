@@ -1,9 +1,12 @@
 package com.example.quicoffee;
 
+import com.example.quicoffee.Models.Product;
 import com.example.quicoffee.Models.Shop;
 import com.example.quicoffee.Models.User;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+
+import java.util.List;
 
 public class FireBaseUtill {
     private static FirebaseDatabase databaseReference;
@@ -31,6 +34,19 @@ public class FireBaseUtill {
     }
     public DatabaseReference getRefrencesUsers(){
         return databaseReference.getReference(Global_Variable.TABLE_USERS);
+    }
+
+    public void UpdateShopIngredient(String ShopID, List<String> ingredient) {
+        databaseReference.getReference(Global_Variable.TABLE_USERS)
+                .child(ShopID)
+                .setValue(ingredient);
+    }
+
+    public void UpdateShopProducts(String ShopID, List<Product> products) {
+        databaseReference.getReference(Global_Variable.TABLE_USERS)
+                .child(ShopID)
+                .child(Global_Variable.PRODUCTS_COLUMN)
+                .setValue(products);
     }
     /*public DatabaseReference getRefrencesScoresSheet(){
         return databaseReference.getReference(Global_Variable.SCORE_SHEET_TABLE_NAME);

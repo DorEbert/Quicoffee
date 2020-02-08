@@ -16,9 +16,18 @@ public class Global_Variable {
     public static final String LATITUDE = "Latitude";
     public static final String LONGITUDE = "Longitude";
     public static final String MISSING_SHOP_NAME_INFORMATION = "Enter shop name!" ;
-    public static final String MISSING_LATITUDE_INFORMATION = "Enter latitude!" ;
-    public static final String MISSING_LONGITUDE_INFORMATION = "Enter longitude!" ;
     public static final String INVALID_LOCATION_IFORMATION = "Location must be by numbers";
+
+    //Variable for adding/updating ingredient or product
+    public static final String ACTION_TYPE = "action_type";
+    public static final String INGREDIENT_OR_PRODUCT = "ingredient_or_product";
+    public static final String PRODUCT_TYPE = "Product";
+    public static final String INGREDIENT_TYPE = "Ingredient";
+    public static final String CREATE = "1";
+    public static final String UPDATE = "0";
+    public static final String REMOVE_PRODUCT = "Remove Product";
+    public static final String REMOVE_INGREDIENT = "Remove Ingredient";
+    public static final String MISSING_INGREDIENT_INFORMATION = "Enter ingredient name!";
     //TABLES IN FIREBASE
     //  USER TABLE
     public static final String TABLE_USERS = "Users";
@@ -32,10 +41,15 @@ public class Global_Variable {
     public static final String TABLE_SHOP = "Shops";
     public static final String DESCRIPTION = "Description";
     public static final String ADD_PRODUCT = "Add Product";
+    public static final String UPDATE_PRODUCT = "Update Product";
     public static final String ADD_INGREDIENT = "Add Ingredient";
+    public static final String UPDATE_INGREDIENT = "Update Ingredient";
     public static final String PRODUCT_NAME = "Product Name";
     public static final String PRICE = "Price";
     public static final String INGREDIENT_NAME = "Ingredient Name";
+    public static final String INVALID_PRICE_IFORMATION = "Price must be number!";
+    public static final String PRODUCTS_COLUMN = "products";
+
 
     public static int index = 0;
     // in order to save shared preferences-> used to login only once

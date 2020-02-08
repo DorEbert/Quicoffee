@@ -1,18 +1,15 @@
 package com.example.quicoffee;
 
-import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.Gravity;
-import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
+import android.view.View;
 import android.widget.Button;
 import android.widget.LinearLayout;
-import android.widget.ListView;
-import android.widget.TextView;
 
 import com.example.quicoffee.Models.Product;
 import com.example.quicoffee.Models.ProductAdapter;
@@ -25,7 +22,7 @@ public class ManageShopActivity extends AppCompatActivity {
     private int mainActivityHeight;
     private LinearLayout linearLayout;
     private User user;
-    private RecyclerView.Adapter productsAdapter;
+    private ProductAdapter productsAdapter;
     private RecyclerView recyclerView;
     private RecyclerView.LayoutManager layoutManager;
     @Override
@@ -37,11 +34,7 @@ public class ManageShopActivity extends AppCompatActivity {
 
     }
     private void AddProductRecycleView(){
-        ArrayList<Product> products = new ArrayList<>();
-        products.add(new Product("Late",5,"Coffee with milk"));
-        products.add(new Product("Late",5,"Coffee with milk"));
-        products.add(new Product("Late",5,"Coffee with milk"));
-        products.add(new Product("Late",5,"Coffee with milk"));
+        final ArrayList<Product> products = new ArrayList<>();
         products.add(new Product("Late",5,"Coffee with milk"));
         recyclerView = new RecyclerView(this);
         LinearLayout.LayoutParams layoutParams =  new LinearLayout.LayoutParams((int)(mainActivityWitdh ),mainActivityHeight/5);
@@ -52,6 +45,17 @@ public class ManageShopActivity extends AppCompatActivity {
         productsAdapter = new ProductAdapter(products);
         recyclerView.setLayoutManager(layoutManager);
         recyclerView.setAdapter(productsAdapter );
+        productsAdapter.SetOnItemClickListener(new ProductAdapter.OnItemClickListener() {
+            @Override
+            public void onItemClick(int position) {
+                Intent intent = new Intent(ManageShopActivity.this, AddShopMenuActivity.class);
+                intent.putExtra(Global_Variable.INGREDIENT_OR_PRODUCT,Global_Variable.PRODUCT_TYPE);
+                intent.putExtra(Global_Variable.ACTION_TYPE,Global_Variable.UPDATE);
+                intent.putExtra(Global_Variable.ADD_PRODUCT, products.get(position));
+                startActivity(intent);
+                finish();
+            }
+        });
         linearLayout.addView(recyclerView);
     }
     private void InititalVariablesOfLocalActivity(){
@@ -62,16 +66,32 @@ public class ManageShopActivity extends AppCompatActivity {
     private void BuildActivityUI() {
         // Add product button
         Button addProductButton = CreateButton(Global_Variable.ADD_PRODUCT);
+        addProductButton.setOnClickListener(new View.OnClickListener()
+            {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(ManageShopActivity.this, AddShopMenuActivity.class);
+                intent.putExtra(Global_Variable.INGREDIENT_OR_PRODUCT,Global_Variable.PRODUCT_TYPE);
+                intent.putExtra(Global_Variable.ACTION_TYPE,Global_Variable.CREATE);
+                startActivity(intent);
+                finish();
+            }
+            });
         Button addIngredientButton = CreateButton(Global_Variable.ADD_INGREDIENT);
+        addIngredientButton.setOnClickListener(new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(ManageShopActivity.this, AddShopMenuActivity.class);
+                intent.putExtra(Global_Variable.INGREDIENT_OR_PRODUCT,Global_Variable.INGREDIENT_TYPE);
+                intent.putExtra(Global_Variable.ACTION_TYPE,Global_Variable.CREATE);
+                startActivity(intent);
+                finish();
+            }
+        });
         linearLayout.addView(addProductButton);
         AddProductRecycleView();
         linearLayout.addView(addIngredientButton);
-
-    }
-    private void addTable(){
-        ListView recyclerView = new ListView(this);
-        TextView textView = new TextView(this);
-        //ArrayAdapter<Product> adapter = new ArrayAdapter<>(ManageShopActivity.this, recyclerView,textView, user.getShop().GetProducts());
     }
     private Button CreateButton(String labelText) {
         //Set Button Settings

@@ -92,9 +92,9 @@ public class ShopActivity extends AppCompatActivity implements View.OnClickListe
     }
     private void addShopButton() {
         //Set Button Settings
-        Button loginButton = new Button(this);
-        loginButton.setOnClickListener(this);
-        loginButton.setText(Global_Variable.ADD_SHOP);
+        Button shopButton = new Button(this);
+        shopButton.setOnClickListener(this);
+        shopButton.setText(Global_Variable.ADD_SHOP);
         LinearLayout.LayoutParams loginButtonLayoutParams =
                 new LinearLayout.LayoutParams((int)(mainActivityWitdh *0.5),mainActivityHeight/20);
         loginButtonLayoutParams.gravity = Gravity.CENTER;
@@ -102,10 +102,10 @@ public class ShopActivity extends AppCompatActivity implements View.OnClickListe
                 ,mainActivityHeight/20
                 ,0
                 ,mainActivityHeight/40);
-        loginButton.setLayoutParams(loginButtonLayoutParams);
-        loginButton.setBackgroundResource(R.color.buttonColor);
-        loginButton.setTextColor(getApplication().getResources().getColor(R.color.colorBlack));
-        linearLayout.addView(loginButton);
+        shopButton.setLayoutParams(loginButtonLayoutParams);
+        shopButton.setBackgroundResource(R.color.buttonColor);
+        shopButton.setTextColor(getApplication().getResources().getColor(R.color.colorBlack));
+        linearLayout.addView(shopButton);
     }
     //Get Full Address From Coordinates
     private void GetAddressFromCoordinates(double latitude,double longitude){

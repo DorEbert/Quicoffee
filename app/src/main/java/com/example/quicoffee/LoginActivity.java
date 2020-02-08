@@ -110,7 +110,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     @Override
     public void onClick(View v) {
         //todo change to which activity
-        Intent intent = new Intent(LoginActivity.this, AddProductActivity.class);
+        Intent intent = new Intent(LoginActivity.this, ManageShopActivity.class);
         startActivity(intent);
         finish();
         String email = ((EditText)findViewById(usernameTextboxID)).getText().toString();

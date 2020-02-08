@@ -14,11 +14,18 @@ import java.util.ArrayList;
 
 public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.ProductViewHolder>{
     private ArrayList<Product> _productList;
+    private OnItemClickListener _listener;
     @Override
     public ProductViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.product_item,parent,false);
-        ProductViewHolder pvh = new ProductViewHolder(v);
+        ProductViewHolder pvh = new ProductViewHolder(v,_listener);
         return pvh;
+    }
+    public interface OnItemClickListener {
+        void onItemClick(int position);
+    }
+    public void SetOnItemClickListener(OnItemClickListener listener){
+        _listener = listener;
     }
     public ProductAdapter(ArrayList<Product> productList){
         _productList = productList;
@@ -40,11 +47,22 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.ProductV
         public TextView productName;
         public TextView price;
         public TextView description;
-    public ProductViewHolder(View itemView) {
+    public ProductViewHolder(View itemView,final OnItemClickListener listener) {
         super(itemView);
         productName = itemView.findViewById(R.id.productName);
         price = itemView.findViewById(R.id.price);
         description = itemView.findViewById(R.id.description);
+        itemView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(listener != null){
+                    int position =  getAdapterPosition();
+                    if(position != RecyclerView.NO_POSITION){
+                        listener.onItemClick(position);
+                    }
+                }
+            }
+        });
     }
 }
 
