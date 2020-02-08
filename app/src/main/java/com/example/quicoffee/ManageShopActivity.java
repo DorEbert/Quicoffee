@@ -32,19 +32,27 @@ public class ManageShopActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_manage_shop);
+        InititalVariablesOfLocalActivity();
+        BuildActivityUI();
+
+    }
+    private void AddProductRecycleView(){
         ArrayList<Product> products = new ArrayList<>();
         products.add(new Product("Late",5,"Coffee with milk"));
         products.add(new Product("Late",5,"Coffee with milk"));
         products.add(new Product("Late",5,"Coffee with milk"));
         products.add(new Product("Late",5,"Coffee with milk"));
         products.add(new Product("Late",5,"Coffee with milk"));
-        recyclerView = findViewById(R.id.my_recycler_view);
+        recyclerView = new RecyclerView(this);
+        LinearLayout.LayoutParams layoutParams =  new LinearLayout.LayoutParams((int)(mainActivityWitdh ),mainActivityHeight/5);
+        recyclerView.setLayoutParams(layoutParams);
         //todo
         recyclerView.setHasFixedSize(true);
         layoutManager = new LinearLayoutManager(this);
         productsAdapter = new ProductAdapter(products);
         recyclerView.setLayoutManager(layoutManager);
         recyclerView.setAdapter(productsAdapter );
+        linearLayout.addView(recyclerView);
     }
     private void InititalVariablesOfLocalActivity(){
         mainActivityWitdh = getResources().getDisplayMetrics().widthPixels;
@@ -56,6 +64,8 @@ public class ManageShopActivity extends AppCompatActivity {
         Button addProductButton = CreateButton(Global_Variable.ADD_PRODUCT);
         Button addIngredientButton = CreateButton(Global_Variable.ADD_INGREDIENT);
         linearLayout.addView(addProductButton);
+        AddProductRecycleView();
+        linearLayout.addView(addIngredientButton);
 
     }
     private void addTable(){

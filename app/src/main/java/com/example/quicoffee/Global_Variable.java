@@ -33,6 +33,10 @@ public class Global_Variable {
     public static final String DESCRIPTION = "Description";
     public static final String ADD_PRODUCT = "Add Product";
     public static final String ADD_INGREDIENT = "Add Ingredient";
+    public static final String PRODUCT_NAME = "Product Name";
+    public static final String PRICE = "Price";
+    public static final String INGREDIENT_NAME = "Ingredient Name";
+
     public static int index = 0;
     // in order to save shared preferences-> used to login only once
     public static final String PREFS_NAME = "MyPrefsFile";
