@@ -3,6 +3,10 @@ package com.example.quicoffee;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.drawable.Drawable;
+import android.media.Image;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.Gravity;
@@ -10,6 +14,7 @@ import android.view.View;
 import android.view.inputmethod.EditorInfo;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -24,6 +29,7 @@ public class AddShopMenuActivity extends AppCompatActivity {
     private int ingredientTextboxID;
     private int mainActivityWitdh;
     private int mainActivityHeight;
+    private ImageView image;
     private LinearLayout linearLayout;
     private FireBaseUtill fireBaseUtill = new FireBaseUtill();
     private String productIDToUpdate;
@@ -71,6 +77,7 @@ public class AddShopMenuActivity extends AppCompatActivity {
         mainActivityWitdh = getResources().getDisplayMetrics().widthPixels;
         mainActivityHeight = getResources().getDisplayMetrics().heightPixels;
         linearLayout = findViewById(R.id.linear_layout);
+        image = new ImageView(this);
     }
 
     private void BuildAddProductActivityUI(){
@@ -82,6 +89,8 @@ public class AddShopMenuActivity extends AppCompatActivity {
         priceTextboxID = addPairOfTextViewAndEditText(Global_Variable.PRICE,lparams);
         //description label and textBox
         descriptionTextboxID = addPairOfTextViewAndEditText(Global_Variable.DESCRIPTION,lparams);
+        //add camera button
+        addCameraButton();
         //Add product button
         String addOrUpdateButtonName;
         if(ingredientTextToUpdate != null){
@@ -102,7 +111,21 @@ public class AddShopMenuActivity extends AppCompatActivity {
                     Toast.makeText(getApplicationContext(), Global_Variable.INVALID_PRICE_IFORMATION, Toast.LENGTH_SHORT).show();
                     return;
                 }
+                if (TextUtils.isEmpty(productName)) {
+                    Toast.makeText(getApplicationContext(), Global_Variable.MISSING_PRODUCT_INFORMATION, Toast.LENGTH_SHORT).show();
+                    return;
+                }
+                if (price <=0) {
+                    Toast.makeText(getApplicationContext(), Global_Variable.PRICE_INFORMATION, Toast.LENGTH_SHORT).show();
+                    return;
+                }
                 Product product = new Product(productName,price,description);
+                if(getIntent().hasExtra(Global_Variable.RESULT_IMAGE)) {
+                    Bitmap _bitmap = BitmapFactory.decodeByteArray(
+                            getIntent().getByteArrayExtra(Global_Variable.RESULT_IMAGE),0,getIntent().getByteArrayExtra("byteArray").length);
+                    image.setImageBitmap(_bitmap);
+                    product.setImage(image);
+                }
                 if(ingredientTextToUpdate != null){
                     user.getShop().AddOrUpdateProduct(productIDToUpdate,product);
                 }else{
@@ -135,6 +158,8 @@ public class AddShopMenuActivity extends AppCompatActivity {
         lparams.gravity = Gravity.CENTER;
         //product Name label and textBox
         ingredientTextboxID = addPairOfTextViewAndEditText(Global_Variable.INGREDIENT_NAME,lparams);
+        //add camera button
+        addCameraButton();
         //add ingredient button
         String addOrUpdateButtonName;
         if(ingredientTextToUpdate != null){
@@ -177,7 +202,6 @@ public class AddShopMenuActivity extends AppCompatActivity {
             ReturnToManagerShopActivity();
         }
         linearLayout.addView(buttonLinearLayout);
-        
     }
     private TextView CreateTextView(String labelText){
         //Set Label Setting
@@ -225,6 +249,17 @@ public class AddShopMenuActivity extends AppCompatActivity {
         Intent intent = new Intent(AddShopMenuActivity.this, ManageShopActivity.class);
         startActivity(intent);
         finish();
+    }
+    private void addCameraButton(){
+        Button addProductButton = CreateButton(Global_Variable.CAMERA);
+        addProductButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(AddShopMenuActivity.this,MyCameraActivity.class);
+                startActivity(intent);
+            }
+        });
+        linearLayout.addView(addProductButton);
     }
 
 }

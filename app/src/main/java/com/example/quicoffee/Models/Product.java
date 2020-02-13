@@ -2,12 +2,14 @@ package com.example.quicoffee.Models;
 
 import android.os.Parcel;
 import android.os.Parcelable;
+import android.widget.ImageView;
 
 public class Product implements Parcelable {
     private String ID;
     private String productName;
     private String description;
     private double price;
+    private ImageView image;
 
     public Product(String productName,double price,String description){
         this.productName = productName;
@@ -76,5 +78,12 @@ public class Product implements Parcelable {
         dest.writeString(this.productName);
         dest.writeString(this.description);
         dest.writeDouble(price);
+    }
+
+    public void setImage(ImageView image) {
+        this.image = image;
+    }
+    public ImageView getImage(){
+        return image;
     }
 }

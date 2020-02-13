@@ -28,6 +28,8 @@ public class Global_Variable {
     public static final String REMOVE_PRODUCT = "Remove Product";
     public static final String REMOVE_INGREDIENT = "Remove Ingredient";
     public static final String MISSING_INGREDIENT_INFORMATION = "Enter ingredient name!";
+    public static final String  MISSING_PRODUCT_INFORMATION = "Enter product name!";
+
     //TABLES IN FIREBASE
     //  USER TABLE
     public static final String TABLE_USERS = "Users";
@@ -49,6 +51,9 @@ public class Global_Variable {
     public static final String INGREDIENT_NAME = "Ingredient Name";
     public static final String INVALID_PRICE_IFORMATION = "Price must be number!";
     public static final String PRODUCTS_COLUMN = "products";
+    public static final String PRICE_INFORMATION = "Price is not valid!";
+    public static final String RESULT_IMAGE = "Result_Image";
+    public static final String CAMERA = "Camera";
 
 
     public static int index = 0;
