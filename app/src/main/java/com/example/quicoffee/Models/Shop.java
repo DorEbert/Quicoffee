@@ -2,6 +2,8 @@ package com.example.quicoffee.Models;
 
 import android.location.Location;
 
+import com.google.android.gms.maps.model.LatLng;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -9,7 +11,7 @@ public class Shop {
     private String ID;
     private String shopName;
     // location of the shop
-    private Location location;
+    private LatLng location;
     // products will contain for example: mud coffee, late...
     private List<Product> products;
     // ingredients will contain for example: Coconut milk, almond milk in order to find
@@ -18,17 +20,17 @@ public class Shop {
 
 
     private String description;
-    public Shop(String shopName,Location location,String description){
+    public Shop(String shopName,LatLng location,String description){
         this.shopName = shopName;
         this.location = location;
         this.description = description;
         products = new ArrayList<>();
         ingredients = new ArrayList<>();
     }
-    public void UpdateLocation(Location location){
+    public void UpdateLocation(LatLng  location){
         this.location = location;
     }
-    public Location GetLocation(){
+    public LatLng  GetLocation(){
         return location;
     }
     public void AddProduct(Product product){
@@ -102,5 +104,13 @@ public class Shop {
                 products.remove(i);
                 return;
             }
+    }
+
+    public void setProducts(List<Product> products) {
+        this.products = products;
+    }
+
+    public void setIngredients(List<String> ingredients) {
+        this.ingredients = ingredients;
     }
 }

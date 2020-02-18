@@ -17,6 +17,7 @@ import android.widget.Toast;
 
 import com.example.quicoffee.Models.Shop;
 import com.example.quicoffee.Models.User;
+import com.google.android.gms.maps.model.LatLng;
 
 import java.io.IOException;
 import java.util.List;
@@ -30,7 +31,6 @@ public class ShopActivity extends AppCompatActivity implements View.OnClickListe
     private int latitudeTextboxID;
     private int longitudeTextboxID;
     private int descriptionTextboxID;
-    private User user;
     private FireBaseUtill fireBaseUtill = new FireBaseUtill();
 
     @Override
@@ -40,11 +40,11 @@ public class ShopActivity extends AppCompatActivity implements View.OnClickListe
         InititalVariablesOfLocalActivity();
         BuildActivityUI();
     }
-    private void FillExistingShop(){
-        ((EditText)findViewById(shopNameTextboxID)).setText(user.getShop().getShopName());
-        ((EditText)findViewById(descriptionTextboxID)).setText(user.getShop().getDescription());
-        ((EditText)findViewById(latitudeTextboxID)).setText(String.valueOf(user.getShop().GetLocation().getLatitude()));
-        ((EditText)findViewById(longitudeTextboxID)).setText(String.valueOf(user.getShop().GetLocation().getLatitude()));
+    private void FillExistingShop(Shop shop){
+        ((EditText)findViewById(shopNameTextboxID)).setText(shop.getShopName());
+        ((EditText)findViewById(descriptionTextboxID)).setText(shop.getDescription());
+        ((EditText)findViewById(latitudeTextboxID)).setText(String.valueOf(shop.GetLocation().longitude));
+        ((EditText)findViewById(longitudeTextboxID)).setText(String.valueOf(shop.GetLocation().latitude));
     }
     private void BuildActivityUI() {
         LinearLayout.LayoutParams lparams = new LinearLayout.LayoutParams((int)(mainActivityWitdh *0.9),mainActivityHeight/20);
@@ -146,11 +146,7 @@ public class ShopActivity extends AppCompatActivity implements View.OnClickListe
             return;
         }
         //todo -DO WE NEED VALIDATION AGAINST DUPLICATES?
-        Location location = new Location(shopName);
-        location.setLatitude(latitude);
-        location.setLongitude(longitude);
-        Shop shop = new Shop(shopName,location,description);
-        user.addShop(shop);
-        fireBaseUtill.AddShopToUser(user);
+        Global_Variable.shop = new Shop(shopName,new LatLng(latitude,longitude),description);
+        fireBaseUtill.AddShopToUser(Global_Variable.user,Global_Variable.shop);
     }
 }

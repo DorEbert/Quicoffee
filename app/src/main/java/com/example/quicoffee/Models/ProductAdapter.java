@@ -3,6 +3,7 @@ package com.example.quicoffee.Models;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -36,6 +37,7 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.ProductV
         holder.productName.setText(product.getProductName());
         holder.price.setText(String.valueOf(product.getPrice()));
         holder.description.setText(product.getDescription());
+        holder.image = product.getImage();
     }
 
     @Override
@@ -44,6 +46,7 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.ProductV
     }
 
     public static class ProductViewHolder extends  RecyclerView.ViewHolder {
+        public ImageView image;
         public TextView productName;
         public TextView price;
         public TextView description;
@@ -52,6 +55,7 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.ProductV
         productName = itemView.findViewById(R.id.productName);
         price = itemView.findViewById(R.id.price);
         description = itemView.findViewById(R.id.description);
+        image = itemView.findViewById(R.id.imageView);
         itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

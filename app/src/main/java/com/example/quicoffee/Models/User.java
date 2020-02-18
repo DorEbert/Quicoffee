@@ -9,21 +9,22 @@ public class User {
     private String lastName;
     private String email;
     private String password;
-    private Shop shop;
+    private String shop;
     public User(String firstName,String lastName,String email,String password){
         this.firstName = firstName;
         this.lastName = lastName;
         this.email = email;
         this.password = password;
     }
-    public User(String firstName,String lastName,String email,String password,Shop shop){
+    public User(String firstName,String lastName,String email,String password,String shop){
         this.firstName = firstName;
         this.lastName = lastName;
         this.email = email;
         this.password = password;
         this.shop = shop;
     }
-    public void addShop(Shop shop){
+
+    public void addShop(String shop){
         this.shop = shop;
     }
 
@@ -43,6 +44,10 @@ public class User {
         return password;
     }
 
+    public String getID() {
+        return ID;
+    }
+
     public void setFirstName(String firstName) {
         this.firstName = firstName;
     }
@@ -55,11 +60,11 @@ public class User {
         this.email = email;
     }
 
-    public Shop getShop(){
-        return shop;
-    }
+    public String getShop(){ return shop; }
 
     public void setPassword(String password) {
         this.password = password;
     }
+
+    public void setID(String id) { this.ID = id; }
 }

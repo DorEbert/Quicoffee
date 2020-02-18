@@ -1,13 +1,18 @@
 package com.example.quicoffee;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.drawable.Drawable;
+import android.location.Location;
 import android.media.Image;
+import android.net.Uri;
 import android.os.Bundle;
+import android.provider.MediaStore;
 import android.text.TextUtils;
 import android.view.Gravity;
 import android.view.View;
@@ -20,7 +25,22 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.quicoffee.Models.Product;
+import com.example.quicoffee.Models.Shop;
 import com.example.quicoffee.Models.User;
+import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.storage.OnProgressListener;
+import com.google.firebase.storage.StorageReference;
+import com.google.firebase.storage.UploadTask;
+
+import java.io.IOException;
+import java.util.List;
+import java.util.UUID;
 
 public class AddShopMenuActivity extends AppCompatActivity {
     private int productNameTextboxID;
@@ -35,8 +55,7 @@ public class AddShopMenuActivity extends AppCompatActivity {
     private String productIDToUpdate;
     private String ingredientTextToUpdate;
     private User user;
-
-
+    private Shop shop;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -79,7 +98,6 @@ public class AddShopMenuActivity extends AppCompatActivity {
         linearLayout = findViewById(R.id.linear_layout);
         image = new ImageView(this);
     }
-
     private void BuildAddProductActivityUI(){
         LinearLayout.LayoutParams lparams = new LinearLayout.LayoutParams((int)(mainActivityWitdh *0.9),mainActivityHeight/20);
         lparams.gravity = Gravity.CENTER;
@@ -121,17 +139,26 @@ public class AddShopMenuActivity extends AppCompatActivity {
                 }
                 Product product = new Product(productName,price,description);
                 if(getIntent().hasExtra(Global_Variable.RESULT_IMAGE)) {
-                    Bitmap _bitmap = BitmapFactory.decodeByteArray(
-                            getIntent().getByteArrayExtra(Global_Variable.RESULT_IMAGE),0,getIntent().getByteArrayExtra("byteArray").length);
-                    image.setImageBitmap(_bitmap);
+                    //Bitmap bitmap = BitmapFactory.decodeByteArray(
+                          //  getIntent().getByteArrayExtra(Global_Variable.RESULT_IMAGE),0,getIntent().getByteArrayExtra("byteArray").length);
+                    String uriString = getIntent().getStringExtra(Global_Variable.RESULT_IMAGE);
+                    Uri uri = Uri.parse(uriString);
+                    Bitmap bitmap = null;
+                    try {
+                        bitmap = MediaStore.Images.Media.getBitmap(getContentResolver(), uri);
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                    uploadImage(uri);
+                    image.setImageBitmap(bitmap);
                     product.setImage(image);
                 }
                 if(ingredientTextToUpdate != null){
-                    user.getShop().AddOrUpdateProduct(productIDToUpdate,product);
+                    shop.AddOrUpdateProduct(productIDToUpdate,product);
                 }else{
-                    user.getShop().AddOrUpdateProduct(null,product);
+                    shop.AddOrUpdateProduct(null,product);
                 }
-                fireBaseUtill.UpdateShopProducts(user.getShop().getID(),user.getShop().GetProducts());
+                fireBaseUtill.UpdateShopProducts(shop.getID(),shop.GetProducts());
                 ReturnToManagerShopActivity();
             }
         });
@@ -145,8 +172,8 @@ public class AddShopMenuActivity extends AppCompatActivity {
             removeProductButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    user.getShop().RemoveProduct(productIDToUpdate);
-                    fireBaseUtill.UpdateShopIngredient(user.getShop().getID(),user.getShop().GetIngredients());
+                    shop.RemoveProduct(productIDToUpdate);
+                    fireBaseUtill.UpdateShopIngredient(shop.getID(),shop.GetIngredients());
                     ReturnToManagerShopActivity();
                 }
             });
@@ -177,11 +204,11 @@ public class AddShopMenuActivity extends AppCompatActivity {
                     return;
                 }
                 if(ingredientTextToUpdate != null){
-                    user.getShop().AddOrUpdateIngredient(ingredientTextToUpdate,ingredient);
+                    shop.AddOrUpdateIngredient(ingredientTextToUpdate,ingredient);
                 }else{
-                    user.getShop().AddOrUpdateIngredient(null,ingredient);
+                    shop.AddOrUpdateIngredient(null,ingredient);
                 }
-                fireBaseUtill.UpdateShopIngredient(user.getShop().getID(),user.getShop().GetIngredients());
+                fireBaseUtill.UpdateShopIngredient(shop.getID(),shop.GetIngredients());
                 ReturnToManagerShopActivity();
             }
         });
@@ -194,8 +221,8 @@ public class AddShopMenuActivity extends AppCompatActivity {
             removeIngredientButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    user.getShop().RemoveIngredient(ingredientTextToUpdate);
-                    fireBaseUtill.UpdateShopIngredient(user.getShop().getID(),user.getShop().GetIngredients());
+                    shop.RemoveIngredient(ingredientTextToUpdate);
+                    fireBaseUtill.UpdateShopIngredient(shop.getID(),shop.GetIngredients());
                 }
             });
             buttonLinearLayout.addView(removeIngredientButton);
@@ -261,5 +288,66 @@ public class AddShopMenuActivity extends AppCompatActivity {
         });
         linearLayout.addView(addProductButton);
     }
+    private void uploadImage(Uri filePath) {
+        if(filePath != null)
+        {
+            final ProgressDialog progressDialog = new ProgressDialog(this);
+            progressDialog.setTitle("Uploading...");
+            progressDialog.show();
 
+            StorageReference ref = fireBaseUtill.getStorageReference().child("images/"+ UUID.randomUUID().toString());
+            ref.putFile(filePath)
+                    .addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+                        @Override
+                        public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                            progressDialog.dismiss();
+                            Toast.makeText(AddShopMenuActivity.this, "Uploaded", Toast.LENGTH_SHORT).show();
+                        }
+                    })
+                    .addOnFailureListener(new OnFailureListener() {
+                        @Override
+                        public void onFailure(@NonNull Exception e) {
+                            progressDialog.dismiss();
+                            Toast.makeText(AddShopMenuActivity.this, "Failed "+e.getMessage(), Toast.LENGTH_SHORT).show();
+                        }
+                    })
+                    .addOnProgressListener(new OnProgressListener<UploadTask.TaskSnapshot>() {
+                        @Override
+                        public void onProgress(UploadTask.TaskSnapshot taskSnapshot) {
+                            double progress = (100.0*taskSnapshot.getBytesTransferred()/taskSnapshot
+                                    .getTotalByteCount());
+                            progressDialog.setMessage("Uploaded "+(int)progress+"%");
+                        }
+                    });
+        }
+    }
+    private void getShop(final String shopID){
+        DatabaseReference databaseReference = fireBaseUtill.getRefrencesShops();
+        databaseReference.orderByChild(Global_Variable.ID).equalTo(shopID)
+                .addListenerForSingleValueEvent(new ValueEventListener(){
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                        for(DataSnapshot usersSnapShot: dataSnapshot.getChildren()){
+                            try {
+                                String shopName = usersSnapShot.child(Global_Variable.SHOP_NAME_COLUMN).getValue().toString();
+                                LatLng location = (LatLng) usersSnapShot.child(Global_Variable.LOCATION_COLUMN.toLowerCase()).getValue();
+                                List<Product> products = (List<Product>) usersSnapShot.child(Global_Variable.COLUMN_EMAIL.toLowerCase()).getValue();
+                                List<String> ingredients = (List<String>) usersSnapShot.child(Global_Variable.COLUMN_PASSWORD.toLowerCase()).getValue();
+                                String description = usersSnapShot.child(Global_Variable.DESCRIPTION.toLowerCase()).getValue().toString();
+                                Shop shop = new Shop(shopName,location,description);
+                                shop.setID(shopID);
+                                shop.setProducts(products);
+                                shop.setIngredients(ingredients);
+                                break;
+                            }
+                            catch(Exception e){
+                                e.getMessage();
+                            }
+                        }
+                    }
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError databaseError) {
+                    }
+                });
+    }
 }

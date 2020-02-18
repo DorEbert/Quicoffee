@@ -110,10 +110,38 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     @Override
     public void onClick(View v) {
         //todo change to which activity
-        Intent intent = new Intent(LoginActivity.this, ManageShopActivity.class);
-        startActivity(intent);
-        finish();
-        String email = ((EditText)findViewById(usernameTextboxID)).getText().toString();
+        //User user = new User("Dor","Ebert","dor123@gmail.com","123");
+        //getUser("-M0OkJc1uoX2y227WG6S");
+        fireBaseUtill.getRefrencesUsers().
+                orderByChild(Global_Variable.ID.toLowerCase()).equalTo("-M0OkJc1uoX2y227WG6S")
+                .addListenerForSingleValueEvent(new ValueEventListener(){
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                        for(DataSnapshot usersSnapShot: dataSnapshot.getChildren()){
+                            try {
+                                String firstName = usersSnapShot.child(Global_Variable.COLUMN_FIRSTNAME).getValue().toString();
+                                String lastName = usersSnapShot.child(Global_Variable.COLUMN_LASTNAME).getValue().toString();
+                                String email = usersSnapShot.child(Global_Variable.COLUMN_EMAIL.toLowerCase()).getValue().toString();
+                                String password = usersSnapShot.child(Global_Variable.COLUMN_PASSWORD.toLowerCase()).getValue().toString();
+                                //String shop = usersSnapShot.child(Global_Variable.COLUMN_SHOPS.toLowerCase()).getValue().toString();
+                                user = new User(firstName,lastName,email,password);
+                                break;
+                            }
+                            catch(Exception e){
+                                e.getMessage();
+                            }
+                        }
+                        user.setID("-M0OkJc1uoX2y227WG6S");
+                        Global_Variable.user = user;
+                        Intent intent = new Intent(LoginActivity.this,  ShopActivity.class);
+                        startActivity(intent);
+                    }
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError databaseError) {
+                    }
+                });
+        //finish();
+        /*String email = ((EditText)findViewById(usernameTextboxID)).getText().toString();
         final String password = ((EditText)findViewById(passwordTextboxID)).getText().toString();
 
         if (TextUtils.isEmpty(email)) {
@@ -149,12 +177,12 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                             finish();
                         }
                     }
-                });
+                });*/
     }
-    private void getUser(String userID){
-        DatabaseReference databaseReference = fireBaseUtill.getRefrencesUsers();
-        databaseReference.orderByChild(Global_Variable.ID).equalTo(userID)
-                .addListenerForSingleValueEvent(new ValueEventListener(){
+    private void getUser(String userID) {
+        fireBaseUtill.getRefrencesUsers().
+                orderByChild(Global_Variable.ID).equalTo(userID)
+                /*.addListenerForSingleValueEvent(new ValueEventListener(){
                     @Override
                     public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                         for(DataSnapshot usersSnapShot: dataSnapshot.getChildren()){
@@ -163,7 +191,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                                 String lastName = usersSnapShot.child(Global_Variable.COLUMN_LASTNAME.toLowerCase()).getValue().toString();
                                 String email = usersSnapShot.child(Global_Variable.COLUMN_EMAIL.toLowerCase()).getValue().toString();
                                 String password = usersSnapShot.child(Global_Variable.COLUMN_PASSWORD.toLowerCase()).getValue().toString();
-                                Shop shop = (Shop)usersSnapShot.child(Global_Variable.COLUMN_SHOPS.toLowerCase()).getValue();
+                                String shop = usersSnapShot.child(Global_Variable.COLUMN_SHOPS.toLowerCase()).getValue().toString();
                                 user = new User(firstName,lastName,email,password,shop);
                                 break;
                             }
@@ -174,6 +202,22 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                     }
                     @Override
                     public void onCancelled(@NonNull DatabaseError databaseError) {
+                    }
+                });*/
+                .addValueEventListener(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                        String firstName = dataSnapshot.child(Global_Variable.COLUMN_FIRSTNAME).getValue().toString();
+                        String lastName = dataSnapshot.child(Global_Variable.COLUMN_LASTNAME.toLowerCase()).getValue().toString();
+                        String email = dataSnapshot.child(Global_Variable.COLUMN_EMAIL.toLowerCase()).getValue().toString();
+                        String password = dataSnapshot.child(Global_Variable.COLUMN_PASSWORD.toLowerCase()).getValue().toString();
+                        String shop = dataSnapshot.child(Global_Variable.COLUMN_SHOPS.toLowerCase()).getValue().toString();
+                        user = new User(firstName,lastName,email,password,shop);
+                    }
+
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError databaseError) {
+
                     }
                 });
     }

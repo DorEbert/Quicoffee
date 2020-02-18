@@ -1,5 +1,8 @@
 package com.example.quicoffee;
 
+import com.example.quicoffee.Models.Shop;
+import com.example.quicoffee.Models.User;
+
 public class Global_Variable {
     public static final String PASSWORD = "Password";
     public static final String EMAIL = "Email";
@@ -29,7 +32,7 @@ public class Global_Variable {
     public static final String REMOVE_INGREDIENT = "Remove Ingredient";
     public static final String MISSING_INGREDIENT_INFORMATION = "Enter ingredient name!";
     public static final String  MISSING_PRODUCT_INFORMATION = "Enter product name!";
-
+    
     //TABLES IN FIREBASE
     //  USER TABLE
     public static final String TABLE_USERS = "Users";
@@ -54,11 +57,16 @@ public class Global_Variable {
     public static final String PRICE_INFORMATION = "Price is not valid!";
     public static final String RESULT_IMAGE = "Result_Image";
     public static final String CAMERA = "Camera";
+    public static final String SHOP_NAME_COLUMN = "shopName";
+    public static final String LOCATION_COLUMN = "location";
 
 
     public static int index = 0;
     // in order to save shared preferences-> used to login only once
     public static final String PREFS_NAME = "MyPrefsFile";
+    public static User user;
+    public static Shop shop;
+
     // in order to generate a unique ID for every created view
     public static int GetID() {
         return index++;
