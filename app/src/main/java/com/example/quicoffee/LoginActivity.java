@@ -1,11 +1,7 @@
 package com.example.quicoffee;
 
-import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
-
 import android.content.Intent;
 import android.os.Bundle;
-import android.text.TextUtils;
 import android.view.Gravity;
 import android.view.View;
 import android.view.inputmethod.EditorInfo;
@@ -13,21 +9,15 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
-import com.example.quicoffee.Models.Shop;
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
+
 import com.example.quicoffee.Models.User;
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
-import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
-import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.ValueEventListener;
-
-import java.util.ArrayList;
-import java.util.List;
 
 public class LoginActivity extends AppCompatActivity implements View.OnClickListener {
     private User user;
@@ -38,8 +28,6 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     private LinearLayout linearLayout;
     private FirebaseAuth auth;
     private FireBaseUtill fireBaseUtill = new FireBaseUtill();
-
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -72,7 +60,6 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         linearLayout = findViewById(R.id.linear_layout);
         auth = FirebaseAuth.getInstance();
     }
-
     private void addLoginButton() {
         //Set Button Settings
         Button loginButton = new Button(this);
@@ -110,10 +97,11 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     @Override
     public void onClick(View v) {
         //todo change to which activity
-        //User user = new User("Dor","Ebert","dor123@gmail.com","123");
+        //final User user2 = new User("Dor","Ebert","dor123@gmail.com","123","");
+        //fireBaseUtill.addUser(user2);
         //getUser("-M0OkJc1uoX2y227WG6S");
         fireBaseUtill.getRefrencesUsers().
-                orderByChild(Global_Variable.ID.toLowerCase()).equalTo("-M0OkJc1uoX2y227WG6S")
+                orderByChild(Global_Variable.ID.toLowerCase()).equalTo("-M0dEouLY5J-QKinwhe0")
                 .addListenerForSingleValueEvent(new ValueEventListener(){
                     @Override
                     public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
@@ -123,15 +111,15 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                                 String lastName = usersSnapShot.child(Global_Variable.COLUMN_LASTNAME).getValue().toString();
                                 String email = usersSnapShot.child(Global_Variable.COLUMN_EMAIL.toLowerCase()).getValue().toString();
                                 String password = usersSnapShot.child(Global_Variable.COLUMN_PASSWORD.toLowerCase()).getValue().toString();
-                                //String shop = usersSnapShot.child(Global_Variable.COLUMN_SHOPS.toLowerCase()).getValue().toString();
-                                user = new User(firstName,lastName,email,password);
+                                String shop = usersSnapShot.child(Global_Variable.COLUMN_SHOPS.toLowerCase()).getValue().toString();
+                                user = new User(firstName,lastName,email,password,shop);
                                 break;
                             }
                             catch(Exception e){
                                 e.getMessage();
                             }
                         }
-                        user.setID("-M0OkJc1uoX2y227WG6S");
+                        user.setID("-M0dEouLY5J-QKinwhe0");
                         Global_Variable.user = user;
                         Intent intent = new Intent(LoginActivity.this,  ShopActivity.class);
                         startActivity(intent);

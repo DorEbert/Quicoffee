@@ -11,7 +11,8 @@ public class Shop {
     private String ID;
     private String shopName;
     // location of the shop
-    private LatLng location;
+    private double latitude;
+    private double longitude;
     // products will contain for example: mud coffee, late...
     private List<Product> products;
     // ingredients will contain for example: Coconut milk, almond milk in order to find
@@ -22,16 +23,18 @@ public class Shop {
     private String description;
     public Shop(String shopName,LatLng location,String description){
         this.shopName = shopName;
-        this.location = location;
+        this.latitude = location.latitude;
+        this.longitude = location.longitude;    
         this.description = description;
         products = new ArrayList<>();
         ingredients = new ArrayList<>();
     }
     public void UpdateLocation(LatLng  location){
-        this.location = location;
+        this.latitude = location.latitude;
+        this.longitude = location.longitude;
     }
     public LatLng  GetLocation(){
-        return location;
+        return new LatLng(latitude,longitude);
     }
     public void AddProduct(Product product){
         products.add(product);
@@ -54,10 +57,12 @@ public class Shop {
                 return;
             }
     }
-    public List<Product> GetProducts(){
-        return  products;
+
+    public List<Product> getProducts() {
+        return products;
     }
-    public List<String> GetIngredients() {
+
+    public List<String> getIngredients() {
         return ingredients;
     }
 
@@ -113,4 +118,12 @@ public class Shop {
     public void setIngredients(List<String> ingredients) {
         this.ingredients = ingredients;
     }
+    public double getLatitude() {
+        return latitude;
+    }
+
+    public double getLongitude() {
+        return longitude;
+    }
+
 }

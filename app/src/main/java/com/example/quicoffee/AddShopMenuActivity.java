@@ -158,7 +158,7 @@ public class AddShopMenuActivity extends AppCompatActivity {
                 }else{
                     shop.AddOrUpdateProduct(null,product);
                 }
-                fireBaseUtill.UpdateShopProducts(shop.getID(),shop.GetProducts());
+                fireBaseUtill.UpdateShopProducts(shop.getID(),shop.getProducts());
                 ReturnToManagerShopActivity();
             }
         });
@@ -173,7 +173,7 @@ public class AddShopMenuActivity extends AppCompatActivity {
                 @Override
                 public void onClick(View v) {
                     shop.RemoveProduct(productIDToUpdate);
-                    fireBaseUtill.UpdateShopIngredient(shop.getID(),shop.GetIngredients());
+                    fireBaseUtill.UpdateShopIngredient(shop.getID(),shop.getIngredients());
                     ReturnToManagerShopActivity();
                 }
             });
@@ -208,7 +208,7 @@ public class AddShopMenuActivity extends AppCompatActivity {
                 }else{
                     shop.AddOrUpdateIngredient(null,ingredient);
                 }
-                fireBaseUtill.UpdateShopIngredient(shop.getID(),shop.GetIngredients());
+                fireBaseUtill.UpdateShopIngredient(shop.getID(),shop.getIngredients());
                 ReturnToManagerShopActivity();
             }
         });
@@ -222,7 +222,7 @@ public class AddShopMenuActivity extends AppCompatActivity {
                 @Override
                 public void onClick(View v) {
                     shop.RemoveIngredient(ingredientTextToUpdate);
-                    fireBaseUtill.UpdateShopIngredient(shop.getID(),shop.GetIngredients());
+                    fireBaseUtill.UpdateShopIngredient(shop.getID(),shop.getIngredients());
                 }
             });
             buttonLinearLayout.addView(removeIngredientButton);
@@ -320,34 +320,5 @@ public class AddShopMenuActivity extends AppCompatActivity {
                         }
                     });
         }
-    }
-    private void getShop(final String shopID){
-        DatabaseReference databaseReference = fireBaseUtill.getRefrencesShops();
-        databaseReference.orderByChild(Global_Variable.ID).equalTo(shopID)
-                .addListenerForSingleValueEvent(new ValueEventListener(){
-                    @Override
-                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                        for(DataSnapshot usersSnapShot: dataSnapshot.getChildren()){
-                            try {
-                                String shopName = usersSnapShot.child(Global_Variable.SHOP_NAME_COLUMN).getValue().toString();
-                                LatLng location = (LatLng) usersSnapShot.child(Global_Variable.LOCATION_COLUMN.toLowerCase()).getValue();
-                                List<Product> products = (List<Product>) usersSnapShot.child(Global_Variable.COLUMN_EMAIL.toLowerCase()).getValue();
-                                List<String> ingredients = (List<String>) usersSnapShot.child(Global_Variable.COLUMN_PASSWORD.toLowerCase()).getValue();
-                                String description = usersSnapShot.child(Global_Variable.DESCRIPTION.toLowerCase()).getValue().toString();
-                                Shop shop = new Shop(shopName,location,description);
-                                shop.setID(shopID);
-                                shop.setProducts(products);
-                                shop.setIngredients(ingredients);
-                                break;
-                            }
-                            catch(Exception e){
-                                e.getMessage();
-                            }
-                        }
-                    }
-                    @Override
-                    public void onCancelled(@NonNull DatabaseError databaseError) {
-                    }
-                });
     }
 }

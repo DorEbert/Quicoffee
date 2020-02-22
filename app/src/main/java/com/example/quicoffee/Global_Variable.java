@@ -14,6 +14,7 @@ public class Global_Variable {
     public static final String COULD_NOT_DETECT_LOCATION = "could not detect location";
     public static final String SHOP_NAME = "Shop Name";
     public static final String ADD_SHOP = "Add Shop";
+    public static final String UPDATE_SHOP = "Update Shop";
     public static final String CHOOSE_LOCATION = "Choose Location";
     public static final String ADD_LOCATION = "Add Location";
     public static final String LATITUDE = "Latitude";
@@ -36,12 +37,12 @@ public class Global_Variable {
     //TABLES IN FIREBASE
     //  USER TABLE
     public static final String TABLE_USERS = "Users";
-    public static final String ID = "ID";
+    public static final String ID = "id";
     public static final String COLUMN_FIRSTNAME = "firstName";
     public static final String COLUMN_LASTNAME = "lastName";
     public static final String COLUMN_EMAIL = "email";
     public static final String COLUMN_PASSWORD = "password";
-    public static final String COLUMN_SHOPS = "shops";
+    public static final String COLUMN_SHOPS = "shop";
     //  SHOP TABLE
     public static final String TABLE_SHOP = "Shops";
     public static final String DESCRIPTION = "Description";
@@ -58,8 +59,8 @@ public class Global_Variable {
     public static final String RESULT_IMAGE = "Result_Image";
     public static final String CAMERA = "Camera";
     public static final String SHOP_NAME_COLUMN = "shopName";
-    public static final String LOCATION_COLUMN = "location";
-
+    public static final String LATITUDE_COLUMN = "latitude";
+    public static final String LONGITUDE_COLUMN = "longitude";
 
     public static int index = 0;
     // in order to save shared preferences-> used to login only once
