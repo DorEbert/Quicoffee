@@ -12,6 +12,7 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 
 import com.example.quicoffee.Models.User;
 import com.google.firebase.auth.FirebaseAuth;
@@ -32,6 +33,8 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+       // Toolbar toolbar = findViewById(R.id.toolbar);
+      //  setSupportActionBar(toolbar);
         InititalVariablesOfLocalActivity();
         BuildActivityUI();
 

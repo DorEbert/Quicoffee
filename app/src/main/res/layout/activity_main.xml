@@ -11,6 +11,8 @@
         android:layout_height="match_parent"
         tools:context=".LoginActivity"
         android:orientation="vertical">
+
+
     </LinearLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
