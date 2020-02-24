@@ -25,6 +25,7 @@ import java.text.Normalizer;
 
 public class FavoriteCoffeeActivity extends AppCompatActivity  {
     public FirebaseUser user;
+    public String UserId;
     private int mainActivityWitdh;
     private int mainActivityHeight;
     private LinearLayout linearLayout;
@@ -36,6 +37,7 @@ public class FavoriteCoffeeActivity extends AppCompatActivity  {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_favorite_coffee);
         Toolbar myToolbar = (Toolbar) findViewById(R.id.toolbar);
+        UserId=getIntent().getStringExtra(Global_Variable.USER_FOR_MOVE_INTENT);
         setSupportActionBar(myToolbar);
         InititalVariablesOfLocalActivity();
         initAttributesForCoffee(Global_Variable.SIZE_OF_CUP, Global_Variable.SIZE_OF_COFFEE);
@@ -61,6 +63,7 @@ public class FavoriteCoffeeActivity extends AppCompatActivity  {
         botton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+
                 //TODO: save the coffee on the DB
             }
         });

@@ -5,13 +5,13 @@ import com.example.quicoffee.Global_Variable;
 public class FavoriteCoffee {
 
     public String sizeOfCup;
-    public String typeOfMile;
+    public String typeOfMilk;
     public String amountOfEspresso;
     public String with_Form;
 
     public FavoriteCoffee(String sizeOfCup, String typeOfMile, String amountOfEspresso, String with_Form) {
         this.sizeOfCup = sizeOfCup;
-        this.typeOfMile = typeOfMile;
+        this.typeOfMilk = typeOfMile;
         this.amountOfEspresso = amountOfEspresso;
         this.with_Form = with_Form;
     }
@@ -24,7 +24,7 @@ public class FavoriteCoffee {
     }
 
     public void setTypeOfMile(String typeOfMile) {
-        this.typeOfMile = typeOfMile;
+        this.typeOfMilk = typeOfMile;
     }
 
     public void setAmountOfEspresso(String amountOfEspresso) {
