@@ -15,11 +15,11 @@
         app:showAsAction="never">
     </item>
     <item android:id="@+id/setUpAShop"
-        android:title="Set up a Shop "
+        android:title="Set up a Shop"
         app:showAsAction="never">
     </item>
     <item android:id="@+id/setting"
-        android:title="setting "
+        android:title="Settings"
         app:showAsAction="never">
     </item>
     <item android:id="@+id/logOut"

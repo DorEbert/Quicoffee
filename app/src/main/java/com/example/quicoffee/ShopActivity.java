@@ -2,6 +2,7 @@ package com.example.quicoffee;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Intent;
 import android.location.Address;
 import android.location.Geocoder;
 import android.location.Location;
@@ -200,5 +201,7 @@ public class ShopActivity extends AppCompatActivity implements View.OnClickListe
         }
         Global_Variable.shop = shop;
         fireBaseUtill.AddShopToUser(Global_Variable.user,Global_Variable.shop);
+        Intent intent = new Intent(ShopActivity.this,  ManageShopActivity.class);
+        startActivity(intent);
     }
 }

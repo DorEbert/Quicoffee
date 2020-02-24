@@ -39,7 +39,11 @@ public class FireBaseUtill {
     }
     public void AddShopToUser(User user,Shop shop){
         DatabaseReference shopReference = databaseReference.getReference(Global_Variable.TABLE_SHOP);
-        String id = shopReference.push().getKey();
+        String id ;
+        if(shop.getID() == null)
+            id = shopReference.push().getKey();
+        else
+            id = shop.getID();
         shop.setID(id);
         shopReference.child(id).setValue(shop);
         user.addShop(id);

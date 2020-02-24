@@ -24,7 +24,13 @@
         <activity android:name=".OurDefaultActivity"></activity>
         <activity android:name=".FavoriteCoffeeActivity" />
         <activity android:name=".findShopsActivity" />
-        <activity android:name=".SignIn" />
+        <activity android:name=".SignIn">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
         <activity android:name=".MyCameraActivity" />
         <activity android:name=".AddShopMenuActivity" />
         <activity android:name=".ManageShopActivity" />
@@ -41,13 +47,6 @@
             android:value="@string/google_maps_key" />
 
         <activity android:name=".ShopActivity" />
-        <activity android:name=".LoginActivity">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
-        </activity>
     </application>
 
 </manifest>

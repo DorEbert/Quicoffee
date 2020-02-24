@@ -46,6 +46,7 @@ public class Global_Variable {
     public static final String COLUMN_EMAIL = "email";
     public static final String COLUMN_PASSWORD = "password";
     public static final String COLUMN_SHOPS = "shop";
+    public static final String COLUMN_NAME = "name";
     //  SHOP TABLE
     public static final String TABLE_SHOP = "Shops";
     public static final String DESCRIPTION = "Description";

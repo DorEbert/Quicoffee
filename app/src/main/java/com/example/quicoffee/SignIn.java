@@ -10,6 +10,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.widget.Toast;
 
+import com.example.quicoffee.Models.User;
 import com.firebase.ui.auth.AuthUI;
 import com.firebase.ui.auth.IdpResponse;
 import com.google.firebase.auth.FirebaseAuth;
@@ -23,7 +24,7 @@ public class SignIn extends AppCompatActivity {
     private static final int RC_SIGN_IN =0 ;
     private FirebaseAuth mAuth;
     public FirebaseUser user;
-
+    private FireBaseUtill fireBaseUtill = new FireBaseUtill();
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -56,7 +57,6 @@ public class SignIn extends AppCompatActivity {
 
         if (requestCode == RC_SIGN_IN) {
             IdpResponse response = IdpResponse.fromResultIntent(data);
-
             if (resultCode == RESULT_OK) {
                 // Successfully signed in
                 user = FirebaseAuth.getInstance().getCurrentUser();
