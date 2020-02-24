@@ -6,4 +6,5 @@
     <color name="colorBlack">#000000</color>
     <color name="textViewColor">#e6f3ff</color>
     <color name="buttonColor">#e6f3ff</color>
+    <color name="white"> #FBFCFB</color>
 </resources>

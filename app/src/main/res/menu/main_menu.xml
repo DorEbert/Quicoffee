@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <item android:id="@+id/findShops"
+        android:title="Find nearby Shops "
+        app:showAsAction="never">
+    </item>
+    <item android:id="@+id/favoirtCoffee"
+        android:title="My Favorit Coffee "
+        app:showAsAction="never">
+    </item>
+    <item android:id="@+id/myOrder"
+        android:title="My Orders"
+        app:showAsAction="never">
+    </item>
+    <item android:id="@+id/setUpAShop"
+        android:title="Set up a Shop "
+        app:showAsAction="never">
+    </item>
+    <item android:id="@+id/setting"
+        android:title="setting "
+        app:showAsAction="never">
+    </item>
+    <item android:id="@+id/logOut"
+        android:title="Log out "
+        app:showAsAction="never">
+    </item>
+
+
+
+</menu>

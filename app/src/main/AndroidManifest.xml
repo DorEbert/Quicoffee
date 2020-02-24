@@ -21,7 +21,7 @@
         android:roundIcon="@mipmap/logowithmap_round"
         android:supportsRtl="true"
 
-        android:theme="@style/AppTheme">
+        android:theme="@style/Theme.AppCompat.Light.NoActionBar">
         <activity android:name=".MyCameraActivity"></activity>
         <activity android:name=".AddShopMenuActivity" />
         <activity android:name=".ManageShopActivity" />
