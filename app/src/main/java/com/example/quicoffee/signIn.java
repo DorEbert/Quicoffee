@@ -73,10 +73,8 @@ public class signIn extends AppCompatActivity {
 
     public void findShops(){
         Intent myIntent = new Intent(signIn.this,
-                signIn.class);
+                findShopsActivity.class);
         myIntent.putExtra(Global_Variable.USER_FOR_MOVE_INTENT,this.user);
-        //        userName = getIntent().getStringExtra(Global_Variable.USER_NAME_FOR_MOVE_INTENT);
-        //        password=getIntent().getStringExtra(Global_Variable.PASSWORD_FOR_MOVE_INTENT);
         startActivity(myIntent);
     }
 

@@ -22,15 +22,16 @@ import androidx.appcompat.widget.Toolbar;
 
 import com.example.quicoffee.Models.User;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.ValueEventListener;
 
 public class LoginActivity extends AppCompatActivity implements View.OnClickListener {
     private User user;
+    public FirebaseUser userFromFirebase;
     private int usernameTextboxID;
     private int passwordTextboxID;
-    private int newAccountTextVieID;
     private int mainActivityWitdh;
     private int mainActivityHeight;
     private LinearLayout linearLayout;
@@ -54,6 +55,15 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         return true;
     }
 
+    public void findShops(){
+        Intent myIntent = new Intent(LoginActivity.this,
+                findShopsActivity.class);
+        myIntent.putExtra(Global_Variable.USER_FOR_MOVE_INTENT,this.userFromFirebase);
+        startActivity(myIntent);
+    }
+
+
+
     //TODO: init all the menu oprtions :)
     //findShops, favoirtCoffee, myOrder, setUpAShop, setting,logOut
     @Override
@@ -61,7 +71,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         // Handle item selection
         switch (item.getItemId()) {
             case R.id.findShops:
-                //findShops();
+                findShops();
                 return true;
             case R.id.favoirtCoffee:
              //   favoirtCoffee();
