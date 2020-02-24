@@ -2,6 +2,8 @@ package com.example.quicoffee;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.SpannableString;
+import android.text.style.UnderlineSpan;
 import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -12,6 +14,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -27,6 +30,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     private User user;
     private int usernameTextboxID;
     private int passwordTextboxID;
+    private int newAccountTextVieID;
     private int mainActivityWitdh;
     private int mainActivityHeight;
     private LinearLayout linearLayout;
@@ -85,7 +89,26 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         //Password label and textBox
         passwordTextboxID = addPairOfTextViewAndEditText(Global_Variable.PASSWORD,lparams);
         addLoginButton();
+        newAccountTextVieID = addNewAccount();
     }
+
+    private int addNewAccount(){
+        TextView textView = CreateTextView(Global_Variable.NEW_ACCOUNT);
+        textView.setPadding(50,10,50,10);
+        textView.setTextSize(14);
+        SpannableString content = new SpannableString(Global_Variable.NEW_ACCOUNT);
+        content.setSpan(new UnderlineSpan(), 0, content.length(), 0);
+        textView.setText(content);
+        linearLayout.addView(textView);
+        textView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Toast.makeText(LoginActivity.this , "cool!", Toast.LENGTH_SHORT).show();
+            }
+        });
+        return textView.getId();
+    }
+
     private int addPairOfTextViewAndEditText(String labelText,LinearLayout.LayoutParams lparams){
         TextView textView = CreateTextView(labelText);
         textView.setPadding(50,10,50,10);
@@ -114,8 +137,8 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                 ,0
                 ,mainActivityHeight/40);
         loginButton.setLayoutParams(loginButtonLayoutParams);
-        loginButton.setBackgroundResource(R.color.buttonColor);
-        loginButton.setTextColor(getApplication().getResources().getColor(R.color.colorBlack));
+        loginButton.setBackgroundResource(R.color.colorCoffee);
+        loginButton.setTextColor(getApplication().getResources().getColor(R.color.textViewColor));
         linearLayout.addView(loginButton);
     }
     private TextView CreateTextView(String labelText){

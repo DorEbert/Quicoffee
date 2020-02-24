@@ -2,6 +2,7 @@
 <resources>
     <color name="colorPrimary">#FF9800</color>
     <color name="colorPrimaryDark">#57001C</color>
+    <color name="colorCoffee">#E91E2F</color>
     <color name="colorAccent">#D81B60</color>
     <color name="colorBlack">#000000</color>
     <color name="textViewColor">#e6f3ff</color>
