@@ -22,7 +22,7 @@ public class Global_Variable {
     public static final String MISSING_SHOP_NAME_INFORMATION = "Enter shop name!" ;
     public static final String INVALID_LOCATION_IFORMATION = "Location must be by numbers";
     public static final String NEW_ACCOUNT = "didn't have an account yet? click here to sigh in";
-
+    public static final String USER_FOR_MOVE_INTENT = "User for intent";
 
     //Variable for adding/updating ingredient or product
     public static final String ACTION_TYPE = "action_type";

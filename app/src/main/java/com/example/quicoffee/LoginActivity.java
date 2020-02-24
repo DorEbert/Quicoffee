@@ -89,10 +89,10 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         //Password label and textBox
         passwordTextboxID = addPairOfTextViewAndEditText(Global_Variable.PASSWORD,lparams);
         addLoginButton();
-        newAccountTextVieID = addNewAccount();
+        addNewAccount();
     }
 
-    private int addNewAccount(){
+    private void addNewAccount(){
         TextView textView = CreateTextView(Global_Variable.NEW_ACCOUNT);
         textView.setPadding(50,10,50,10);
         textView.setTextSize(14);
@@ -104,9 +104,11 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
             @Override
             public void onClick(View v) {
                 Toast.makeText(LoginActivity.this , "cool!", Toast.LENGTH_SHORT).show();
+                Intent myIntent = new Intent(LoginActivity.this,
+                        signIn.class);
+                startActivity(myIntent);
             }
         });
-        return textView.getId();
     }
 
     private int addPairOfTextViewAndEditText(String labelText,LinearLayout.LayoutParams lparams){
