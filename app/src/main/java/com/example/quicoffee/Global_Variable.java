@@ -1,7 +1,7 @@
 package com.example.quicoffee;
 
 import com.example.quicoffee.Models.Shop;
-import com.example.quicoffee.Models.User;
+import com.firebase.ui.auth.data.model.User;
 
 public class Global_Variable {
     public static final String PASSWORD = "Password";
@@ -65,6 +65,7 @@ public class Global_Variable {
     public static final String SHOP_NAME_COLUMN = "shopName";
     public static final String LATITUDE_COLUMN = "latitude";
     public static final String LONGITUDE_COLUMN = "longitude";
+    public static final String USER_ID_COLUMN = "userID";
 
     public static int index = 0;
     // in order to save shared preferences-> used to login only once

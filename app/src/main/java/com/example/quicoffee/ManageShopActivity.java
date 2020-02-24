@@ -14,7 +14,7 @@ import android.widget.LinearLayout;
 import com.example.quicoffee.Models.IngredientAdapter;
 import com.example.quicoffee.Models.Product;
 import com.example.quicoffee.Models.ProductAdapter;
-import com.example.quicoffee.Models.User;
+import com.firebase.ui.auth.data.model.User;
 
 import java.util.ArrayList;
 

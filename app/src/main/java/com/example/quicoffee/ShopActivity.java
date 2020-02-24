@@ -2,6 +2,7 @@ package com.example.quicoffee;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.location.Address;
 import android.location.Geocoder;
@@ -19,7 +20,6 @@ import android.widget.Toast;
 
 import com.example.quicoffee.Models.Product;
 import com.example.quicoffee.Models.Shop;
-import com.example.quicoffee.Models.User;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -48,25 +48,26 @@ public class ShopActivity extends AppCompatActivity implements View.OnClickListe
         BuildActivityUI();
         CheckIfUserOwnedShop();
     }
+    @SuppressLint("RestrictedApi")
     private void CheckIfUserOwnedShop() {
-        if(Global_Variable.user.getShop()!= null
-        && Global_Variable.user.getShop()!= "") {
             fireBaseUtill.getRefrencesShops().
-                    orderByChild(Global_Variable.ID).equalTo(Global_Variable.user.getShop())
+                    orderByChild(Global_Variable.USER_ID_COLUMN).equalTo(Global_Variable.user.getEmail())
                     .addListenerForSingleValueEvent(new ValueEventListener() {
                         @Override
                         public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                             for (DataSnapshot usersSnapShot : dataSnapshot.getChildren()) {
                                 try {
+                                    String ID = usersSnapShot.child(Global_Variable.ID).getValue().toString();
                                     String shopName = usersSnapShot.child(Global_Variable.SHOP_NAME_COLUMN).getValue().toString();
+                                    String userID = usersSnapShot.child(Global_Variable.USER_ID_COLUMN).getValue().toString();
                                     double latitude = Double.parseDouble(usersSnapShot.child(Global_Variable.LATITUDE_COLUMN.toLowerCase()).getValue().toString());
                                     double longitude = Double.parseDouble(usersSnapShot.child(Global_Variable.LONGITUDE_COLUMN.toLowerCase()).getValue().toString());
                                     LatLng location = new LatLng(latitude, longitude);
                                     List<Product> products = (List<Product>) usersSnapShot.child(Global_Variable.COLUMN_EMAIL.toLowerCase()).getValue();
                                     List<String> ingredients = (List<String>) usersSnapShot.child(Global_Variable.COLUMN_PASSWORD.toLowerCase()).getValue();
                                     String description = usersSnapShot.child(Global_Variable.DESCRIPTION.toLowerCase()).getValue().toString();
-                                    Global_Variable.shop = new Shop(shopName, location, description);
-                                    Global_Variable.shop.setID(Global_Variable.user.getShop());
+                                    Global_Variable.shop = new Shop(shopName, location, description,userID);
+                                    Global_Variable.shop.setID(ID);
                                     Global_Variable.shop.setProducts(products);
                                     Global_Variable.shop.setIngredients(ingredients);
                                     break;
@@ -80,7 +81,6 @@ public class ShopActivity extends AppCompatActivity implements View.OnClickListe
                         public void onCancelled(@NonNull DatabaseError databaseError) {
                         }
                     });
-        }
     }
     private void FillExistingShop(Shop shop){
         ((EditText)findViewById(shopNameTextboxID)).setText(shop.getShopName());
@@ -136,8 +136,7 @@ public class ShopActivity extends AppCompatActivity implements View.OnClickListe
         //Set Button Settings
         Button shopButton = new Button(this);
         shopButton.setOnClickListener(this);
-        if(Global_Variable.user.getShop()!= null
-                && Global_Variable.user.getShop()!= "")
+        if(Global_Variable.shop!= null)
             shopButton.setText(Global_Variable.UPDATE_SHOP);
         else
         shopButton.setText(Global_Variable.ADD_SHOP);
@@ -192,15 +191,16 @@ public class ShopActivity extends AppCompatActivity implements View.OnClickListe
             return;
         }
         //todo -DO WE NEED VALIDATION AGAINST DUPLICATES?
-        Shop shop = new Shop(shopName,new LatLng(latitude,longitude),description);
-        if(Global_Variable.user.getShop()!= null
-                && Global_Variable.user.getShop()!= "") {
-            shop.setID(Global_Variable.user.getShop());
+        @SuppressLint("RestrictedApi")
+        Shop shop = new Shop(shopName,new LatLng(latitude,longitude),description,Global_Variable.user.getEmail());
+        if(Global_Variable.shop!= null)
+         {
+            shop.setID(Global_Variable.shop.getID());
             shop.setProducts(Global_Variable.shop.getProducts());
             shop.setIngredients(Global_Variable.shop.getIngredients());
         }
         Global_Variable.shop = shop;
-        fireBaseUtill.AddShopToUser(Global_Variable.user,Global_Variable.shop);
+        fireBaseUtill.AddShopToUser(Global_Variable.shop);
         Intent intent = new Intent(ShopActivity.this,  ManageShopActivity.class);
         startActivity(intent);
     }

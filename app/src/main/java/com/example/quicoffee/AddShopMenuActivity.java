@@ -26,7 +26,6 @@ import android.widget.Toast;
 
 import com.example.quicoffee.Models.Product;
 import com.example.quicoffee.Models.Shop;
-import com.example.quicoffee.Models.User;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -54,7 +53,6 @@ public class AddShopMenuActivity extends AppCompatActivity {
     private FireBaseUtill fireBaseUtill = new FireBaseUtill();
     private String productIDToUpdate;
     private String ingredientTextToUpdate;
-    private User user;
     private Shop shop;
     @Override
     protected void onCreate(Bundle savedInstanceState) {

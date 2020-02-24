@@ -7,7 +7,7 @@ import androidx.annotation.NonNull;
 
 import com.example.quicoffee.Models.Product;
 import com.example.quicoffee.Models.Shop;
-import com.example.quicoffee.Models.User;
+import com.firebase.ui.auth.data.model.User;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.database.DatabaseReference;
@@ -37,7 +37,7 @@ public class FireBaseUtill {
         }
         return databaseReference;
     }
-    public void AddShopToUser(User user,Shop shop){
+    public void AddShopToUser(Shop shop){
         DatabaseReference shopReference = databaseReference.getReference(Global_Variable.TABLE_SHOP);
         String id ;
         if(shop.getID() == null)
@@ -46,22 +46,12 @@ public class FireBaseUtill {
             id = shop.getID();
         shop.setID(id);
         shopReference.child(id).setValue(shop);
-        user.addShop(id);
-        DatabaseReference userReference = databaseReference.getReference(Global_Variable.TABLE_USERS);
-        userReference.child(user.getID()).setValue(user);
     }
-    public DatabaseReference getRefrencesUsers(){
-        return databaseReference.getReference(Global_Variable.TABLE_USERS);
-    }
+
     public DatabaseReference getRefrencesShops(){
         return databaseReference.getReference(Global_Variable.TABLE_SHOP);
     }
-    public void addUser(User user){
-        DatabaseReference userReference = databaseReference.getReference(Global_Variable.TABLE_USERS);
-        String id = userReference.push().getKey();
-        user.setID(id);
-        userReference.child(id).setValue(user);
-    }
+
     public void UpdateShopIngredient(String ShopID, List<String> ingredient) {
         databaseReference.getReference(Global_Variable.TABLE_USERS)
                 .child(ShopID)

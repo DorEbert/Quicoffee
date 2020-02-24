@@ -10,6 +10,7 @@ import java.util.List;
 public class Shop {
     private String ID;
     private String shopName;
+    private String userID;
     // location of the shop
     private double latitude;
     private double longitude;
@@ -21,7 +22,8 @@ public class Shop {
 
 
     private String description;
-    public Shop(String shopName,LatLng location,String description){
+    public Shop(String shopName,LatLng location,String description,String userID){
+        this.userID = userID;
         this.shopName = shopName;
         this.latitude = location.latitude;
         this.longitude = location.longitude;    
@@ -90,6 +92,9 @@ public class Shop {
         return description;
     }
 
+    public String getUserID() {
+        return userID;
+    }
 
     public void AddOrUpdateProduct(String productIDToUpdate, Product product) {
         if(productIDToUpdate != null) {
