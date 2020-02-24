@@ -18,7 +18,7 @@ import com.google.firebase.auth.FirebaseUser;
 import java.util.Arrays;
 import java.util.List;
 
-public class signIn extends AppCompatActivity {
+public class SignIn extends AppCompatActivity {
 
     private static final int RC_SIGN_IN =0 ;
     private FirebaseAuth mAuth;
@@ -62,7 +62,7 @@ public class signIn extends AppCompatActivity {
                 user = FirebaseAuth.getInstance().getCurrentUser();
                 findShops();
             } else {
-                Toast.makeText(signIn.this , "Sign in failed :/", Toast.LENGTH_SHORT).show();
+                Toast.makeText(SignIn.this , "Sign in failed :/", Toast.LENGTH_SHORT).show();
                 // Sign in failed. If response is null the user canceled the
                 // sign-in flow using the back button. Otherwise check
                 // response.getError().getErrorCode() and handle the error.
@@ -72,11 +72,19 @@ public class signIn extends AppCompatActivity {
     }
 
     public void findShops(){
-        Intent myIntent = new Intent(signIn.this,
+        Intent myIntent = new Intent(SignIn.this,
                 findShopsActivity.class);
         myIntent.putExtra(Global_Variable.USER_FOR_MOVE_INTENT,this.user);
         startActivity(myIntent);
     }
+
+    public void favoriteCoffee(){
+        Intent myIntent = new Intent(SignIn.this,
+                FavoriteCoffeeActivity.class);
+        myIntent.putExtra(Global_Variable.USER_FOR_MOVE_INTENT,this.user);
+        startActivity(myIntent);
+    }
+
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -92,10 +100,10 @@ public class signIn extends AppCompatActivity {
         // Handle item selection
         switch (item.getItemId()) {
             case R.id.findShops:
-             //   findShops();
+                findShops();
                 return true;
-            case R.id.favoirtCoffee:
-                //   favoirtCoffee();
+            case R.id.favoriteCoffee:
+                favoriteCoffee();
                 return true;
             case R.id.myOrder:
                 //     showMyOrders();

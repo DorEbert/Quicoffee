@@ -4,14 +4,13 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".SignIn">
+    tools:context=".FavoriteCoffeeActivity">
     <LinearLayout
         android:id="@+id/linear_layout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        tools:context=".SignIn"
+        tools:context=".findShopsActivity"
         android:orientation="vertical">
-
         <androidx.appcompat.widget.Toolbar
             android:id="@+id/toolbar"
             android:layout_width="match_parent"
@@ -27,5 +26,8 @@
                 android:background="@mipmap/logowithmap_foreground">
             </ImageView>
         </androidx.appcompat.widget.Toolbar>
+
+
+
     </LinearLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>

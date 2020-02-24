@@ -6,8 +6,8 @@
         android:title="Find nearby Shops "
         app:showAsAction="never">
     </item>
-    <item android:id="@+id/favoirtCoffee"
-        android:title="My Favorit Coffee "
+    <item android:id="@+id/favoriteCoffee"
+        android:title="My Favorite Coffee "
         app:showAsAction="never">
     </item>
     <item android:id="@+id/myOrder"

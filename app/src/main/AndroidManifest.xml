@@ -21,8 +21,10 @@
         android:roundIcon="@mipmap/logowithmap_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.AppCompat.Light.NoActionBar">
-        <activity android:name=".findShopsActivity"></activity>
-        <activity android:name=".signIn" />
+        <activity android:name=".OurDefaultActivity"></activity>
+        <activity android:name=".FavoriteCoffeeActivity" />
+        <activity android:name=".findShopsActivity" />
+        <activity android:name=".SignIn" />
         <activity android:name=".MyCameraActivity" />
         <activity android:name=".AddShopMenuActivity" />
         <activity android:name=".ManageShopActivity" />

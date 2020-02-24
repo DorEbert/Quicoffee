@@ -75,4 +75,19 @@ public class Global_Variable {
     public static int GetID() {
         return index++;
     }
+
+
+    //Variable for adding/updating favorite coffee:
+    public static final String SIZE_OF_CUP = "Size of coffee";
+    public static final String MILK = "Types Of milk";
+    public static final String ESPRESSO = "Amount Of Espresso";
+    public static final String FOAM = "with foam?";
+
+    public static final String[] SIZE_OF_COFFEE = new String[]{"Small", "Medium", "Large"};
+    public static final String[] TYPES_OF_MILK = new String[]{"Regular milk", "soy milk", "almond milk", "low fat milk"};
+    public static final String[] AMOUNT_OF_ESPRESSO = new String[]{"Short espresso" ,"Long espresso", "Double short espresso" ,
+            "Double long espresso", "black coffee" , "Instant Coffee", "cappuccino"};
+    public static final String[] WITH_FOAM = new String[]{"Yes", "No"};
+    public static final String SAVE_FAVORITE_COFFEE = "Save";
+
 }

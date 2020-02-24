@@ -62,7 +62,12 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         startActivity(myIntent);
     }
 
-
+    public void favoriteCoffee(){
+        Intent myIntent = new Intent(LoginActivity.this,
+                FavoriteCoffeeActivity.class);
+        myIntent.putExtra(Global_Variable.USER_FOR_MOVE_INTENT,this.userFromFirebase);
+        startActivity(myIntent);
+    }
 
     //TODO: init all the menu oprtions :)
     //findShops, favoirtCoffee, myOrder, setUpAShop, setting,logOut
@@ -73,8 +78,8 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
             case R.id.findShops:
                 findShops();
                 return true;
-            case R.id.favoirtCoffee:
-             //   favoirtCoffee();
+            case R.id.favoriteCoffee:
+                favoriteCoffee();
                 return true;
             case R.id.myOrder:
            //     showMyOrders();
@@ -115,7 +120,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
             public void onClick(View v) {
                 Toast.makeText(LoginActivity.this , "cool!", Toast.LENGTH_SHORT).show();
                 Intent myIntent = new Intent(LoginActivity.this,
-                        signIn.class);
+                        SignIn.class);
                 startActivity(myIntent);
             }
         });
