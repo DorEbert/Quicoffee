@@ -148,8 +148,8 @@ public class ShopActivity extends AppCompatActivity implements View.OnClickListe
                 ,0
                 ,mainActivityHeight/40);
         shopButton.setLayoutParams(loginButtonLayoutParams);
-        shopButton.setBackgroundResource(R.color.buttonColor);
-        shopButton.setTextColor(getApplication().getResources().getColor(R.color.colorBlack));
+        shopButton.setBackgroundResource(R.color.colorCoffee);
+        shopButton.setTextColor(getApplication().getResources().getColor(R.color.textViewColor));
         linearLayout.addView(shopButton);
     }
     //Get Full Address From Coordinates

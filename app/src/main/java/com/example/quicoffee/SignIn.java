@@ -5,6 +5,7 @@ import androidx.appcompat.widget.Toolbar;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -59,6 +60,8 @@ public class SignIn extends AppCompatActivity {
             if (resultCode == RESULT_OK) {
                 // Successfully signed in
                 user = FirebaseAuth.getInstance().getCurrentUser();
+                //user = mAuth.getCurrentUser();
+               // Log.e("user is ", user.getEmail());
                 findShops();
             } else {
                 Toast.makeText(SignIn.this , "Sign in failed :/", Toast.LENGTH_SHORT).show();
@@ -77,10 +80,11 @@ public class SignIn extends AppCompatActivity {
         startActivity(myIntent);
     }
 
+
     public void favoriteCoffee(){
         Intent myIntent = new Intent(SignIn.this,
                 FavoriteCoffeeActivity.class);
-        myIntent.putExtra(Global_Variable.USER_FOR_MOVE_INTENT,this.user);
+        myIntent.putExtra(Global_Variable.USER_FOR_MOVE_INTENT, this.user);
         startActivity(myIntent);
     }
 

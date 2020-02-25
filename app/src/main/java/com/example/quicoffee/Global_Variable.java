@@ -22,7 +22,7 @@ public class Global_Variable {
     public static final String MISSING_SHOP_NAME_INFORMATION = "Enter shop name!" ;
     public static final String INVALID_LOCATION_IFORMATION = "Location must be by numbers";
     public static final String NEW_ACCOUNT = "didn't have an account yet? click here to sigh in";
-    public static final String USER_FOR_MOVE_INTENT = "User for intent";
+    public static final String USER_FOR_MOVE_INTENT = "FirebaseUser";
     public static final String SHOPS_THAT_CLOSE_TO_YOU = "Shops nearby you:";
 
     //Variable for adding/updating ingredient or product
@@ -91,5 +91,8 @@ public class Global_Variable {
             "Double long espresso", "black coffee" , "Instant Coffee", "cappuccino"};
     public static final String[] WITH_FOAM = new String[]{"Yes", "No"};
     public static final String SAVE_FAVORITE_COFFEE = "Save";
+
+
+    public static final String FAVORITE_COFFEE_TABLE = "favoriteCoffeeTable";
 
 }
