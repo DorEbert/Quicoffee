@@ -66,6 +66,7 @@ public class Global_Variable {
     public static final String LATITUDE_COLUMN = "latitude";
     public static final String LONGITUDE_COLUMN = "longitude";
     public static final String USER_ID_COLUMN = "userID";
+    public static final String SHOP_INTENT = "MyShop";
 
     public static int index = 0;
     // in order to save shared preferences-> used to login only once

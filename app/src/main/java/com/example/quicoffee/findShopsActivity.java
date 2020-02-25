@@ -58,6 +58,7 @@ public class findShopsActivity extends AppCompatActivity {
                 //     showMyOrders();
                 return true;
             case R.id.setUpAShop:
+                AddShopActivity();
                 return true;
             case R.id.setting:
                 return true;
@@ -95,6 +96,12 @@ public class findShopsActivity extends AppCompatActivity {
     public void favoriteCoffee(){
         Intent myIntent = new Intent(findShopsActivity.this,
                 FavoriteCoffeeActivity.class);
+        myIntent.putExtra(Global_Variable.USER_FOR_MOVE_INTENT,this.user);
+        startActivity(myIntent);
+    }
+    public void AddShopActivity(){
+        Intent myIntent = new Intent(findShopsActivity.this,
+                ShopActivity.class);
         myIntent.putExtra(Global_Variable.USER_FOR_MOVE_INTENT,this.user);
         startActivity(myIntent);
     }

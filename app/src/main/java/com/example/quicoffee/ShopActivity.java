@@ -21,6 +21,7 @@ import android.widget.Toast;
 import com.example.quicoffee.Models.Product;
 import com.example.quicoffee.Models.Shop;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.ValueEventListener;
@@ -39,7 +40,8 @@ public class ShopActivity extends AppCompatActivity implements View.OnClickListe
     private int longitudeTextboxID;
     private int descriptionTextboxID;
     private FireBaseUtill fireBaseUtill = new FireBaseUtill();
-
+    private FirebaseUser user;
+    private Shop shop;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -51,7 +53,7 @@ public class ShopActivity extends AppCompatActivity implements View.OnClickListe
     @SuppressLint("RestrictedApi")
     private void CheckIfUserOwnedShop() {
             fireBaseUtill.getRefrencesShops().
-                    orderByChild(Global_Variable.USER_ID_COLUMN).equalTo(Global_Variable.user.getEmail())
+                    orderByChild(Global_Variable.USER_ID_COLUMN).equalTo(user.getEmail())
                     .addListenerForSingleValueEvent(new ValueEventListener() {
                         @Override
                         public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
@@ -66,16 +68,16 @@ public class ShopActivity extends AppCompatActivity implements View.OnClickListe
                                     List<Product> products = (List<Product>) usersSnapShot.child(Global_Variable.COLUMN_EMAIL.toLowerCase()).getValue();
                                     List<String> ingredients = (List<String>) usersSnapShot.child(Global_Variable.COLUMN_PASSWORD.toLowerCase()).getValue();
                                     String description = usersSnapShot.child(Global_Variable.DESCRIPTION.toLowerCase()).getValue().toString();
-                                    Global_Variable.shop = new Shop(shopName, location, description,userID);
-                                    Global_Variable.shop.setID(ID);
-                                    Global_Variable.shop.setProducts(products);
-                                    Global_Variable.shop.setIngredients(ingredients);
+                                    shop = new Shop(shopName, location, description,userID);
+                                    shop.setID(ID);
+                                    shop.setProducts(products);
+                                    shop.setIngredients(ingredients);
+                                    FillExistingShop(shop);
                                     break;
                                 } catch (Exception e) {
                                     e.getMessage();
                                 }
                             }
-                            FillExistingShop(Global_Variable.shop);
                         }
                         @Override
                         public void onCancelled(@NonNull DatabaseError databaseError) {
@@ -114,6 +116,7 @@ public class ShopActivity extends AppCompatActivity implements View.OnClickListe
         mainActivityWitdh = getResources().getDisplayMetrics().widthPixels;
         mainActivityHeight = getResources().getDisplayMetrics().heightPixels;
         linearLayout = findViewById(R.id.linear_layout);
+        user = getIntent().getParcelableExtra(Global_Variable.USER_FOR_MOVE_INTENT);
     }
     private TextView CreateTextView(String labelText){
         //Set Label Setting
@@ -136,10 +139,10 @@ public class ShopActivity extends AppCompatActivity implements View.OnClickListe
         //Set Button Settings
         Button shopButton = new Button(this);
         shopButton.setOnClickListener(this);
-        if(Global_Variable.shop!= null)
+        if(this.shop != null)
             shopButton.setText(Global_Variable.UPDATE_SHOP);
         else
-        shopButton.setText(Global_Variable.ADD_SHOP);
+            shopButton.setText(Global_Variable.ADD_SHOP);
         LinearLayout.LayoutParams loginButtonLayoutParams =
                 new LinearLayout.LayoutParams((int)(mainActivityWitdh *0.5),mainActivityHeight/20);
         loginButtonLayoutParams.gravity = Gravity.CENTER;
@@ -191,17 +194,17 @@ public class ShopActivity extends AppCompatActivity implements View.OnClickListe
             return;
         }
         //todo -DO WE NEED VALIDATION AGAINST DUPLICATES?
-        @SuppressLint("RestrictedApi")
-        Shop shop = new Shop(shopName,new LatLng(latitude,longitude),description,Global_Variable.user.getEmail());
-        if(Global_Variable.shop!= null)
+        Shop shop = new Shop(shopName,new LatLng(latitude,longitude),description,this.user.getEmail());
+        if(this.shop!= null)
          {
-            shop.setID(Global_Variable.shop.getID());
-            shop.setProducts(Global_Variable.shop.getProducts());
-            shop.setIngredients(Global_Variable.shop.getIngredients());
-        }
-        Global_Variable.shop = shop;
-        fireBaseUtill.AddShopToUser(Global_Variable.shop);
+            shop.setID(this.shop.getID());
+            shop.setProducts(this.shop.getProducts());
+            shop.setIngredients(this.shop.getIngredients());
+         }
+        this.shop = shop;
+        fireBaseUtill.AddShopToUser(this.shop);
         Intent intent = new Intent(ShopActivity.this,  ManageShopActivity.class);
+        intent.putExtra(Global_Variable.SHOP_INTENT,shop);
         startActivity(intent);
     }
 }

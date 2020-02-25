@@ -1,13 +1,15 @@
 package com.example.quicoffee.Models;
 
 import android.location.Location;
+import android.os.Parcel;
+import android.os.Parcelable;
 
 import com.google.android.gms.maps.model.LatLng;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class Shop {
+public class Shop implements Parcelable {
     private String ID;
     private String shopName;
     private String userID;
@@ -131,4 +133,19 @@ public class Shop {
         return longitude;
     }
 
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeString(ID);
+        dest.writeString(shopName);
+        dest.writeString(userID);
+        dest.writeDouble(latitude);
+        dest.writeDouble(longitude);
+        dest.writeList(products);
+        dest.writeList(ingredients);
+    }
 }

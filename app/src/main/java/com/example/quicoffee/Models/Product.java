@@ -9,7 +9,7 @@ public class Product implements Parcelable {
     private String productName;
     private String description;
     private double price;
-    private ImageView image;
+    private String image;
 
     public Product(String productName,double price,String description){
         this.productName = productName;
@@ -78,12 +78,13 @@ public class Product implements Parcelable {
         dest.writeString(this.productName);
         dest.writeString(this.description);
         dest.writeDouble(price);
+        dest.writeString(image);
     }
 
-    public void setImage(ImageView image) {
+    public void setImage(String image) {
         this.image = image;
     }
-    public ImageView getImage(){
+    public String getImage(){
         return image;
     }
 }

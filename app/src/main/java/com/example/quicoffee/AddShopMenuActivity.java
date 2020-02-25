@@ -95,6 +95,7 @@ public class AddShopMenuActivity extends AppCompatActivity {
         mainActivityHeight = getResources().getDisplayMetrics().heightPixels;
         linearLayout = findViewById(R.id.linear_layout);
         image = new ImageView(this);
+        shop = getIntent().getParcelableExtra(Global_Variable.SHOP_INTENT);
     }
     private void BuildAddProductActivityUI(){
         LinearLayout.LayoutParams lparams = new LinearLayout.LayoutParams((int)(mainActivityWitdh *0.9),mainActivityHeight/20);
@@ -149,9 +150,9 @@ public class AddShopMenuActivity extends AppCompatActivity {
                     }
                     uploadImage(uri);
                     image.setImageBitmap(bitmap);
-                    product.setImage(image);
+                    //product.setImage(image);
                 }
-                if(ingredientTextToUpdate != null){
+                if(productIDToUpdate != null){
                     shop.AddOrUpdateProduct(productIDToUpdate,product);
                 }else{
                     shop.AddOrUpdateProduct(null,product);
