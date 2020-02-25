@@ -129,8 +129,8 @@ public class FavoriteCoffeeActivity extends AppCompatActivity  {
             favoriteCoffeeRef.child(id).setValue(someFavoriteCoffee);
         }
         else{ // update:
-         //   dataSnapshot.getRef().child(indexUserExist).setValue(favoriteCoffee);
-            Log.e("Dorelllllllllllllllll", indexUserExist);
+            Log.e("indexUserExist ","indexUserExist : "+ indexUserExist);
+            dataSnapshot.getRef().child(indexUserExist).setValue(favoriteCoffee);
         }
 
     }
@@ -142,8 +142,8 @@ public class FavoriteCoffeeActivity extends AppCompatActivity  {
         }
         for (DataSnapshot postSnapshot: dataSnapshot.getChildren()) {
             someFavoriteCoffee = postSnapshot.getValue(FavoriteCoffee.class);
-            Log.e("dorel!!!!!!!!!!!!!!!!!", "checkIfUserExist: "+someFavoriteCoffee.getUserID());
-            Log.e("dorel!!!!!!!!!!!!!!!!!", "checkIfUserExist: "+user.getUid());
+            Log.e("checkIfUserExist", "checkIfUserExist: someFavoriteCoffee.getUserID()"+someFavoriteCoffee.getUserID());
+            Log.e("checkIfUserExist", "checkIfUserExist: user.getUid()"+user.getUid());
             if (someFavoriteCoffee.getUserID().equals(user.getUid())) {
                 return postSnapshot.getKey();
             }
