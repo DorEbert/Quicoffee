@@ -94,5 +94,5 @@ public class Global_Variable {
 
 
     public static final String FAVORITE_COFFEE_TABLE = "favoriteCoffeeTable";
-
+    public static final String USER_NOT_EXIST = "none";
 }

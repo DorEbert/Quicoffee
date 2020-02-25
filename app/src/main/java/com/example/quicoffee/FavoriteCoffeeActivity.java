@@ -1,5 +1,6 @@
 package com.example.quicoffee;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
@@ -17,15 +18,14 @@ import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.example.quicoffee.Models.FavoriteCoffee;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
-
-import java.util.List;
+import com.google.firebase.database.ValueEventListener;
 
 
 public class FavoriteCoffeeActivity extends AppCompatActivity  {
@@ -40,9 +40,8 @@ public class FavoriteCoffeeActivity extends AppCompatActivity  {
     public DatabaseReference favoriteCoffeeRef;
     private FavoriteCoffee someFavoriteCoffee;
     private String id;
+    public ValueEventListener saveListener;
 
-
-//TODO: singelton Favorite coffee
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -68,7 +67,7 @@ public class FavoriteCoffeeActivity extends AppCompatActivity  {
     public void onStop() {
         super.onStop();
         //DATA BASE:
-        //favoriteCoffeeRef.removeEventListener(saveListener);
+     //   favoriteCoffeeRef.removeEventListener(saveListener);
     }
 
     @Override
@@ -96,43 +95,63 @@ public class FavoriteCoffeeActivity extends AppCompatActivity  {
         botton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //TODO: save
-                    writeFavoriteCoffee(favoriteCoffee,user);
-             //   DatabaseReference ref=FirebaseDatabase.getInstance().getReference();
-               // ref.child("favoriteCoffeeTable").removeValue();
+                saveFavoriteCoffeeToDB(favoriteCoffee,user);
+                  //  writeFavoriteCoffee(favoriteCoffee,user);
+             //delete all the table:
+             //DatabaseReference ref=FirebaseDatabase.getInstance().getReference();
+             //ref.child("favoriteCoffeeTable").removeValue();
             }
         });
         linearLayout.addView(botton);
     }
 
-    public void saveNewFavoriteCoffee(DataSnapshot dataSnapshot){
-        //if (dataSnapshot.getChildrenCount() > 0 ){
-          //  if (){ //if the user exist
-         //   updateFavoriteCoffee(favoriteCoffee,user,dataSnapshot);
-         //   }
-           // else{
-         //   writeFavoriteCoffee(favoriteCoffee,user);
-         //   }
-        //    writeFavoriteCoffee(favoriteCoffee,user);
-     //   }
-     //   else{
-            writeFavoriteCoffee(favoriteCoffee,user);
-      //  }
-        }
+    public void saveFavoriteCoffeeToDB(final FavoriteCoffee favoriteCoffee, final FirebaseUser user){
+        saveListener = new ValueEventListener(){
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                writeFavoriteCoffee(favoriteCoffee,user,dataSnapshot);
+            }
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
 
-
-    ///DATA BASE //
-    private void writeFavoriteCoffee(FavoriteCoffee favoriteCoffee, FirebaseUser user) {
-        id = favoriteCoffeeRef.push().getKey();
-        someFavoriteCoffee = new FavoriteCoffee(favoriteCoffee.getSizeOfCup(),favoriteCoffee.getTypeOfMilk(),
-                favoriteCoffee.getAmountOfEspresso(),favoriteCoffee.getWith_Form(),user.getUid());
-        favoriteCoffeeRef.child(id).setValue(someFavoriteCoffee);
+            }
+        };
+        favoriteCoffeeRef.addValueEventListener(saveListener);
     }
 
-   // private void updateFavoriteCoffee(FavoriteCoffee favoriteCoffee,FirebaseUser user ,DataSnapshot dataSnapshot){
-      //  dataSnapshot.getRef().child(userId).child("userLocation").setValue(location);
-    //    dataSnapshot.getRef().child(userId).child("points").setValue(points);
- //   }
+    ///DATA BASE //
+    private void writeFavoriteCoffee(FavoriteCoffee favoriteCoffee, FirebaseUser user, DataSnapshot dataSnapshot) {
+        String indexUserExist = checkIfUserExist(dataSnapshot);
+        someFavoriteCoffee = new FavoriteCoffee(favoriteCoffee.getSizeOfCup(),favoriteCoffee.getTypeOfMilk(),
+                favoriteCoffee.getAmountOfEspresso(),favoriteCoffee.getWith_Form(),user.getUid());
+        if(indexUserExist.equals(Global_Variable.USER_NOT_EXIST)){
+            id = favoriteCoffeeRef.push().getKey();
+            favoriteCoffeeRef.child(id).setValue(someFavoriteCoffee);
+        }
+        else{ // update:
+         //   dataSnapshot.getRef().child(indexUserExist).setValue(favoriteCoffee);
+            Log.e("Dorelllllllllllllllll", indexUserExist);
+        }
+
+    }
+
+
+    public String checkIfUserExist(DataSnapshot dataSnapshot) {
+        if (dataSnapshot.getChildrenCount() == 0 ){
+            return Global_Variable.USER_NOT_EXIST;
+        }
+        for (DataSnapshot postSnapshot: dataSnapshot.getChildren()) {
+            someFavoriteCoffee = postSnapshot.getValue(FavoriteCoffee.class);
+            Log.e("dorel!!!!!!!!!!!!!!!!!", "checkIfUserExist: "+someFavoriteCoffee.getUserID());
+            Log.e("dorel!!!!!!!!!!!!!!!!!", "checkIfUserExist: "+user.getUid());
+            if (someFavoriteCoffee.getUserID().equals(user.getUid())) {
+                return postSnapshot.getKey();
+            }
+        }
+        return Global_Variable.USER_NOT_EXIST;
+    }
+
+
 
 
     private void initAttributesForCoffee(final String attribute , String[] items){
@@ -170,7 +189,6 @@ public class FavoriteCoffeeActivity extends AppCompatActivity  {
         linearLayout.addView(spinner);
     }
 
-
     private TextView CreateTextView(String labelText){
         //Set Label Setting
         TextView textView = new TextView(this);
@@ -183,8 +201,6 @@ public class FavoriteCoffeeActivity extends AppCompatActivity  {
         return textView;
     }
 
-
-
     private void InititalVariablesOfLocalActivity(){
         mainActivityWitdh = getResources().getDisplayMetrics().widthPixels;
         mainActivityHeight = getResources().getDisplayMetrics().heightPixels;
@@ -193,14 +209,12 @@ public class FavoriteCoffeeActivity extends AppCompatActivity  {
         someFavoriteCoffee = new FavoriteCoffee();
     }
 
-
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.main_menu, menu);
         return true;
     }
-
 
     //TODO: init all the menu oprtions :)
     //findShops, favoirtCoffee, myOrder, setUpAShop, setting,logOut
