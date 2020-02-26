@@ -20,6 +20,7 @@ import android.widget.Toast;
 
 import com.example.quicoffee.Models.Product;
 import com.example.quicoffee.Models.Shop;
+import com.example.quicoffee.Models.UserLocation;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
@@ -42,10 +43,25 @@ public class ShopActivity extends AppCompatActivity implements View.OnClickListe
     private FireBaseUtill fireBaseUtill = new FireBaseUtill();
     private FirebaseUser user;
     private Shop shop;
+
+    //Location user sign in:
+    public UserLocation userLocation;
+    double x = 3;
+    double y = 3;
+    public Bundle b;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_shop);
+
+        //get location user from other activity:
+        b = new Bundle();
+        b = getIntent().getExtras();
+        x = b.getDouble(Global_Variable.USER_LOCATION_MOVE_INTENT_LONGITUDE);
+        y = b.getDouble(Global_Variable.USER_LOCATION_MOVE_INTENT_LATITUDE);
+        userLocation = new UserLocation(x,y);
+
         InititalVariablesOfLocalActivity();
         BuildActivityUI();
         CheckIfUserOwnedShop();

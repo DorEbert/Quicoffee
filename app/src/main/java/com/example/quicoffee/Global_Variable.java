@@ -22,7 +22,6 @@ public class Global_Variable {
     public static final String MISSING_SHOP_NAME_INFORMATION = "Enter shop name!" ;
     public static final String INVALID_LOCATION_IFORMATION = "Location must be by numbers";
     public static final String NEW_ACCOUNT = "didn't have an account yet? click here to sigh in";
-    public static final String USER_FOR_MOVE_INTENT = "FirebaseUser";
     public static final String SHOPS_THAT_CLOSE_TO_YOU = "Shops nearby you:";
 
     //Variable for adding/updating ingredient or product
@@ -91,9 +90,14 @@ public class Global_Variable {
     public static final String[] AMOUNT_OF_ESPRESSO = new String[]{"Short espresso" ,"Long espresso", "Double short espresso" ,
             "Double long espresso", "black coffee" , "Instant Coffee", "cappuccino"};
     public static final String[] WITH_FOAM = new String[]{"Yes", "No"};
-    public static final String SAVE_FAVORITE_COFFEE = "Save";
-
-
+    public static final String SAVE_FAVORITE_COFFEE_TEXT = "Save";
     public static final String FAVORITE_COFFEE_TABLE = "favoriteCoffeeTable";
     public static final String USER_NOT_EXIST = "none";
+
+
+    //for intent between activity to activity:
+    public static final String USER_FOR_MOVE_INTENT = "FirebaseUser";
+    public static final String USER_LOCATION_MOVE_INTENT_LATITUDE = "Latitude";
+    public static final String USER_LOCATION_MOVE_INTENT_LONGITUDE = "Longitude";
+
 }

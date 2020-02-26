@@ -10,8 +10,6 @@ public class FavoriteCoffee {
     public String userID;
 
 
-
-
     public FavoriteCoffee(String sizeOfCup, String typeOfMile, String amountOfEspresso, String with_Form, String userID) {
         this.sizeOfCup = sizeOfCup;
         this.typeOfMilk = typeOfMile;
@@ -22,6 +20,7 @@ public class FavoriteCoffee {
 
     public FavoriteCoffee() {
     }
+
     public String getSizeOfCup() {
         return sizeOfCup;
     }
