@@ -33,6 +33,10 @@ public class Shop implements Parcelable {
         products = new ArrayList<>();
         ingredients = new ArrayList<>();
     }
+
+    public Shop() {
+    }
+
     public void UpdateLocation(LatLng  location){
         this.latitude = location.latitude;
         this.longitude = location.longitude;

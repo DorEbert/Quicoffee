@@ -1,6 +1,7 @@
 package com.example.quicoffee;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 
 import android.annotation.SuppressLint;
 import android.content.Intent;
@@ -10,6 +11,9 @@ import android.location.Location;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.Gravity;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.inputmethod.EditorInfo;
 import android.widget.Button;
@@ -55,6 +59,8 @@ public class ShopActivity extends AppCompatActivity implements View.OnClickListe
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_shop);
 
+        Toolbar myToolbar = (Toolbar) findViewById(R.id.toolbar);
+        setSupportActionBar(myToolbar);
         //get location user from other activity:
         b = new Bundle();
         b = getIntent().getExtras();
@@ -147,7 +153,7 @@ public class ShopActivity extends AppCompatActivity implements View.OnClickListe
         EditText editText = new EditText(this);
         editText.setMaxLines(1);
         editText.setImeOptions(EditorInfo.IME_ACTION_NEXT);
-        editText.setBackgroundColor(getApplication().getResources().getColor(R.color.textViewColor));
+        editText.setBackgroundColor(getApplication().getResources().getColor(R.color.colorforAttributes));
         editText.setLayoutParams(lparams);
         return editText;
     }
@@ -223,4 +229,69 @@ public class ShopActivity extends AppCompatActivity implements View.OnClickListe
         intent.putExtra(Global_Variable.SHOP_INTENT,shop);
         startActivity(intent);
     }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.main_menu, menu);
+        return true;
+    }
+
+    //TODO: init all the menu oprtions :)
+    //findShops, favoirtCoffee, myOrder, setUpAShop, setting,logOut
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        // Handle item selection
+        switch (item.getItemId()) {
+            case R.id.findShops:
+                findShops();
+                return true;
+            case R.id.favoriteCoffee:
+                favoriteCoffee();
+                return true;
+            case R.id.myOrder:
+                //     showMyOrders();
+                return true;
+            case R.id.setUpAShop:
+                AddShopActivity();
+                return true;
+            case R.id.setting:
+                return true;
+            case R.id.logOut:
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
+    }
+
+    public void findShops(){
+        Intent myIntent = new Intent(ShopActivity.this,
+                findShopsActivity.class);
+        myIntent.putExtra(Global_Variable.USER_FOR_MOVE_INTENT,this.user);
+        b.putDouble(Global_Variable.USER_LOCATION_MOVE_INTENT_LONGITUDE, this.userLocation.getX());
+        b.putDouble(Global_Variable.USER_LOCATION_MOVE_INTENT_LATITUDE, this.userLocation.getY());
+        myIntent.putExtras(b);
+        startActivity(myIntent);
+    }
+
+    public void AddShopActivity(){
+        Intent myIntent = new Intent(ShopActivity.this,
+                ShopActivity.class);
+        b.putDouble(Global_Variable.USER_LOCATION_MOVE_INTENT_LONGITUDE, this.userLocation.getX());
+        b.putDouble(Global_Variable.USER_LOCATION_MOVE_INTENT_LATITUDE, this.userLocation.getY());
+        myIntent.putExtras(b);
+        myIntent.putExtra(Global_Variable.USER_FOR_MOVE_INTENT,this.user);
+        startActivity(myIntent);
+    }
+    public void favoriteCoffee(){
+        Intent myIntent = new Intent(ShopActivity.this,
+                FavoriteCoffeeActivity.class);
+        myIntent.putExtra(Global_Variable.USER_FOR_MOVE_INTENT,this.user);
+        b.putDouble(Global_Variable.USER_LOCATION_MOVE_INTENT_LONGITUDE, this.userLocation.getX());
+        b.putDouble(Global_Variable.USER_LOCATION_MOVE_INTENT_LATITUDE, this.userLocation.getY());
+        myIntent.putExtras(b);
+        startActivity(myIntent);
+    }
+
+
 }

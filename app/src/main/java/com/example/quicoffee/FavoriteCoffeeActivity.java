@@ -56,16 +56,16 @@ public class FavoriteCoffeeActivity extends AppCompatActivity  {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_favorite_coffee);
         Toolbar myToolbar = (Toolbar) findViewById(R.id.toolbar);
+        setSupportActionBar(myToolbar);
 
+        user = (FirebaseUser) getIntent().getParcelableExtra(Global_Variable.USER_FOR_MOVE_INTENT);
         //get location user from other activity:
         b = new Bundle();
-        user = (FirebaseUser) getIntent().getParcelableExtra(Global_Variable.USER_FOR_MOVE_INTENT);
         b = getIntent().getExtras();
         x = b.getDouble(Global_Variable.USER_LOCATION_MOVE_INTENT_LONGITUDE);
         y = b.getDouble(Global_Variable.USER_LOCATION_MOVE_INTENT_LATITUDE);
         userLocation = new UserLocation(x,y);
 
-        setSupportActionBar(myToolbar);
         inititalVariablesOfLocalActivity();
         initAttributesForCoffee(Global_Variable.SIZE_OF_CUP, Global_Variable.SIZE_OF_COFFEE);
         initAttributesForCoffee(Global_Variable.MILK, Global_Variable.TYPES_OF_MILK);
@@ -75,6 +75,7 @@ public class FavoriteCoffeeActivity extends AppCompatActivity  {
 
         mDatabase = FirebaseDatabase.getInstance();
         favoriteCoffeeRef = mDatabase.getReference(Global_Variable.FAVORITE_COFFEE_TABLE);
+
     }
 
 
@@ -82,7 +83,12 @@ public class FavoriteCoffeeActivity extends AppCompatActivity  {
     public void onStop() {
         super.onStop();
         //DATA BASE:
-        favoriteCoffeeRef.removeEventListener(saveListener);
+        if(saveListener != null ){
+            favoriteCoffeeRef.removeEventListener(saveListener);
+            //saveListener init only if the user click on "save"
+            //so we have to check this :)
+        }
+
     }
 
 
@@ -274,6 +280,9 @@ public class FavoriteCoffeeActivity extends AppCompatActivity  {
         Intent myIntent = new Intent(FavoriteCoffeeActivity.this,
                 findShopsActivity.class);
         myIntent.putExtra(Global_Variable.USER_FOR_MOVE_INTENT,this.user);
+        b.putDouble(Global_Variable.USER_LOCATION_MOVE_INTENT_LONGITUDE, this.userLocation.getX());
+        b.putDouble(Global_Variable.USER_LOCATION_MOVE_INTENT_LATITUDE, this.userLocation.getY());
+        myIntent.putExtras(b);
         startActivity(myIntent);
     }
 
@@ -290,6 +299,9 @@ public class FavoriteCoffeeActivity extends AppCompatActivity  {
         Intent myIntent = new Intent(FavoriteCoffeeActivity.this,
                 FavoriteCoffeeActivity.class);
         myIntent.putExtra(Global_Variable.USER_FOR_MOVE_INTENT,this.user);
+        b.putDouble(Global_Variable.USER_LOCATION_MOVE_INTENT_LONGITUDE, this.userLocation.getX());
+        b.putDouble(Global_Variable.USER_LOCATION_MOVE_INTENT_LATITUDE, this.userLocation.getY());
+        myIntent.putExtras(b);
         startActivity(myIntent);
     }
 

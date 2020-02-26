@@ -17,6 +17,10 @@ public class Product implements Parcelable {
         this.description = description;
     }
 
+    //Dorel: I added this:
+    public Product(){
+    }
+
     protected Product(Parcel in) {
         ID = in.readString();
         productName = in.readString();
