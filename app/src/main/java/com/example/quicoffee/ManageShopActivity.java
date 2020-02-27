@@ -138,8 +138,8 @@ public class ManageShopActivity extends AppCompatActivity {
                 ,0
                 ,mainActivityHeight/40);
         button.setLayoutParams(loginButtonLayoutParams);
-        button.setBackgroundResource(R.color.buttonColor);
-        button.setTextColor(getApplication().getResources().getColor(R.color.colorBlack));
+        button.setBackgroundResource(R.color.colorCoffee);
+        button.setTextColor(getApplication().getResources().getColor(R.color.textViewColor));
         return button;
     }
 }

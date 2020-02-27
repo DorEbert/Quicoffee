@@ -57,7 +57,7 @@ public class OurDefaultActivity extends AppCompatActivity {
 
     public void findShops(){
         Intent myIntent = new Intent(OurDefaultActivity.this,
-                findShopsActivity.class);
+                FindShopsActivity.class);
         myIntent.putExtra(Global_Variable.USER_FOR_MOVE_INTENT,this.user);
         startActivity(myIntent);
     }

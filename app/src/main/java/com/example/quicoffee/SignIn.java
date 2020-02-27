@@ -14,9 +14,7 @@ import android.location.Location;
 import android.location.LocationManager;
 import android.os.Bundle;
 import android.os.Looper;
-import android.os.Parcelable;
 import android.provider.Settings;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -35,7 +33,6 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
-import java.io.Serializable;
 import java.util.Arrays;
 import java.util.List;
 
@@ -115,7 +112,7 @@ public class SignIn extends AppCompatActivity {
 
     public void findShops(){
         Intent myIntent = new Intent(SignIn.this,
-                findShopsActivity.class);
+                FindShopsActivity.class);
         myIntent.putExtra(Global_Variable.USER_FOR_MOVE_INTENT,this.user);
         b.putDouble(Global_Variable.USER_LOCATION_MOVE_INTENT_LONGITUDE, this.userLocation.getX());
         b.putDouble(Global_Variable.USER_LOCATION_MOVE_INTENT_LATITUDE, this.userLocation.getY());

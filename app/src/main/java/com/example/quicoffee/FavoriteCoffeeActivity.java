@@ -278,7 +278,7 @@ public class FavoriteCoffeeActivity extends AppCompatActivity  {
 
     public void findShops(){
         Intent myIntent = new Intent(FavoriteCoffeeActivity.this,
-                findShopsActivity.class);
+                FindShopsActivity.class);
         myIntent.putExtra(Global_Variable.USER_FOR_MOVE_INTENT,this.user);
         b.putDouble(Global_Variable.USER_LOCATION_MOVE_INTENT_LONGITUDE, this.userLocation.getX());
         b.putDouble(Global_Variable.USER_LOCATION_MOVE_INTENT_LATITUDE, this.userLocation.getY());

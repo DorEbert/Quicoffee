@@ -1,4 +1,5 @@
 <resources>
     <string name="app_name">Quicoffee</string>
     <string name="title_activity_choose_location">Map</string>
+    <string name="shops_that_close_to_you">Shops nearby you:</string>
 </resources>

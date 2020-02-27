@@ -1,5 +1,8 @@
 package com.example.quicoffee.Models;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
 public class UserLocation {
 
     private double x;
@@ -12,6 +15,23 @@ public class UserLocation {
         this.x = x;
         this.y = y;
     }
+
+    protected UserLocation(Parcel in) {
+        x = in.readDouble();
+        y = in.readDouble();
+    }
+
+    public static final Parcelable.Creator<UserLocation> CREATOR = new Parcelable.Creator<UserLocation>() {
+        @Override
+        public UserLocation createFromParcel(Parcel in) {
+            return new UserLocation(in);
+        }
+
+        @Override
+        public UserLocation[] newArray(int size) {
+            return new UserLocation[size];
+        }
+    };
 
     @Override
     public String toString(){

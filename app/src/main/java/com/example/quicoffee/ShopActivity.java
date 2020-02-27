@@ -7,7 +7,6 @@ import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.location.Address;
 import android.location.Geocoder;
-import android.location.Location;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.Gravity;
@@ -32,7 +31,6 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.ValueEventListener;
 
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
@@ -266,7 +264,7 @@ public class ShopActivity extends AppCompatActivity implements View.OnClickListe
 
     public void findShops(){
         Intent myIntent = new Intent(ShopActivity.this,
-                findShopsActivity.class);
+                FindShopsActivity.class);
         myIntent.putExtra(Global_Variable.USER_FOR_MOVE_INTENT,this.user);
         b.putDouble(Global_Variable.USER_LOCATION_MOVE_INTENT_LONGITUDE, this.userLocation.getX());
         b.putDouble(Global_Variable.USER_LOCATION_MOVE_INTENT_LATITUDE, this.userLocation.getY());

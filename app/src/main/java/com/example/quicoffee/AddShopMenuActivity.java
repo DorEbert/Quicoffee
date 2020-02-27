@@ -242,7 +242,7 @@ public class AddShopMenuActivity extends AppCompatActivity {
         EditText editText = new EditText(this);
         editText.setMaxLines(1);
         editText.setImeOptions(EditorInfo.IME_ACTION_NEXT);
-        editText.setBackgroundColor(getApplication().getResources().getColor(R.color.textViewColor));
+        editText.setBackgroundColor(getApplication().getResources().getColor(R.color.colorforAttributes));
         editText.setLayoutParams(lparams);
         return editText;
     }
@@ -267,8 +267,8 @@ public class AddShopMenuActivity extends AppCompatActivity {
                 ,0
                 ,mainActivityHeight/40);
         button.setLayoutParams(loginButtonLayoutParams);
-        button.setBackgroundResource(R.color.buttonColor);
-        button.setTextColor(getApplication().getResources().getColor(R.color.colorBlack));
+        button.setBackgroundResource(R.color.colorCoffee);
+        button.setTextColor(getApplication().getResources().getColor(R.color.textViewColor));
         return button;
     }
     private void ReturnToManagerShopActivity(){

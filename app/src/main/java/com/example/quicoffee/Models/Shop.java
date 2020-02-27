@@ -36,6 +36,28 @@ public class Shop implements Parcelable {
 
     public Shop() {
     }
+    protected Shop(Parcel in) {
+        userID = in.readString();
+        shopName = in.readString();
+        description = in.readString();
+        latitude = in.readDouble();
+        longitude = in.readDouble();
+      //  products = in.readArrayList();
+        //ingredients = in.readArrayList();
+    }
+
+    public static final Creator<Shop> CREATOR = new Creator<Shop>() {
+        @Override
+        public Shop createFromParcel(Parcel in) {
+            return new Shop(in);
+        }
+
+        @Override
+        public Shop[] newArray(int size) {
+            return new Shop[size];
+        }
+    };
+
 
     public void UpdateLocation(LatLng  location){
         this.latitude = location.latitude;

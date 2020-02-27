@@ -22,7 +22,7 @@ public class Global_Variable {
     public static final String MISSING_SHOP_NAME_INFORMATION = "Enter shop name!" ;
     public static final String INVALID_LOCATION_IFORMATION = "Location must be by numbers";
     public static final String NEW_ACCOUNT = "didn't have an account yet? click here to sigh in";
-    public static final String SHOPS_THAT_CLOSE_TO_YOU = "Shops nearby you:";
+ //   public static final String SHOPS_THAT_CLOSE_TO_YOU = "Shops nearby you:";
 
     //Variable for adding/updating ingredient or product
     public static final String ACTION_TYPE = "action_type";
@@ -99,5 +99,6 @@ public class Global_Variable {
     public static final String USER_FOR_MOVE_INTENT = "FirebaseUser";
     public static final String USER_LOCATION_MOVE_INTENT_LATITUDE = "Latitude";
     public static final String USER_LOCATION_MOVE_INTENT_LONGITUDE = "Longitude";
+   // public static final String USER_LOCATION_MOVE_INTENT = "userLocationForMoveing";
 
 }

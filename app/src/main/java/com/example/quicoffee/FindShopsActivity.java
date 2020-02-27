@@ -2,32 +2,21 @@ package com.example.quicoffee;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
-import androidx.core.app.ActivityCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import android.Manifest;
-import android.annotation.SuppressLint;
-import android.content.Context;
 import android.content.Intent;
-import android.content.pm.PackageManager;
-import android.location.Location;
-import android.location.LocationManager;
 import android.os.Bundle;
-import android.os.Looper;
-import android.provider.Settings;
-import android.text.SpannableString;
-import android.text.style.UnderlineSpan;
+import android.os.Parcelable;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
-import android.widget.ArrayAdapter;
 import android.widget.LinearLayout;
-import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.quicoffee.Models.FavoriteCoffee;
 import com.example.quicoffee.Models.Shop;
 import com.example.quicoffee.Models.ShopAdapter;
 import com.example.quicoffee.Models.UserLocation;
@@ -43,7 +32,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-public class findShopsActivity extends AppCompatActivity {
+public class FindShopsActivity extends AppCompatActivity {
     public FirebaseUser user;
     public String UserId;
     private LinearLayout linearLayout;
@@ -53,18 +42,17 @@ public class findShopsActivity extends AppCompatActivity {
     double x = 3;
     double y = 3;
     public Bundle b;
+    private FavoriteCoffee favoriteCoffee;
 
-    //for read form firebase:
+    //Read form firebase:
     public FirebaseDatabase mDatabase;
     public DatabaseReference shopsRef;
     RecyclerView recyclerView;
-    RecyclerView.Adapter adapter;
-
-    // Write to the database
     private ArrayList<Shop> arrayToShowOnTheScreen;
     private List<String> keys;
     public ValueEventListener postListener;
-    private RecyclerView.Adapter mAdapter;
+    private ShopAdapter shopAdapter;
+    private Shop chosenShop;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -82,8 +70,9 @@ public class findShopsActivity extends AppCompatActivity {
         userLocation = new UserLocation(x,y);
 
         InititalVariablesOfLocalActivity();
-        linearLayout.addView(CreateTextView(Global_Variable.SHOPS_THAT_CLOSE_TO_YOU));
-
+        //linearLayout.addView(CreateTextView(Global_Variable.SHOPS_THAT_CLOSE_TO_YOU));
+        //TODO: init  favoriteCoffee -> if user has a favoriteCoffee on the tabel if not -> just init a new one
+        //TODO: move this favoriteCoffee to other activities
     }
 
     @Override
@@ -120,21 +109,46 @@ public class findShopsActivity extends AppCompatActivity {
                 Collections.reverse(arrayToShowOnTheScreen);
                 recyclerView = (RecyclerView) findViewById(R.id.my_recycler_view);
                 recyclerView.setHasFixedSize(true);
-                recyclerView.setLayoutManager(new LinearLayoutManager(findShopsActivity.this));
-                mAdapter = new ShopAdapter(arrayToShowOnTheScreen);
-                recyclerView.setAdapter(mAdapter);
+                LinearLayoutManager linearLayoutManager =  new LinearLayoutManager(FindShopsActivity.this);
+                linearLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
+                recyclerView.setLayoutManager(linearLayoutManager);
+                shopAdapter = new ShopAdapter(arrayToShowOnTheScreen);
+                shopAdapter.SetOnItemClickListener(new ShopAdapter.OnItemClickListener() {
+                    @Override
+                    public void onItemClick(int position) {
+                        chosenShop = arrayToShowOnTheScreen.get(position);
+                        showAShop();
+                    }
+                });
+
+                recyclerView.setNestedScrollingEnabled(true);
+                recyclerView.setAdapter(shopAdapter);
+
+
             }
 
             public void onCancelled(@NonNull DatabaseError databaseError) {
                 Log.e("The read failed: " ,databaseError.getMessage());
-               // Toast.makeText(ScoreSheetActivity.this , "The read failed: "+databaseError.getMessage(), Toast.LENGTH_SHORT).show();
             }
         };
         Query queryRef = shopsRef.orderByChild(Global_Variable.SHOP_NAME);
         queryRef.addValueEventListener(postListener);
     }
 
-
+    private void showAShop(){
+        Toast.makeText(this, "The Shop " + chosenShop.getID() + " is clicked", Toast.LENGTH_LONG).show();
+/*/
+        Intent intent = new Intent(FindShopsActivity.this, ShowChosenShopActivity.class);
+        intent.putExtra(Global_Variable.SHOP_INTENT , chosenShop);
+        intent.putExtra(Global_Variable.USER_FOR_MOVE_INTENT,this.user);
+        //TODO: putExtra favorite coffee
+        b.putDouble(Global_Variable.USER_LOCATION_MOVE_INTENT_LONGITUDE, this.userLocation.getX());
+        b.putDouble(Global_Variable.USER_LOCATION_MOVE_INTENT_LATITUDE, this.userLocation.getY());
+        intent.putExtras(b);
+        startActivity(intent);
+        finish();
+/*/
+    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -194,8 +208,8 @@ public class findShopsActivity extends AppCompatActivity {
     }
 
     public void findShops(){
-        Intent myIntent = new Intent(findShopsActivity.this,
-                findShopsActivity.class);
+        Intent myIntent = new Intent(FindShopsActivity.this,
+                FindShopsActivity.class);
         myIntent.putExtra(Global_Variable.USER_FOR_MOVE_INTENT,this.user);
         b.putDouble(Global_Variable.USER_LOCATION_MOVE_INTENT_LONGITUDE, this.userLocation.getX());
         b.putDouble(Global_Variable.USER_LOCATION_MOVE_INTENT_LATITUDE, this.userLocation.getY());
@@ -204,7 +218,7 @@ public class findShopsActivity extends AppCompatActivity {
     }
 
     public void favoriteCoffee(){
-        Intent myIntent = new Intent(findShopsActivity.this,
+        Intent myIntent = new Intent(FindShopsActivity.this,
                 FavoriteCoffeeActivity.class);
         myIntent.putExtra(Global_Variable.USER_FOR_MOVE_INTENT,this.user);
         b.putDouble(Global_Variable.USER_LOCATION_MOVE_INTENT_LONGITUDE, this.userLocation.getX());
@@ -214,7 +228,7 @@ public class findShopsActivity extends AppCompatActivity {
     }
 
     public void AddShopActivity(){
-        Intent myIntent = new Intent(findShopsActivity.this,
+        Intent myIntent = new Intent(FindShopsActivity.this,
                 ShopActivity.class);
         b.putDouble(Global_Variable.USER_LOCATION_MOVE_INTENT_LONGITUDE, this.userLocation.getX());
         b.putDouble(Global_Variable.USER_LOCATION_MOVE_INTENT_LATITUDE, this.userLocation.getY());
@@ -222,6 +236,8 @@ public class findShopsActivity extends AppCompatActivity {
         myIntent.putExtra(Global_Variable.USER_FOR_MOVE_INTENT,this.user);
         startActivity(myIntent);
     }
+
+
 
 
 }
