@@ -104,6 +104,7 @@ public class FindShopsActivity extends AppCompatActivity {
                     keys.add(postSnapshot.getKey());
                     //Shop someShop = new Shop();
                     Shop someShop = postSnapshot.getValue(Shop.class);
+                    //TODO: show only shops nearby :)
                     arrayToShowOnTheScreen.add(someShop);
                 }
                 Collections.reverse(arrayToShowOnTheScreen);
@@ -136,10 +137,11 @@ public class FindShopsActivity extends AppCompatActivity {
     }
 
     private void showAShop(){
-        Toast.makeText(this, "The Shop " + chosenShop.getID() + " is clicked", Toast.LENGTH_LONG).show();
-/*/
+     //   Toast.makeText(this, "The Shop " + chosenShop.getID() + " is clicked", Toast.LENGTH_LONG).show();
+
         Intent intent = new Intent(FindShopsActivity.this, ShowChosenShopActivity.class);
-        intent.putExtra(Global_Variable.SHOP_INTENT , chosenShop);
+        //TODO: delete the shop and send only idShop + make it global
+        intent.putExtra("idShop" , chosenShop.getID());
         intent.putExtra(Global_Variable.USER_FOR_MOVE_INTENT,this.user);
         //TODO: putExtra favorite coffee
         b.putDouble(Global_Variable.USER_LOCATION_MOVE_INTENT_LONGITUDE, this.userLocation.getX());
@@ -147,7 +149,7 @@ public class FindShopsActivity extends AppCompatActivity {
         intent.putExtras(b);
         startActivity(intent);
         finish();
-/*/
+
     }
 
     @Override

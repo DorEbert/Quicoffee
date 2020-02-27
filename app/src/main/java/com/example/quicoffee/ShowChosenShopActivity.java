@@ -39,6 +39,7 @@ public class ShowChosenShopActivity extends AppCompatActivity {
     private LinearLayout linearLayout;
     private TextView title;
     private Shop shop;
+    private String idShop;
     public FirebaseUser user;
     private FavoriteCoffee favoriteCoffee;
     public UserLocation userLocation;
@@ -148,7 +149,8 @@ public class ShowChosenShopActivity extends AppCompatActivity {
         y = b.getDouble(Global_Variable.USER_LOCATION_MOVE_INTENT_LATITUDE);
         userLocation = new UserLocation(x,y);
         //TODO: init favoriteCoffee from other activities
-        shop =(Shop) getIntent().getParcelableExtra(Global_Variable.SHOP_INTENT);
+        //shop =(Shop) getIntent().getParcelableExtra(Global_Variable.SHOP_INTENT);
+        idShop = getIntent().getStringExtra("idShop");
 
         //init for read shops from DB:
         arrayToShowOnTheScreen = new ArrayList<>();
@@ -165,7 +167,7 @@ public class ShowChosenShopActivity extends AppCompatActivity {
             shop = new Shop();
            // shopsRef = mDatabase.getReference(Global_Variable.TABLE_SHOP);
         }
-
+        shopsRef = mDatabase.getReference(Global_Variable.TABLE_SHOP).child(idShop).child(Global_Variable.PRODUCTS_COLUMN);
     }
 
     //TODO: init all the menu oprtions :)

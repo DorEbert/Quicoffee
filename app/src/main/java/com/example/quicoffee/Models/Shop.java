@@ -42,8 +42,13 @@ public class Shop implements Parcelable {
         description = in.readString();
         latitude = in.readDouble();
         longitude = in.readDouble();
-      //  products = in.readArrayList();
-        //ingredients = in.readArrayList();
+        products = new ArrayList<Product>();
+        in.readList(products, Product.class.getClassLoader());
+
+        ingredients = new ArrayList<String>();
+        in.readList(ingredients, Product.class.getClassLoader());
+       // ingredients = new ArrayList<IngredientAdapter>();
+        //in.readList(products, Product.class.getClassLoader());
     }
 
     public static final Creator<Shop> CREATOR = new Creator<Shop>() {
