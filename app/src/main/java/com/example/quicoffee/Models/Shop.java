@@ -141,14 +141,16 @@ public class Shop implements Parcelable {
     }
 
     public void AddOrUpdateProduct(String productIDToUpdate, Product product) {
-        if(productIDToUpdate != null) {
-            for (int i = 0; i < products.size(); i++)
-                if (products.get(i).getID() == productIDToUpdate) {
-                    products.set(i, product);
-                    return;
-                }
-        }else{
-            products.add(product);
+        if(product instanceof  Product) {
+            if (productIDToUpdate != null) {
+                for (int i = 0; i < products.size(); i++)
+                    if (products.get(i).getID().equals(productIDToUpdate)) {
+                        products.set(i, product);
+                        return;
+                    }
+            } else {
+                products.add(product);
+            }
         }
     }
 
@@ -167,6 +169,7 @@ public class Shop implements Parcelable {
     public void setIngredients(List<String> ingredients) {
         this.ingredients = ingredients;
     }
+
     public double getLatitude() {
         return latitude;
     }

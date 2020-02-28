@@ -73,7 +73,7 @@ public class ShopActivity extends AppCompatActivity implements View.OnClickListe
     }
     private void CheckIfUserOwnedShop() {
             fireBaseUtill.getRefrencesShops().
-                    orderByChild(Global_Variable.USER_ID_COLUMN).equalTo(user.getEmail())
+                    orderByChild(Global_Variable.USER_ID_COLUMN).equalTo(user.getUid())
                     .addListenerForSingleValueEvent(new ValueEventListener() {
                         @Override
                         public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
@@ -217,7 +217,7 @@ public class ShopActivity extends AppCompatActivity implements View.OnClickListe
             return;
         }
         //todo -DO WE NEED VALIDATION AGAINST DUPLICATES?
-        Shop shop = new Shop(shopName,new LatLng(latitude,longitude),description,this.user.getEmail());
+        Shop shop = new Shop(shopName,new LatLng(latitude,longitude),description,this.user.getUid());
         if(this.shop!= null)
          {
             shop.setID(this.shop.getID());

@@ -59,11 +59,20 @@ public class FireBaseUtill {
                 .setValue(ingredient);
     }
 
-    public void UpdateShopProducts(String ShopID, List<Product> products) {
-        databaseReference.getReference(Global_Variable.TABLE_SHOP)
-                .child(ShopID)
+    public void AddOrUpdateShopProducts(Shop shop, Product product) {
+        DatabaseReference shopReference = databaseReference.getReference(Global_Variable.TABLE_SHOP);
+        if(product.getID()== null) {
+            String id = shopReference.push().getKey();
+            product.setID(id);
+            shop.AddOrUpdateProduct(null,product);
+        }else{
+            shop.AddOrUpdateProduct(product.getID(),product);
+        }
+
+        shopReference
+                .child(shop.getID())
                 .child(Global_Variable.PRODUCTS_COLUMN)
-                .setValue(products);
+                .setValue(shop.getProducts());
     }
     public StorageReference getStorageReference(){
     return storageRef;

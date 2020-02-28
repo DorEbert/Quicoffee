@@ -47,7 +47,6 @@ public class ManageShopActivity extends AppCompatActivity {
         //DATA BASE:
         productArrayList.clear();
     }
-
     @Override
     public void onStop() {
         super.onStop();
@@ -62,33 +61,7 @@ public class ManageShopActivity extends AppCompatActivity {
         InititalVariablesOfLocalActivity();
         BuildActivityUI();
     }
-    /*private void AddProductRecycleView(){
-        final ArrayList<Product> products = (ArrayList<Product>) shop.getProducts();
-        recyclerView = new RecyclerView(this);
-        LinearLayout.LayoutParams layoutParams =  new LinearLayout.LayoutParams((int)(mainActivityWitdh ),mainActivityHeight/5);
-        recyclerView.setLayoutParams(layoutParams);
-        recyclerView.setHasFixedSize(true);
-        layoutManager = new LinearLayoutManager(this);
-        recyclerView.setLayoutManager(layoutManager);
-        if(products != null) {
-            productsAdapter = new ProductAdapter(products);
-            recyclerView.setAdapter(productsAdapter);
-            productsAdapter.SetOnItemClickListener(new ProductAdapter.OnItemClickListener() {
-                @Override
-                public void onItemClick(int position) {
-                    Intent intent = new Intent(ManageShopActivity.this, AddShopMenuActivity.class);
-                    intent.putExtra(Global_Variable.INGREDIENT_OR_PRODUCT, Global_Variable.PRODUCT_TYPE);
-                    intent.putExtra(Global_Variable.ACTION_TYPE, Global_Variable.UPDATE);
-                    intent.putExtra(Global_Variable.ADD_PRODUCT, products.get(position));
-                    intent.putExtra(Global_Variable.SHOP_INTENT, shop);
-                    startActivity(intent);
-                    finish();
-                }
-            });
-        }
-        linearLayout.addView(recyclerView);
-    }*/
-    public void AddProductRecycleView(){//final DataStatus dataStatus){
+    public void AddProductRecycleView(){
         productArrayList.clear();
         recyclerView = new RecyclerView(this);
         postListener = new ValueEventListener(){
@@ -114,6 +87,7 @@ public class ManageShopActivity extends AppCompatActivity {
                         finish();
                     }
                 });
+                shop.setProducts(productArrayList);
                 recyclerView.setAdapter(productsAdapter);
             }
 
@@ -126,32 +100,6 @@ public class ManageShopActivity extends AppCompatActivity {
         linearLayout.addView(recyclerView);
     }
 
-    /*private void AddIngredientRecycleView(){
-        final ArrayList<String> ingredients = (ArrayList<String>) shop.getIngredients();
-        recyclerView = new RecyclerView(this);
-        LinearLayout.LayoutParams layoutParams =  new LinearLayout.LayoutParams((int)(mainActivityWitdh ),mainActivityHeight/5);
-        recyclerView.setLayoutParams(layoutParams);
-        recyclerView.setHasFixedSize(true);
-        layoutManager = new LinearLayoutManager(this);
-        if(ingredients != null) {
-            ingredientAdapter = new IngredientAdapter(ingredients);
-            recyclerView.setLayoutManager(layoutManager);
-            recyclerView.setAdapter(ingredientAdapter);
-            productsAdapter.SetOnItemClickListener(new ProductAdapter.OnItemClickListener() {
-                @Override
-                public void onItemClick(int position) {
-                    Intent intent = new Intent(ManageShopActivity.this, AddShopMenuActivity.class);
-                    intent.putExtra(Global_Variable.INGREDIENT_OR_PRODUCT, Global_Variable.INGREDIENT_TYPE);
-                    intent.putExtra(Global_Variable.ACTION_TYPE, Global_Variable.UPDATE);
-                    intent.putExtra(Global_Variable.ADD_INGREDIENT, ingredients.get(position));
-                    intent.putExtra(Global_Variable.SHOP_INTENT, shop);
-                    startActivity(intent);
-                    finish();
-                }
-            });
-        }
-        lnearLayout.addView(recyclerView);
-    }*/
     private void InititalVariablesOfLocalActivity(){
         mainActivityWitdh = getResources().getDisplayMetrics().widthPixels;
         mainActivityHeight = getResources().getDisplayMetrics().heightPixels;
@@ -165,6 +113,32 @@ public class ManageShopActivity extends AppCompatActivity {
 
 
     }
+    /*private void AddIngredientRecycleView(){
+    final ArrayList<String> ingredients = (ArrayList<String>) shop.getIngredients();
+    recyclerView = new RecyclerView(this);
+    LinearLayout.LayoutParams layoutParams =  new LinearLayout.LayoutParams((int)(mainActivityWitdh ),mainActivityHeight/5);
+    recyclerView.setLayoutParams(layoutParams);
+    recyclerView.setHasFixedSize(true);
+    layoutManager = new LinearLayoutManager(this);
+    if(ingredients != null) {
+        ingredientAdapter = new IngredientAdapter(ingredients);
+        recyclerView.setLayoutManager(layoutManager);
+        recyclerView.setAdapter(ingredientAdapter);
+        productsAdapter.SetOnItemClickListener(new ProductAdapter.OnItemClickListener() {
+            @Override
+            public void onItemClick(int position) {
+                Intent intent = new Intent(ManageShopActivity.this, AddShopMenuActivity.class);
+                intent.putExtra(Global_Variable.INGREDIENT_OR_PRODUCT, Global_Variable.INGREDIENT_TYPE);
+                intent.putExtra(Global_Variable.ACTION_TYPE, Global_Variable.UPDATE);
+                intent.putExtra(Global_Variable.ADD_INGREDIENT, ingredients.get(position));
+                intent.putExtra(Global_Variable.SHOP_INTENT, shop);
+                startActivity(intent);
+                finish();
+            }
+        });
+    }
+    lnearLayout.addView(recyclerView);
+    }*/
     private void BuildActivityUI() {
         // Add product button
         Button addProductButton = CreateButton(Global_Variable.ADD_PRODUCT);

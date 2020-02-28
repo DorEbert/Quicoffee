@@ -110,7 +110,7 @@ public class AddShopMenuActivity extends AppCompatActivity {
         addCameraButton();
         //Add product button
         String addOrUpdateButtonName;
-        if(ingredientTextToUpdate != null){
+        if(productIDToUpdate != null){
             addOrUpdateButtonName = Global_Variable.UPDATE_PRODUCT;
         }else{
             addOrUpdateButtonName = Global_Variable.ADD_PRODUCT;
@@ -152,12 +152,11 @@ public class AddShopMenuActivity extends AppCompatActivity {
                     image.setImageBitmap(bitmap);
                     //product.setImage(image);
                 }
-                if(productIDToUpdate != null){
-                    shop.AddOrUpdateProduct(productIDToUpdate,product);
-                }else{
-                    shop.AddOrUpdateProduct(null,product);
-                }
-                fireBaseUtill.UpdateShopProducts(shop.getID(),shop.getProducts());
+                //In case of UPDATE
+                if(productIDToUpdate != null)
+                    product.setID(productIDToUpdate);
+                fireBaseUtill.AddOrUpdateShopProducts(shop,product);
+
                 ReturnToManagerShopActivity();
             }
         });

@@ -34,10 +34,11 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.ProductV
     @Override
     public void onBindViewHolder(@NonNull ProductViewHolder holder, int position) {
         Product product = _productList.get(position);
+        holder.ID = product.getID();
         holder.productName.setText(product.getProductName());
+        holder.imagePath = product.getImage();
         holder.price.setText(String.valueOf(product.getPrice()));
         holder.description.setText(product.getDescription());
-        //holder.image = product.getImage();
     }
 
     @Override
@@ -46,6 +47,8 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.ProductV
     }
 
     public static class ProductViewHolder extends  RecyclerView.ViewHolder {
+        public String ID;
+        public String imagePath;
         public ImageView image;
         public TextView productName;
         public TextView price;
