@@ -26,6 +26,7 @@ public class Product implements Parcelable {
         productName = in.readString();
         description = in.readString();
         price = in.readDouble();
+        image = in.readString();
     }
 
     public static final Creator<Product> CREATOR = new Creator<Product>() {
