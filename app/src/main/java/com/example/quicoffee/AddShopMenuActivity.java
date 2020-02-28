@@ -68,9 +68,9 @@ public class AddShopMenuActivity extends AppCompatActivity {
         if(action_type.equals(Global_Variable.UPDATE)){
             if(ingredient_or_product.equals(Global_Variable.PRODUCT_TYPE)){
                 Product product = intent.getParcelableExtra(Global_Variable.ADD_PRODUCT);
+                productIDToUpdate = product.getID();
                 BuildAddProductActivityUI();
                 if(product != null){
-                    productIDToUpdate = product.getID();
                     ((EditText)findViewById(productNameTextboxID)).setText(product.getProductName());
                     ((EditText)findViewById(priceTextboxID)).setText(String.valueOf(product.getPrice()));
                     ((EditText)findViewById(descriptionTextboxID)).setText(product.getDescription());
@@ -156,7 +156,6 @@ public class AddShopMenuActivity extends AppCompatActivity {
                 if(productIDToUpdate != null)
                     product.setID(productIDToUpdate);
                 fireBaseUtill.AddOrUpdateShopProducts(shop,product);
-
                 ReturnToManagerShopActivity();
             }
         });
@@ -171,7 +170,7 @@ public class AddShopMenuActivity extends AppCompatActivity {
                 @Override
                 public void onClick(View v) {
                     shop.RemoveProduct(productIDToUpdate);
-                    fireBaseUtill.UpdateShopIngredient(shop.getID(),shop.getIngredients());
+                    fireBaseUtill.removeProduct(shop);
                     ReturnToManagerShopActivity();
                 }
             });
