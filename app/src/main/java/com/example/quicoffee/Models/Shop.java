@@ -88,7 +88,7 @@ public class Shop implements Parcelable {
     public void AddOrUpdateIngredient(String oldIngredient, String ingredient){
         if(oldIngredient != null) {
             for (int i = 0; i < ingredients.size(); i++)
-                if (ingredients.get(i) == oldIngredient) {
+                if (ingredients.get(i).equals(oldIngredient)) {
                     ingredients.set(i, ingredient);
                     return;
                 }
@@ -98,7 +98,7 @@ public class Shop implements Parcelable {
     }
     public void RemoveIngredient(String ingredientTextToUpdate) {
         for (int i = 0; i < ingredients.size(); i++)
-            if (ingredients.get(i) == ingredientTextToUpdate) {
+            if (ingredients.get(i).equals(ingredientTextToUpdate)) {
                 ingredients.remove(i);
                 return;
             }

@@ -220,10 +220,10 @@ public class AddShopMenuActivity extends AppCompatActivity {
                 public void onClick(View v) {
                     shop.RemoveIngredient(ingredientTextToUpdate);
                     fireBaseUtill.UpdateShopIngredient(shop.getID(),shop.getIngredients());
+                    ReturnToManagerShopActivity();
                 }
             });
             buttonLinearLayout.addView(removeIngredientButton);
-            ReturnToManagerShopActivity();
         }
         linearLayout.addView(buttonLinearLayout);
     }
@@ -271,6 +271,7 @@ public class AddShopMenuActivity extends AppCompatActivity {
     }
     private void ReturnToManagerShopActivity(){
         Intent intent = new Intent(AddShopMenuActivity.this, ManageShopActivity.class);
+        intent.putExtra(Global_Variable.SHOP_INTENT, shop);
         startActivity(intent);
         finish();
     }
