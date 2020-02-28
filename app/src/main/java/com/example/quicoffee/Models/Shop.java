@@ -21,8 +21,6 @@ public class Shop implements Parcelable {
     // ingredients will contain for example: Coconut milk, almond milk in order to find
     // my favorite coffee by ingredients
     private List<String> ingredients;
-
-
     private String description;
     public Shop(String shopName,LatLng location,String description,String userID){
         this.userID = userID;
@@ -37,20 +35,33 @@ public class Shop implements Parcelable {
     public Shop() {
     }
     protected Shop(Parcel in) {
-        userID = in.readString();
+        ID = in.readString();
         shopName = in.readString();
-        description = in.readString();
+        userID = in.readString();
         latitude = in.readDouble();
         longitude = in.readDouble();
+        description = in.readString();
         products = new ArrayList<Product>();
         in.readList(products, Product.class.getClassLoader());
-
         ingredients = new ArrayList<String>();
         in.readList(ingredients, Product.class.getClassLoader());
-       // ingredients = new ArrayList<IngredientAdapter>();
-        //in.readList(products, Product.class.getClassLoader());
+    }
+    @Override
+    public int describeContents() {
+        return 0;
     }
 
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeString(ID);
+        dest.writeString(shopName);
+        dest.writeString(userID);
+        dest.writeDouble(latitude);
+        dest.writeDouble(longitude);
+        dest.writeString(description);
+        dest.writeList(products);
+        dest.writeList(ingredients);
+    }
     public static final Creator<Shop> CREATOR = new Creator<Shop>() {
         @Override
         public Shop createFromParcel(Parcel in) {
@@ -164,19 +175,5 @@ public class Shop implements Parcelable {
         return longitude;
     }
 
-    @Override
-    public int describeContents() {
-        return 0;
-    }
 
-    @Override
-    public void writeToParcel(Parcel dest, int flags) {
-        dest.writeString(ID);
-        dest.writeString(shopName);
-        dest.writeString(userID);
-        dest.writeDouble(latitude);
-        dest.writeDouble(longitude);
-        dest.writeList(products);
-        dest.writeList(ingredients);
-    }
 }
