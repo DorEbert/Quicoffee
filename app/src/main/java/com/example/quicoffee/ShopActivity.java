@@ -42,15 +42,16 @@ public class ShopActivity extends AppCompatActivity implements View.OnClickListe
     private int latitudeTextboxID;
     private int longitudeTextboxID;
     private int descriptionTextboxID;
+    private int shopButtonID;
     private FireBaseUtill fireBaseUtill = new FireBaseUtill();
     private FirebaseUser user;
     private Shop shop;
 
     //Location user sign in:
     public UserLocation userLocation;
-    double x = 3;
-    double y = 3;
-    public Bundle b;
+    double userLongitude = 3;
+    double userLatitude = 3;
+    public Bundle bundle;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -60,17 +61,16 @@ public class ShopActivity extends AppCompatActivity implements View.OnClickListe
         Toolbar myToolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(myToolbar);
         //get location user from other activity:
-        b = new Bundle();
-        b = getIntent().getExtras();
-        x = b.getDouble(Global_Variable.USER_LOCATION_MOVE_INTENT_LONGITUDE);
-        y = b.getDouble(Global_Variable.USER_LOCATION_MOVE_INTENT_LATITUDE);
-        userLocation = new UserLocation(x,y);
+        bundle = new Bundle();
+        bundle = getIntent().getExtras();
+        userLongitude = bundle.getDouble(Global_Variable.USER_LOCATION_MOVE_INTENT_LONGITUDE);
+        userLatitude = bundle.getDouble(Global_Variable.USER_LOCATION_MOVE_INTENT_LATITUDE);
+        userLocation = new UserLocation(userLongitude, userLatitude);
 
         InititalVariablesOfLocalActivity();
         BuildActivityUI();
         CheckIfUserOwnedShop();
     }
-    @SuppressLint("RestrictedApi")
     private void CheckIfUserOwnedShop() {
             fireBaseUtill.getRefrencesShops().
                     orderByChild(Global_Variable.USER_ID_COLUMN).equalTo(user.getEmail())
@@ -85,8 +85,8 @@ public class ShopActivity extends AppCompatActivity implements View.OnClickListe
                                     double latitude = Double.parseDouble(usersSnapShot.child(Global_Variable.LATITUDE_COLUMN.toLowerCase()).getValue().toString());
                                     double longitude = Double.parseDouble(usersSnapShot.child(Global_Variable.LONGITUDE_COLUMN.toLowerCase()).getValue().toString());
                                     LatLng location = new LatLng(latitude, longitude);
-                                    List<Product> products = (List<Product>) usersSnapShot.child(Global_Variable.COLUMN_EMAIL.toLowerCase()).getValue();
-                                    List<String> ingredients = (List<String>) usersSnapShot.child(Global_Variable.COLUMN_PASSWORD.toLowerCase()).getValue();
+                                    List<Product> products = (List<Product>) usersSnapShot.child(Global_Variable.PRODUCTS_COLUMN.toLowerCase()).getValue();
+                                    List<String> ingredients = (List<String>) usersSnapShot.child(Global_Variable.INGREDIENT_COLUMN.toLowerCase()).getValue();
                                     String description = usersSnapShot.child(Global_Variable.DESCRIPTION.toLowerCase()).getValue().toString();
                                     shop = new Shop(shopName, location, description,userID);
                                     shop.setID(ID);
@@ -109,6 +109,7 @@ public class ShopActivity extends AppCompatActivity implements View.OnClickListe
         ((EditText)findViewById(descriptionTextboxID)).setText(shop.getDescription());
         ((EditText)findViewById(latitudeTextboxID)).setText(String.valueOf(shop.GetLocation().longitude));
         ((EditText)findViewById(longitudeTextboxID)).setText(String.valueOf(shop.GetLocation().latitude));
+        ((Button)findViewById(shopButtonID)).setText(Global_Variable.UPDATE_SHOP);
     }
     private void BuildActivityUI() {
         LinearLayout.LayoutParams lparams = new LinearLayout.LayoutParams((int)(mainActivityWitdh *0.9),mainActivityHeight/20);
@@ -158,6 +159,8 @@ public class ShopActivity extends AppCompatActivity implements View.OnClickListe
     private void addShopButton() {
         //Set Button Settings
         Button shopButton = new Button(this);
+        shopButtonID = Global_Variable.GetID();
+        shopButton.setId(shopButtonID);
         shopButton.setOnClickListener(this);
         if(this.shop != null)
             shopButton.setText(Global_Variable.UPDATE_SHOP);
@@ -266,18 +269,18 @@ public class ShopActivity extends AppCompatActivity implements View.OnClickListe
         Intent myIntent = new Intent(ShopActivity.this,
                 FindShopsActivity.class);
         myIntent.putExtra(Global_Variable.USER_FOR_MOVE_INTENT,this.user);
-        b.putDouble(Global_Variable.USER_LOCATION_MOVE_INTENT_LONGITUDE, this.userLocation.getX());
-        b.putDouble(Global_Variable.USER_LOCATION_MOVE_INTENT_LATITUDE, this.userLocation.getY());
-        myIntent.putExtras(b);
+        bundle.putDouble(Global_Variable.USER_LOCATION_MOVE_INTENT_LONGITUDE, this.userLocation.getX());
+        bundle.putDouble(Global_Variable.USER_LOCATION_MOVE_INTENT_LATITUDE, this.userLocation.getY());
+        myIntent.putExtras(bundle);
         startActivity(myIntent);
     }
 
     public void AddShopActivity(){
         Intent myIntent = new Intent(ShopActivity.this,
                 ShopActivity.class);
-        b.putDouble(Global_Variable.USER_LOCATION_MOVE_INTENT_LONGITUDE, this.userLocation.getX());
-        b.putDouble(Global_Variable.USER_LOCATION_MOVE_INTENT_LATITUDE, this.userLocation.getY());
-        myIntent.putExtras(b);
+        bundle.putDouble(Global_Variable.USER_LOCATION_MOVE_INTENT_LONGITUDE, this.userLocation.getX());
+        bundle.putDouble(Global_Variable.USER_LOCATION_MOVE_INTENT_LATITUDE, this.userLocation.getY());
+        myIntent.putExtras(bundle);
         myIntent.putExtra(Global_Variable.USER_FOR_MOVE_INTENT,this.user);
         startActivity(myIntent);
     }
@@ -285,9 +288,9 @@ public class ShopActivity extends AppCompatActivity implements View.OnClickListe
         Intent myIntent = new Intent(ShopActivity.this,
                 FavoriteCoffeeActivity.class);
         myIntent.putExtra(Global_Variable.USER_FOR_MOVE_INTENT,this.user);
-        b.putDouble(Global_Variable.USER_LOCATION_MOVE_INTENT_LONGITUDE, this.userLocation.getX());
-        b.putDouble(Global_Variable.USER_LOCATION_MOVE_INTENT_LATITUDE, this.userLocation.getY());
-        myIntent.putExtras(b);
+        bundle.putDouble(Global_Variable.USER_LOCATION_MOVE_INTENT_LONGITUDE, this.userLocation.getX());
+        bundle.putDouble(Global_Variable.USER_LOCATION_MOVE_INTENT_LATITUDE, this.userLocation.getY());
+        myIntent.putExtras(bundle);
         startActivity(myIntent);
     }
 
