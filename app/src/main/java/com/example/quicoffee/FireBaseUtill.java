@@ -53,13 +53,14 @@ public class FireBaseUtill {
     }
 
     public void UpdateShopIngredient(String ShopID, List<String> ingredient) {
-        databaseReference.getReference(Global_Variable.TABLE_USERS)
+        databaseReference.getReference(Global_Variable.TABLE_SHOP)
                 .child(ShopID)
+                .child(Global_Variable.INGREDIENT_COLUMN)
                 .setValue(ingredient);
     }
 
     public void UpdateShopProducts(String ShopID, List<Product> products) {
-        databaseReference.getReference(Global_Variable.TABLE_USERS)
+        databaseReference.getReference(Global_Variable.TABLE_SHOP)
                 .child(ShopID)
                 .child(Global_Variable.PRODUCTS_COLUMN)
                 .setValue(products);
