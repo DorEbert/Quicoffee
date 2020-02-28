@@ -74,7 +74,15 @@ public class FireBaseUtill {
                 .child(Global_Variable.PRODUCTS_COLUMN)
                 .setValue(shop.getProducts());
     }
-    public StorageReference getStorageReference(){
+    public void removeProduct(Shop shop) {
+        DatabaseReference shopReference = databaseReference.getReference(Global_Variable.TABLE_SHOP);
+        shopReference
+                .child(shop.getID())
+                .child(Global_Variable.PRODUCTS_COLUMN)
+                .setValue(shop.getProducts());
+    }
+
+        public StorageReference getStorageReference(){
     return storageRef;
     }
 }
