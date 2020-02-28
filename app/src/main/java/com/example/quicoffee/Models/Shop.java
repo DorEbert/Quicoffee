@@ -156,7 +156,7 @@ public class Shop implements Parcelable {
 
     public void RemoveProduct(String productIDToUpdate) {
         for (int i = 0; i < products.size(); i++)
-            if (products.get(i).getID() == productIDToUpdate) {
+            if (products.get(i).getID().equals(productIDToUpdate)) {
                 products.remove(i);
                 return;
             }
