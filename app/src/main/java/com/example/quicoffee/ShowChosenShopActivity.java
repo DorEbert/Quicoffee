@@ -208,6 +208,7 @@ public class ShowChosenShopActivity extends AppCompatActivity {
             public void onClick(View v) {
                 Toast.makeText(ShowChosenShopActivity.this , "Your order is saves :)!", Toast.LENGTH_SHORT).show();
                 saveOrderToDB(order,user);
+                showAllDetailsOfTheOrder();
                 //delete all the table:
                 //DatabaseReference ref=FirebaseDatabase.getInstance().getReference();
                 //ref.child("favoriteCoffeeTable").removeValue();
@@ -282,6 +283,18 @@ public class ShowChosenShopActivity extends AppCompatActivity {
         return Global_Variable.ORDER_NOT_EXIST;
     }
 
+    private void showAllDetailsOfTheOrder(){
+        Intent myIntent = new Intent(ShowChosenShopActivity.this,
+                specificOrderActivity.class);
+        myIntent.putExtra(Global_Variable.USER_FOR_MOVE_INTENT,this.user);
+        myIntent.putExtra(Global_Variable.FAVORITE_COFFEE_MOVE_INTENT, this.favoriteCoffee);
+        bundle.putDouble(Global_Variable.USER_LOCATION_MOVE_INTENT_LONGITUDE, this.userLocation.getX());
+        bundle.putDouble(Global_Variable.USER_LOCATION_MOVE_INTENT_LATITUDE, this.userLocation.getY());
+        myIntent.putExtras(bundle);
+        myIntent.putExtra(Global_Variable.USER_FOR_MOVE_INTENT,this.user);
+        startActivity(myIntent);
+    }
+
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater inflater = getMenuInflater();
@@ -303,7 +316,7 @@ public class ShowChosenShopActivity extends AppCompatActivity {
                 favoriteCoffee();
                 return true;
             case R.id.myOrder:
-                showMyOrders();
+              //  showMyOrders();
                 return true;
             case R.id.setUpAShop:
                 AddShopActivity();

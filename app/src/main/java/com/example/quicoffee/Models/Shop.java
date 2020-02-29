@@ -34,6 +34,7 @@ public class Shop implements Parcelable {
 
     public Shop() {
     }
+
     protected Shop(Parcel in) {
         ID = in.readString();
         shopName = in.readString();
@@ -46,6 +47,7 @@ public class Shop implements Parcelable {
         ingredients = new ArrayList<String>();
         in.readList(ingredients, Product.class.getClassLoader());
     }
+
     @Override
     public int describeContents() {
         return 0;
@@ -79,6 +81,7 @@ public class Shop implements Parcelable {
         this.latitude = location.latitude;
         this.longitude = location.longitude;
     }
+
     public LatLng  GetLocation(){
         return new LatLng(latitude,longitude);
     }

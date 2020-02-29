@@ -1,4 +1,6 @@
 package com.example.quicoffee.Models;
+import android.os.Parcel;
+
 import com.google.firebase.auth.FirebaseUser;
 
 import java.sql.Time;
@@ -64,7 +66,6 @@ public class Order {
     public String getGeneralComment() {
         return generalComment;
     }
-
 
 
 }
