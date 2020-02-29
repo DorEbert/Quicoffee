@@ -58,6 +58,7 @@ public class ShopActivity extends AppCompatActivity implements OnMapReadyCallbac
 
     //location
     private GoogleMap mMap;
+    private int addressTextViewID;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -125,6 +126,13 @@ public class ShopActivity extends AppCompatActivity implements OnMapReadyCallbac
         shopNameTextboxID = addPairOfTextViewAndEditText(Global_Variable.SHOP_NAME,lparams);
         //Description TextView and EditText
         descriptionTextboxID = addPairOfTextViewAndEditText(Global_Variable.DESCRIPTION,lparams);
+        //Add address Label
+        TextView addressTextView = CreateTextView("");
+        addressTextView.setPadding(50,10,50,10);
+        addressTextView.setGravity(Gravity.CENTER);
+        addressTextViewID = Global_Variable.GetID();
+        addressTextView.setId(addressTextViewID);
+        linearLayout.addView(addressTextView);
         addShopButton();
     }
     private int addPairOfTextViewAndEditText(String labelText,LinearLayout.LayoutParams lparams){
@@ -192,7 +200,7 @@ public class ShopActivity extends AppCompatActivity implements OnMapReadyCallbac
         linearLayout.addView(shopButton);
     }
     //Get Full Address From Coordinates
-    private void GetAddressFromCoordinates(double latitude,double longitude){
+    private String GetAddressFromCoordinates(double latitude,double longitude){
         Geocoder geocoder;
         List<Address> addresses;
         geocoder = new Geocoder(this, Locale.getDefault());
@@ -201,7 +209,7 @@ public class ShopActivity extends AppCompatActivity implements OnMapReadyCallbac
             addresses = geocoder.getFromLocation(latitude, longitude, 1); // Here 1 represent max location result to returned, by documents it recommended 1 to 5
         } catch (IOException e) {
             Toast.makeText(getApplicationContext(), Global_Variable.COULD_NOT_DETECT_LOCATION, Toast.LENGTH_SHORT).show();
-            return;
+            return "Address was Not found";
         }
         //todo return a string that present the full address of the coordinates
         String address = addresses.get(0).getAddressLine(0); // If any additional address line present than only, check with max available address lines by getMaxAddressLineIndex()
@@ -210,6 +218,7 @@ public class ShopActivity extends AppCompatActivity implements OnMapReadyCallbac
         String country = addresses.get(0).getCountryName();
         String postalCode = addresses.get(0).getPostalCode();
         String knownName = addresses.get(0).getFeatureName(); // Only if available else return NULL
+        return address;
     }
     //add shop on click
     @Override
@@ -315,6 +324,7 @@ public class ShopActivity extends AppCompatActivity implements OnMapReadyCallbac
             mMap.animateCamera(CameraUpdateFactory.zoomIn());
             // Zoom out to zoom level 10, animating with a duration of 2 seconds.
             mMap.animateCamera(CameraUpdateFactory.zoomTo(15), 2000, null);
+            ((TextView) findViewById(addressTextViewID)).setText(GetAddressFromCoordinates(userLatitude, userLongitude));
         }
     }
 }
