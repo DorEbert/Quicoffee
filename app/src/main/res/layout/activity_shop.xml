@@ -26,5 +26,11 @@
                 android:background="@mipmap/logowithmap_foreground">
             </ImageView>
         </androidx.appcompat.widget.Toolbar>
+        <fragment
+            android:id="@+id/map"
+            android:layout_width="match_parent"
+            android:layout_alignParentBottom="true"
+            android:layout_height="150dp"
+            class="com.google.android.gms.maps.SupportMapFragment" />
     </LinearLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>

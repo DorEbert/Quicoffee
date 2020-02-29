@@ -77,7 +77,7 @@ public class Global_Variable {
     public static final String PRICE_COLUMN = "price";
     public static final String DESCRIPTION_COLUMN = "description";
 
-    public static int index = 0;
+    public static int index = 10;
     // in order to save shared preferences-> used to login only once
     public static final String PREFS_NAME = "MyPrefsFile";
     public static User user;

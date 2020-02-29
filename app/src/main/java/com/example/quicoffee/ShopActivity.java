@@ -24,7 +24,12 @@ import android.widget.Toast;
 import com.example.quicoffee.Models.Product;
 import com.example.quicoffee.Models.Shop;
 import com.example.quicoffee.Models.UserLocation;
+import com.google.android.gms.maps.CameraUpdateFactory;
+import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.OnMapReadyCallback;
+import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -34,13 +39,11 @@ import java.io.IOException;
 import java.util.List;
 import java.util.Locale;
 
-public class ShopActivity extends AppCompatActivity implements View.OnClickListener {
+public class ShopActivity extends AppCompatActivity implements OnMapReadyCallback,View.OnClickListener {
     private int mainActivityWitdh;
     private int mainActivityHeight;
     private LinearLayout linearLayout;
     private int shopNameTextboxID;
-    private int latitudeTextboxID;
-    private int longitudeTextboxID;
     private int descriptionTextboxID;
     private int shopButtonID;
     private FireBaseUtill fireBaseUtill = new FireBaseUtill();
@@ -52,6 +55,9 @@ public class ShopActivity extends AppCompatActivity implements View.OnClickListe
     double userLongitude = 3;
     double userLatitude = 3;
     public Bundle bundle;
+
+    //location
+    private GoogleMap mMap;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -107,8 +113,9 @@ public class ShopActivity extends AppCompatActivity implements View.OnClickListe
     private void FillExistingShop(Shop shop){
         ((EditText)findViewById(shopNameTextboxID)).setText(shop.getShopName());
         ((EditText)findViewById(descriptionTextboxID)).setText(shop.getDescription());
-        ((EditText)findViewById(latitudeTextboxID)).setText(String.valueOf(shop.GetLocation().longitude));
-        ((EditText)findViewById(longitudeTextboxID)).setText(String.valueOf(shop.GetLocation().latitude));
+        userLatitude = shop.GetLocation().latitude;
+        userLongitude = shop.GetLocation().longitude;
+        setLocation();
         ((Button)findViewById(shopButtonID)).setText(Global_Variable.UPDATE_SHOP);
     }
     private void BuildActivityUI() {
@@ -118,10 +125,6 @@ public class ShopActivity extends AppCompatActivity implements View.OnClickListe
         shopNameTextboxID = addPairOfTextViewAndEditText(Global_Variable.SHOP_NAME,lparams);
         //Description TextView and EditText
         descriptionTextboxID = addPairOfTextViewAndEditText(Global_Variable.DESCRIPTION,lparams);
-        //  latitude TextView and EditText
-        latitudeTextboxID = addPairOfTextViewAndEditText(Global_Variable.LATITUDE,lparams);
-        //  longitude TextView and EditText
-        longitudeTextboxID = addPairOfTextViewAndEditText(Global_Variable.LONGITUDE,lparams);
         addShopButton();
     }
     private int addPairOfTextViewAndEditText(String labelText,LinearLayout.LayoutParams lparams){
@@ -138,6 +141,16 @@ public class ShopActivity extends AppCompatActivity implements View.OnClickListe
         mainActivityHeight = getResources().getDisplayMetrics().heightPixels;
         linearLayout = findViewById(R.id.linear_layout);
         user = getIntent().getParcelableExtra(Global_Variable.USER_FOR_MOVE_INTENT);
+        bundle = getIntent().getExtras();
+        userLongitude = bundle.getDouble(Global_Variable.USER_LOCATION_MOVE_INTENT_LONGITUDE);
+        userLatitude = bundle.getDouble(Global_Variable.USER_LOCATION_MOVE_INTENT_LATITUDE);
+        userLocation = new UserLocation(userLongitude,userLatitude);
+        addMapFragment();
+    }
+    public void addMapFragment() {
+        SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
+                .findFragmentById(R.id.map);
+        mapFragment.getMapAsync(this);
     }
     private TextView CreateTextView(String labelText){
         //Set Label Setting
@@ -203,21 +216,12 @@ public class ShopActivity extends AppCompatActivity implements View.OnClickListe
     public void onClick(View v) {
         String shopName = ((EditText)findViewById(shopNameTextboxID)).getText().toString();
         String description = ((EditText)findViewById(descriptionTextboxID)).getText().toString();
-        Double latitude;
-        Double longitude;
-        try {
-             latitude = Double.valueOf(((EditText) findViewById(latitudeTextboxID)).getText().toString());
-             longitude = Double.valueOf(((EditText) findViewById(longitudeTextboxID)).getText().toString());
-        }catch (Exception e){
-            Toast.makeText(getApplicationContext(), Global_Variable.INVALID_LOCATION_IFORMATION, Toast.LENGTH_SHORT).show();
-            return;
-        }
         if (TextUtils.isEmpty(shopName)) {
             Toast.makeText(getApplicationContext(), Global_Variable.MISSING_SHOP_NAME_INFORMATION, Toast.LENGTH_SHORT).show();
             return;
         }
         //todo -DO WE NEED VALIDATION AGAINST DUPLICATES?
-        Shop shop = new Shop(shopName,new LatLng(latitude,longitude),description,this.user.getUid());
+        Shop shop = new Shop(shopName,new LatLng(userLatitude,userLongitude),description,this.user.getUid());
         if(this.shop!= null)
          {
             shop.setID(this.shop.getID());
@@ -295,4 +299,22 @@ public class ShopActivity extends AppCompatActivity implements View.OnClickListe
     }
 
 
+    @Override
+    public void onMapReady(GoogleMap googleMap) {
+        mMap = googleMap;
+        // Add a marker in MY location and move the camera
+        setLocation();
+    }
+
+    private void setLocation() {
+        if(mMap!= null) {
+            LatLng location = new LatLng(userLatitude,userLongitude);
+            mMap.clear();
+            mMap.addMarker(new MarkerOptions().position(location).title(""));
+            mMap.moveCamera(CameraUpdateFactory.newLatLng(location));
+            mMap.animateCamera(CameraUpdateFactory.zoomIn());
+            // Zoom out to zoom level 10, animating with a duration of 2 seconds.
+            mMap.animateCamera(CameraUpdateFactory.zoomTo(15), 2000, null);
+        }
+    }
 }
