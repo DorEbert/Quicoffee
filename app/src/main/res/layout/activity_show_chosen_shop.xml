@@ -60,5 +60,11 @@
             android:layout_width="157dp"
             android:layout_height="58dp"></Button>
 
+        <Button
+            android:id="@+id/myOrderButton"
+            android:visibility="gone"
+            android:layout_width="157dp"
+            android:layout_height="58dp"></Button>
+
     </LinearLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>

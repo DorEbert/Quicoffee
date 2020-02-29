@@ -2,6 +2,7 @@ package com.example.quicoffee.Models;
 import com.google.firebase.auth.FirebaseUser;
 
 import java.sql.Time;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -10,13 +11,13 @@ public class Order {
     public String userID;
     private String shopName;
     // (product,comment) comment for specific product
-    private Map<Product,String> products;
+    private ArrayList<Product> products;
     private String generalComment;
     private Time orderPickUpTime;
 
     public Order(String shopName){
         this.shopName = shopName;
-        products = new HashMap<>();
+        products = new ArrayList<>();
     }
 
     public Order(){
@@ -35,8 +36,8 @@ public class Order {
         return this.shopName;
     }
 
-    public void addProduct(Product product,String comment){
-        products.put(product,comment);
+    public void addProduct(Product product){
+        products.add(product);
     }
 
     private void removeProduct(Product product){
@@ -56,7 +57,7 @@ public class Order {
     }
 
 
-    public Map<Product, String> getProducts() {
+    public ArrayList<Product> getProducts() {
         return products;
     }
 

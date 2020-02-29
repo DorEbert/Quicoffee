@@ -53,6 +53,7 @@ public class ShowChosenShopActivity extends AppCompatActivity {
     public Bundle bundle;
     public Order order;
     public Button saveOrderButton;
+    public Button myOrderButton;
 
     //Read form firebase:
     public FirebaseDatabase mDatabase;
@@ -63,7 +64,6 @@ public class ShowChosenShopActivity extends AppCompatActivity {
     public ValueEventListener postListener;
     private ProductAdapter productAdapter;
     private Product productChosen;
-
 
     //for order table:
     public DatabaseReference orderRef;
@@ -82,6 +82,7 @@ public class ShowChosenShopActivity extends AppCompatActivity {
         setSupportActionBar(myToolbar);
         InititalVariablesOfLocalActivity();
         iinitSaveOrderButton();
+       // iinitMyOrderButton();
     }
 
     @Override
@@ -104,7 +105,7 @@ public class ShowChosenShopActivity extends AppCompatActivity {
                 orderRef.removeEventListener(saveOrderListener);
                 //saveOrderListener init only if the user click on "save"
                 //so we have to check this :)
-            }
+        }
     }
 
     public void readAllProducts(){//final DataStatus dataStatus){
@@ -145,7 +146,7 @@ public class ShowChosenShopActivity extends AppCompatActivity {
 
 
     private void addProductToOrderUser(Product productChosen){
-        order.addProduct(productChosen,"");
+        order.addProduct(productChosen);
         //Intent intent = new Intent(ShowChosenShopActivity.this, ShowChosenShopActivity.class);
         // intent.putExtra(Global_Variable.SHOP_INTENT , chosenShop);chosenShop
         //  intent.putExtra(Global_Variable.USER_FOR_MOVE_INTENT,this.user);
@@ -174,7 +175,7 @@ public class ShowChosenShopActivity extends AppCompatActivity {
         idShop = getIntent().getStringExtra(Global_Variable.SHOP_ID_MOVE_INTENT);
         nameShop = getIntent().getStringExtra(Global_Variable.SHOP_NAME_MOVE_INTENT);
 
-        title.setText("The products in the "+  nameShop + " shop:" );
+        title.setText("The products in "+  nameShop + " shop:" );
 
         //init for save an order to DB:
         order = new Order(nameShop);
@@ -190,16 +191,16 @@ public class ShowChosenShopActivity extends AppCompatActivity {
     }
 
     public void iinitSaveOrderButton(){
-        saveOrderButton = (Button) findViewById(R.id.SaveOrderButton);
+        saveOrderButton = (Button) findViewById(R.id.myOrderButton);
         saveOrderButton.setText(R.string.saveButtonText);
-        LinearLayout.LayoutParams loginButtonLayoutParams =
+        LinearLayout.LayoutParams saveButtonLayoutParams =
                 new LinearLayout.LayoutParams((int)(mainActivityWitdh *0.5),mainActivityHeight/20);
-        loginButtonLayoutParams.gravity = Gravity.CENTER;
-        loginButtonLayoutParams.setMargins(0
+        saveButtonLayoutParams.gravity = Gravity.CENTER;
+        saveButtonLayoutParams.setMargins(0
                 ,mainActivityHeight/20
                 ,0
                 ,mainActivityHeight/40);
-        saveOrderButton.setLayoutParams(loginButtonLayoutParams);
+        saveOrderButton.setLayoutParams(saveButtonLayoutParams);
         saveOrderButton.setBackgroundResource(R.color.colorCoffee);
         saveOrderButton.setTextColor(getApplication().getResources().getColor(R.color.textViewColor));
         saveOrderButton.setOnClickListener(new View.OnClickListener() {
@@ -210,6 +211,26 @@ public class ShowChosenShopActivity extends AppCompatActivity {
                 //delete all the table:
                 //DatabaseReference ref=FirebaseDatabase.getInstance().getReference();
                 //ref.child("favoriteCoffeeTable").removeValue();
+            }
+        });
+    }
+
+    public void iinitMyOrderButton(){
+        saveOrderButton = (Button) findViewById(R.id.SaveOrderButton);
+        saveOrderButton.setText(R.string.saveButtonText);
+        LinearLayout.LayoutParams saveOrderButtonLayoutParams =
+                new LinearLayout.LayoutParams((int)(mainActivityWitdh *0.5),mainActivityHeight/20);
+        saveOrderButtonLayoutParams.gravity = Gravity.CENTER;
+        saveOrderButtonLayoutParams.setMargins(0
+                ,mainActivityHeight/20
+                ,0
+                ,mainActivityHeight/40);
+        saveOrderButton.setLayoutParams(saveOrderButtonLayoutParams);
+        saveOrderButton.setBackgroundResource(R.color.colorCoffee);
+        saveOrderButton.setTextColor(getApplication().getResources().getColor(R.color.textViewColor));
+        saveOrderButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
             }
         });
     }
@@ -232,7 +253,6 @@ public class ShowChosenShopActivity extends AppCompatActivity {
 
     ///DATA BASE //
     private void writeOrder(Order order, FirebaseUser user, DataSnapshot dataSnapshot) {
-        Toast.makeText(this, "user.getUid() "+ user.getUid() , Toast.LENGTH_LONG).show();
         indexOrderExist = checkIfOrderExist(dataSnapshot);
         someOrder = new Order(nameShop);
         someOrder.setUserID(user.getUid());
@@ -248,12 +268,12 @@ public class ShowChosenShopActivity extends AppCompatActivity {
 
     public String checkIfOrderExist(DataSnapshot dataSnapshot) {
         if (dataSnapshot.getChildrenCount() == 0 ){
-            return Global_Variable.USER_NOT_EXIST;
+            return Global_Variable.ORDER_NOT_EXIST;
         }
         for (DataSnapshot postSnapshot: dataSnapshot.getChildren()) {
             OrderFromDataSnapshot = postSnapshot.getValue(Order.class);
-            Log.e("checkIfOrderExist", "checkIfUserExist: OrderFromDataSnapshot.getUserID() "+OrderFromDataSnapshot.getUserID());
-             Log.e("checkIfOrderExist", "checkIfUserExist: user.getUid() "+user.getUid());
+            //Log.e("checkIfOrderExist", "checkIfUserExist: OrderFromDataSnapshot.getUserID() "+OrderFromDataSnapshot.getUserID());
+           //  Log.e("checkIfOrderExist", "checkIfUserExist: user.getUid() "+user.getUid());
             if (OrderFromDataSnapshot.getUserID().equals(user.getUid())
                     && OrderFromDataSnapshot.getShopName().equals(nameShop)) {
                 return postSnapshot.getKey();
@@ -270,9 +290,8 @@ public class ShowChosenShopActivity extends AppCompatActivity {
     }
 
 
-
     //TODO: init all the menu oprtions :)
-    //findShops, favoirtCoffee, myOrder, setUpAShop, setting,logOut
+    //findShops, favoirteCoffee, myOrder, setUpAShop, setting,logOut
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         // Handle item selection
@@ -284,7 +303,7 @@ public class ShowChosenShopActivity extends AppCompatActivity {
                 favoriteCoffee();
                 return true;
             case R.id.myOrder:
-                //     showMyOrders();
+                showMyOrders();
                 return true;
             case R.id.setUpAShop:
                 AddShopActivity();
@@ -325,6 +344,21 @@ public class ShowChosenShopActivity extends AppCompatActivity {
         bundle.putDouble(Global_Variable.USER_LOCATION_MOVE_INTENT_LATITUDE, this.userLocation.getY());
         myIntent.putExtras(bundle);
         startActivity(myIntent);
+    }
+
+    public void showMyOrders(){
+        /*/
+        Intent myIntent = new Intent(ShowChosenShopActivity.this,
+                ShowChosenShopActivity.class);
+        myIntent.putExtra(Global_Variable.USER_FOR_MOVE_INTENT,this.user);
+        myIntent.putExtra(Global_Variable.FAVORITE_COFFEE_MOVE_INTENT, this.favoriteCoffee);
+        bundle.putDouble(Global_Variable.USER_LOCATION_MOVE_INTENT_LONGITUDE, this.userLocation.getX());
+        bundle.putDouble(Global_Variable.USER_LOCATION_MOVE_INTENT_LATITUDE, this.userLocation.getY());
+        myIntent.putExtras(bundle);
+        myIntent.putExtra(Global_Variable.USER_FOR_MOVE_INTENT,this.user);
+        startActivity(myIntent);
+        /*/
+
     }
 
 
