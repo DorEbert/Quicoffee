@@ -84,10 +84,9 @@ public class FavoriteCoffeeActivity extends AppCompatActivity  {
         //DATA BASE:
         if(saveListener != null ){
             favoriteCoffeeRef.removeEventListener(saveListener);
-            //saveListener init only if the user click on "save"
+            //saveOrderListener init only if the user click on "save"
             //so we have to check this :)
         }
-
     }
 
 
@@ -101,8 +100,8 @@ public class FavoriteCoffeeActivity extends AppCompatActivity  {
 
 
     private void addSaveButton(){
-        Button botton = new Button(this);
-        botton.setText(Global_Variable.SAVE_FAVORITE_COFFEE_TEXT);
+        Button saveButton = new Button(this);
+        saveButton.setText(R.string.saveButtonText);
         LinearLayout.LayoutParams loginButtonLayoutParams =
                 new LinearLayout.LayoutParams((int)(mainActivityWitdh *0.5),mainActivityHeight/20);
         loginButtonLayoutParams.gravity = Gravity.CENTER;
@@ -110,10 +109,10 @@ public class FavoriteCoffeeActivity extends AppCompatActivity  {
                 ,mainActivityHeight/20
                 ,0
                 ,mainActivityHeight/40);
-        botton.setLayoutParams(loginButtonLayoutParams);
-        botton.setBackgroundResource(R.color.colorCoffee);
-        botton.setTextColor(getApplication().getResources().getColor(R.color.textViewColor));
-        botton.setOnClickListener(new View.OnClickListener() {
+        saveButton.setLayoutParams(loginButtonLayoutParams);
+        saveButton.setBackgroundResource(R.color.colorCoffee);
+        saveButton.setTextColor(getApplication().getResources().getColor(R.color.textViewColor));
+        saveButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Toast.makeText(FavoriteCoffeeActivity.this , "Your favorite coffee save :)!", Toast.LENGTH_SHORT).show();
@@ -123,7 +122,7 @@ public class FavoriteCoffeeActivity extends AppCompatActivity  {
              //ref.child("favoriteCoffeeTable").removeValue();
             }
         });
-        linearLayout.addView(botton);
+        linearLayout.addView(saveButton);
     }
 
     public void saveFavoriteCoffeeToDB(final FavoriteCoffee favoriteCoffee, final FirebaseUser user){

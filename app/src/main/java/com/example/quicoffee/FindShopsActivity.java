@@ -89,7 +89,7 @@ public class FindShopsActivity extends AppCompatActivity {
         shopsRef.removeEventListener(postListener);
         if(readListener != null ){
                 favoriteCoffeeRef.removeEventListener(readListener);
-                //saveListener init only if the user click on "save"
+                //saveOrderListener init only if the user click on "save"
                 //so we have to check this :)
         }
     }

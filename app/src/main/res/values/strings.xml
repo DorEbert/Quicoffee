@@ -3,4 +3,5 @@
     <string name="title_activity_choose_location">Map</string>
     <string name="shops_that_close_to_you">Shops nearby you:</string>
     <string name="clickOnThemTextView">Click on the product you want to add to your order :)</string>
+    <string name="saveButtonText">Save</string>
 </resources>

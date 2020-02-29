@@ -37,6 +37,10 @@ public class Global_Variable {
     public static final String  MISSING_PRODUCT_INFORMATION = "Enter product name!";
     
     //TABLES IN FIREBASE
+    //  ORDER TABLE
+    public static final String TABLE_ORDERS = "Orders";
+    public static final String ORDER_NOT_EXIST = "order_not_exist";
+
     //  USER TABLE
     public static final String TABLE_USERS = "Users";
     public static final String ID = "id";
