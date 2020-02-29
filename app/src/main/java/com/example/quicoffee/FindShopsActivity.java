@@ -7,7 +7,6 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.os.Parcelable;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -41,10 +40,17 @@ public class FindShopsActivity extends AppCompatActivity {
     public UserLocation userLocation;
     double x = 3;
     double y = 3;
-    public Bundle b;
-    private FavoriteCoffee favoriteCoffee;
+    public Bundle bundle;
 
-    //Read form firebase:
+    //Read form firebase the table favorite coffee:
+    private FavoriteCoffee favoriteCoffee;
+    private FavoriteCoffee someFavoriteCoffee;
+    private FavoriteCoffee FavoriteCoffeeFromDataSnapshot;
+    public String indexUserExistForFoundFC;
+    public DatabaseReference favoriteCoffeeRef;
+    public ValueEventListener readListener;
+
+    //Read form firebase the table shops:
     public FirebaseDatabase mDatabase;
     public DatabaseReference shopsRef;
     RecyclerView recyclerView;
@@ -60,18 +66,8 @@ public class FindShopsActivity extends AppCompatActivity {
         setContentView(R.layout.activity_find_shops);
         Toolbar myToolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(myToolbar);
-
-        //get info from other activity:
-        user = (FirebaseUser) getIntent().getParcelableExtra(Global_Variable.USER_FOR_MOVE_INTENT);
-        //get location user from other activity:
-        b = getIntent().getExtras();
-        x = b.getDouble(Global_Variable.USER_LOCATION_MOVE_INTENT_LONGITUDE);
-        y= b.getDouble(Global_Variable.USER_LOCATION_MOVE_INTENT_LATITUDE);
-        userLocation = new UserLocation(x,y);
-
         InititalVariablesOfLocalActivity();
-        //linearLayout.addView(CreateTextView(Global_Variable.SHOPS_THAT_CLOSE_TO_YOU));
-        //TODO: init  favoriteCoffee -> if user has a favoriteCoffee on the tabel if not -> just init a new one
+        readFavoriteCoffeeFromDB();
         //TODO: move this favoriteCoffee to other activities
     }
 
@@ -91,6 +87,11 @@ public class FindShopsActivity extends AppCompatActivity {
        arrayToShowOnTheScreen.clear();
         keys.clear();
         shopsRef.removeEventListener(postListener);
+        if(readListener != null ){
+                favoriteCoffeeRef.removeEventListener(readListener);
+                //saveListener init only if the user click on "save"
+                //so we have to check this :)
+        }
     }
 
     public void readShops(){//final DataStatus dataStatus){
@@ -124,8 +125,6 @@ public class FindShopsActivity extends AppCompatActivity {
 
                 recyclerView.setNestedScrollingEnabled(true);
                 recyclerView.setAdapter(shopAdapter);
-
-
             }
 
             public void onCancelled(@NonNull DatabaseError databaseError) {
@@ -136,17 +135,57 @@ public class FindShopsActivity extends AppCompatActivity {
         queryRef.addValueEventListener(postListener);
     }
 
+
+    public void readFavoriteCoffeeFromDB(){
+        readListener = new ValueEventListener(){
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                createFavoriteCoffee(dataSnapshot);
+            }
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        };
+        favoriteCoffeeRef.addValueEventListener(readListener);
+    }
+
+
+    ///DATA BASE //
+    private void createFavoriteCoffee(DataSnapshot dataSnapshot) {
+        indexUserExistForFoundFC = checkIfUserExistForFC(dataSnapshot);
+        if(indexUserExistForFoundFC.equals(Global_Variable.USER_NOT_EXIST)){
+            favoriteCoffee.setUserID(user.getUid());
+        }
+    }
+
+    public String checkIfUserExistForFC (DataSnapshot dataSnapshot) {
+        if (dataSnapshot.getChildrenCount() == 0 ){
+            return Global_Variable.USER_NOT_EXIST;
+        }
+        for (DataSnapshot postSnapshot: dataSnapshot.getChildren()) {
+            FavoriteCoffeeFromDataSnapshot = postSnapshot.getValue(FavoriteCoffee.class);
+            //Log.e("checkIfUserExist", "checkIfUserExist: someFavoriteCoffee.getUserID() "+f.getUserID());
+            // Log.e("checkIfUserExist", "checkIfUserExist: user.getUid() "+user.getUid());
+            if (FavoriteCoffeeFromDataSnapshot.getUserID().equals(user.getUid())) {
+                favoriteCoffee = FavoriteCoffeeFromDataSnapshot;
+                return postSnapshot.getKey();
+            }
+        }
+        return Global_Variable.USER_NOT_EXIST;
+    }
+
     private void showAShop(){
      //   Toast.makeText(this, "The Shop " + chosenShop.getID() + " is clicked", Toast.LENGTH_LONG).show();
-
         Intent intent = new Intent(FindShopsActivity.this, ShowChosenShopActivity.class);
-        //TODO: delete the shop and send only idShop + make it global
-        intent.putExtra("idShop" , chosenShop.getID());
+        intent.putExtra(Global_Variable.SHOP_ID_MOVE_INTENT , chosenShop.getID());
         intent.putExtra(Global_Variable.USER_FOR_MOVE_INTENT,this.user);
-        //TODO: putExtra favorite coffee
-        b.putDouble(Global_Variable.USER_LOCATION_MOVE_INTENT_LONGITUDE, this.userLocation.getX());
-        b.putDouble(Global_Variable.USER_LOCATION_MOVE_INTENT_LATITUDE, this.userLocation.getY());
-        intent.putExtras(b);
+        intent.putExtra(Global_Variable.SHOP_NAME_MOVE_INTENT, this.chosenShop.getShopName());
+        intent.putExtra(Global_Variable.FAVORITE_COFFEE_MOVE_INTENT, this.favoriteCoffee);
+        bundle.putDouble(Global_Variable.USER_LOCATION_MOVE_INTENT_LONGITUDE, this.userLocation.getX());
+        bundle.putDouble(Global_Variable.USER_LOCATION_MOVE_INTENT_LATITUDE, this.userLocation.getY());
+        intent.putExtras(bundle);
+        //bundle.putParcelable(Global_Variable.FAVORITE_COFFEE_MOVE_INTENT, this.favoriteCoffee);
         startActivity(intent);
         finish();
 
@@ -190,11 +229,26 @@ public class FindShopsActivity extends AppCompatActivity {
         mainActivityWitdh = getResources().getDisplayMetrics().widthPixels;
         mainActivityHeight = getResources().getDisplayMetrics().heightPixels;
         linearLayout = findViewById(R.id.linear_layout);
+
+        //get info from other activity:
+        user = (FirebaseUser) getIntent().getParcelableExtra(Global_Variable.USER_FOR_MOVE_INTENT);
+        //get location user from other activity:
+        bundle = getIntent().getExtras();
+        x = bundle.getDouble(Global_Variable.USER_LOCATION_MOVE_INTENT_LONGITUDE);
+        y= bundle.getDouble(Global_Variable.USER_LOCATION_MOVE_INTENT_LATITUDE);
+        userLocation = new UserLocation(x,y);
+
         //init for read shops from DB:
         arrayToShowOnTheScreen = new ArrayList<>();
         keys= new ArrayList<>();
         mDatabase = FirebaseDatabase.getInstance();
         shopsRef = mDatabase.getReference(Global_Variable.TABLE_SHOP);
+
+        //init for read favorite coffee from DB:
+        favoriteCoffee = new FavoriteCoffee();
+        someFavoriteCoffee = new FavoriteCoffee();
+        FavoriteCoffeeFromDataSnapshot = new FavoriteCoffee();
+        favoriteCoffeeRef = mDatabase.getReference(Global_Variable.FAVORITE_COFFEE_TABLE);
     }
 
 
@@ -213,9 +267,9 @@ public class FindShopsActivity extends AppCompatActivity {
         Intent myIntent = new Intent(FindShopsActivity.this,
                 FindShopsActivity.class);
         myIntent.putExtra(Global_Variable.USER_FOR_MOVE_INTENT,this.user);
-        b.putDouble(Global_Variable.USER_LOCATION_MOVE_INTENT_LONGITUDE, this.userLocation.getX());
-        b.putDouble(Global_Variable.USER_LOCATION_MOVE_INTENT_LATITUDE, this.userLocation.getY());
-        myIntent.putExtras(b);
+        bundle.putDouble(Global_Variable.USER_LOCATION_MOVE_INTENT_LONGITUDE, this.userLocation.getX());
+        bundle.putDouble(Global_Variable.USER_LOCATION_MOVE_INTENT_LATITUDE, this.userLocation.getY());
+        myIntent.putExtras(bundle);
         startActivity(myIntent);
     }
 
@@ -223,18 +277,18 @@ public class FindShopsActivity extends AppCompatActivity {
         Intent myIntent = new Intent(FindShopsActivity.this,
                 FavoriteCoffeeActivity.class);
         myIntent.putExtra(Global_Variable.USER_FOR_MOVE_INTENT,this.user);
-        b.putDouble(Global_Variable.USER_LOCATION_MOVE_INTENT_LONGITUDE, this.userLocation.getX());
-        b.putDouble(Global_Variable.USER_LOCATION_MOVE_INTENT_LATITUDE, this.userLocation.getY());
-        myIntent.putExtras(b);
+        bundle.putDouble(Global_Variable.USER_LOCATION_MOVE_INTENT_LONGITUDE, this.userLocation.getX());
+        bundle.putDouble(Global_Variable.USER_LOCATION_MOVE_INTENT_LATITUDE, this.userLocation.getY());
+        myIntent.putExtras(bundle);
         startActivity(myIntent);
     }
 
     public void AddShopActivity(){
         Intent myIntent = new Intent(FindShopsActivity.this,
                 ShopActivity.class);
-        b.putDouble(Global_Variable.USER_LOCATION_MOVE_INTENT_LONGITUDE, this.userLocation.getX());
-        b.putDouble(Global_Variable.USER_LOCATION_MOVE_INTENT_LATITUDE, this.userLocation.getY());
-        myIntent.putExtras(b);
+        bundle.putDouble(Global_Variable.USER_LOCATION_MOVE_INTENT_LONGITUDE, this.userLocation.getX());
+        bundle.putDouble(Global_Variable.USER_LOCATION_MOVE_INTENT_LATITUDE, this.userLocation.getY());
+        myIntent.putExtras(bundle);
         myIntent.putExtra(Global_Variable.USER_FOR_MOVE_INTENT,this.user);
         startActivity(myIntent);
     }

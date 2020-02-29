@@ -3,7 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <item android:id="@+id/findShops"
-        android:title="Find nearby Shops "
+        android:title="Find Quicoffee "
         app:showAsAction="never">
     </item>
     <item android:id="@+id/favoriteCoffee"
@@ -11,7 +11,7 @@
         app:showAsAction="never">
     </item>
     <item android:id="@+id/myOrder"
-        android:title="My Orders"
+        android:title="My Order"
         app:showAsAction="never">
     </item>
     <item android:id="@+id/setUpAShop"

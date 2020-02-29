@@ -105,6 +105,9 @@ public class Global_Variable {
     public static final String USER_FOR_MOVE_INTENT = "FirebaseUser";
     public static final String USER_LOCATION_MOVE_INTENT_LATITUDE = "Latitude";
     public static final String USER_LOCATION_MOVE_INTENT_LONGITUDE = "Longitude";
+    public static final String SHOP_ID_MOVE_INTENT = "idShop";
+    public static final String SHOP_NAME_MOVE_INTENT = "nameShop";
+    public static final String FAVORITE_COFFEE_MOVE_INTENT = "favoriteCoffeeIntent";
    // public static final String USER_LOCATION_MOVE_INTENT = "userLocationForMoveing";
 
 }

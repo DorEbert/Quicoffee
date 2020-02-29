@@ -1,8 +1,11 @@
 package com.example.quicoffee.Models;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
 import com.example.quicoffee.Global_Variable;
 
-public class FavoriteCoffee {
+public class FavoriteCoffee implements Parcelable {
     public String sizeOfCup;
     public String typeOfMilk;
     public String amountOfEspresso;
@@ -20,6 +23,26 @@ public class FavoriteCoffee {
 
     public FavoriteCoffee() {
     }
+
+    protected FavoriteCoffee(Parcel in) {
+        sizeOfCup = in.readString();
+        typeOfMilk = in.readString();
+        amountOfEspresso = in.readString();
+        with_Form = in.readString();
+        userID = in.readString();
+    }
+
+    public static final Parcelable.Creator<FavoriteCoffee> CREATOR = new Parcelable.Creator<FavoriteCoffee>() {
+        @Override
+        public FavoriteCoffee createFromParcel(Parcel in) {
+            return new FavoriteCoffee(in);
+        }
+
+        @Override
+        public FavoriteCoffee[] newArray(int size) {
+            return new FavoriteCoffee[size];
+        }
+    };
 
     public String getSizeOfCup() {
         return sizeOfCup;
@@ -62,6 +85,17 @@ public class FavoriteCoffee {
     }
 
 
+    @Override
+    public int describeContents() {
+        return 0;
+    }
 
-
+    @Override
+    public void writeToParcel(Parcel out, int flags) {
+        out.writeString(sizeOfCup);
+        out.writeString(typeOfMilk);
+        out.writeString(amountOfEspresso);
+        out.writeString(with_Form);
+        out.writeString(userID);
+    }
 }

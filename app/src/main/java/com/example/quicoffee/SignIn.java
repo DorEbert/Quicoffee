@@ -47,7 +47,7 @@ public class SignIn extends AppCompatActivity {
     public UserLocation userLocation;
     FusedLocationProviderClient mFusedLocationClient;
     int PERMISSION_ID = 44;
-    Bundle b;
+    Bundle bundle;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -55,7 +55,7 @@ public class SignIn extends AppCompatActivity {
         setContentView(R.layout.activity_sign_in);
         Toolbar myToolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(myToolbar);
-        b = new Bundle();
+        bundle = new Bundle();
         mAuth = FirebaseAuth.getInstance();
 // Choose authentication providers
         List<AuthUI.IdpConfig> providers = Arrays.asList(
@@ -114,9 +114,9 @@ public class SignIn extends AppCompatActivity {
         Intent myIntent = new Intent(SignIn.this,
                 FindShopsActivity.class);
         myIntent.putExtra(Global_Variable.USER_FOR_MOVE_INTENT,this.user);
-        b.putDouble(Global_Variable.USER_LOCATION_MOVE_INTENT_LONGITUDE, this.userLocation.getX());
-        b.putDouble(Global_Variable.USER_LOCATION_MOVE_INTENT_LATITUDE, this.userLocation.getY());
-        myIntent.putExtras(b);
+        bundle.putDouble(Global_Variable.USER_LOCATION_MOVE_INTENT_LONGITUDE, this.userLocation.getX());
+        bundle.putDouble(Global_Variable.USER_LOCATION_MOVE_INTENT_LATITUDE, this.userLocation.getY());
+        myIntent.putExtras(bundle);
         startActivity(myIntent);
     }
 

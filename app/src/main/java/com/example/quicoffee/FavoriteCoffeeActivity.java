@@ -39,7 +39,7 @@ public class FavoriteCoffeeActivity extends AppCompatActivity  {
     public UserLocation userLocation;
     double x = 3;
     double y = 3;
-    public Bundle b;
+    public Bundle bundle;
 
     //for favorite coffee table:
     public FirebaseDatabase mDatabase;
@@ -60,10 +60,10 @@ public class FavoriteCoffeeActivity extends AppCompatActivity  {
 
         user = (FirebaseUser) getIntent().getParcelableExtra(Global_Variable.USER_FOR_MOVE_INTENT);
         //get location user from other activity:
-        b = new Bundle();
-        b = getIntent().getExtras();
-        x = b.getDouble(Global_Variable.USER_LOCATION_MOVE_INTENT_LONGITUDE);
-        y = b.getDouble(Global_Variable.USER_LOCATION_MOVE_INTENT_LATITUDE);
+        bundle = new Bundle();
+        bundle = getIntent().getExtras();
+        x = bundle.getDouble(Global_Variable.USER_LOCATION_MOVE_INTENT_LONGITUDE);
+        y = bundle.getDouble(Global_Variable.USER_LOCATION_MOVE_INTENT_LATITUDE);
         userLocation = new UserLocation(x,y);
 
         inititalVariablesOfLocalActivity();
@@ -75,7 +75,6 @@ public class FavoriteCoffeeActivity extends AppCompatActivity  {
 
         mDatabase = FirebaseDatabase.getInstance();
         favoriteCoffeeRef = mDatabase.getReference(Global_Variable.FAVORITE_COFFEE_TABLE);
-
     }
 
 
@@ -280,18 +279,18 @@ public class FavoriteCoffeeActivity extends AppCompatActivity  {
         Intent myIntent = new Intent(FavoriteCoffeeActivity.this,
                 FindShopsActivity.class);
         myIntent.putExtra(Global_Variable.USER_FOR_MOVE_INTENT,this.user);
-        b.putDouble(Global_Variable.USER_LOCATION_MOVE_INTENT_LONGITUDE, this.userLocation.getX());
-        b.putDouble(Global_Variable.USER_LOCATION_MOVE_INTENT_LATITUDE, this.userLocation.getY());
-        myIntent.putExtras(b);
+        bundle.putDouble(Global_Variable.USER_LOCATION_MOVE_INTENT_LONGITUDE, this.userLocation.getX());
+        bundle.putDouble(Global_Variable.USER_LOCATION_MOVE_INTENT_LATITUDE, this.userLocation.getY());
+        myIntent.putExtras(bundle);
         startActivity(myIntent);
     }
 
     public void AddShopActivity(){
         Intent myIntent = new Intent(FavoriteCoffeeActivity.this,
                 ShopActivity.class);
-        b.putDouble(Global_Variable.USER_LOCATION_MOVE_INTENT_LONGITUDE, this.userLocation.getX());
-        b.putDouble(Global_Variable.USER_LOCATION_MOVE_INTENT_LATITUDE, this.userLocation.getY());
-        myIntent.putExtras(b);
+        bundle.putDouble(Global_Variable.USER_LOCATION_MOVE_INTENT_LONGITUDE, this.userLocation.getX());
+        bundle.putDouble(Global_Variable.USER_LOCATION_MOVE_INTENT_LATITUDE, this.userLocation.getY());
+        myIntent.putExtras(bundle);
         myIntent.putExtra(Global_Variable.USER_FOR_MOVE_INTENT,this.user);
         startActivity(myIntent);
     }
@@ -299,9 +298,9 @@ public class FavoriteCoffeeActivity extends AppCompatActivity  {
         Intent myIntent = new Intent(FavoriteCoffeeActivity.this,
                 FavoriteCoffeeActivity.class);
         myIntent.putExtra(Global_Variable.USER_FOR_MOVE_INTENT,this.user);
-        b.putDouble(Global_Variable.USER_LOCATION_MOVE_INTENT_LONGITUDE, this.userLocation.getX());
-        b.putDouble(Global_Variable.USER_LOCATION_MOVE_INTENT_LATITUDE, this.userLocation.getY());
-        myIntent.putExtras(b);
+        bundle.putDouble(Global_Variable.USER_LOCATION_MOVE_INTENT_LONGITUDE, this.userLocation.getX());
+        bundle.putDouble(Global_Variable.USER_LOCATION_MOVE_INTENT_LATITUDE, this.userLocation.getY());
+        myIntent.putExtras(bundle);
         startActivity(myIntent);
     }
 
