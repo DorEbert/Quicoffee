@@ -319,4 +319,8 @@ public class AddShopMenuActivity extends AppCompatActivity {
                     });
         }
     }
+    @Override
+    public void onBackPressed() {
+        ReturnToManagerShopActivity();
+    }
 }
