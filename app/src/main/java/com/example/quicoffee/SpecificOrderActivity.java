@@ -76,8 +76,9 @@ public class SpecificOrderActivity extends AppCompatActivity {
         Toolbar myToolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(myToolbar);
         InititalVariablesOfLocalActivity();
-        readAllProducts();
         readTotalPrice();
+        readAllProducts();
+        textViewTotalPrice.setText(getApplication().getResources().getString(R.string.textViewTotalPriceText)+ totalPrice);
     }
 
     @Override
@@ -86,10 +87,9 @@ public class SpecificOrderActivity extends AppCompatActivity {
         //DATA BASE:
         arrayToShowOnTheScreen.clear();
         keys.clear();
-        readAllProducts();
+        totalPrice = 0;
         readTotalPrice();
-        textViewTotalPrice.setText(getApplication().getResources().getString
-                (R.string.textViewTotalPriceText)+ totalPrice);
+        readAllProducts();
     }
 
     @Override
@@ -98,6 +98,7 @@ public class SpecificOrderActivity extends AppCompatActivity {
         //DATA BASE:
         arrayToShowOnTheScreen.clear();
         keys.clear();
+        totalPrice = 0 ;
         orderProductsRef.removeEventListener(readOrderProductsListener);
         orderTotalPriceRef.removeEventListener(readTotalPriceListener);
     }
@@ -108,7 +109,6 @@ public class SpecificOrderActivity extends AppCompatActivity {
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 Order someOrder = dataSnapshot.getValue(Order.class);
                 totalPrice = someOrder.getTotalPrice();
-                Log.e("totalprice","total price "+ totalPrice);
             }
 
             @Override
@@ -116,7 +116,6 @@ public class SpecificOrderActivity extends AppCompatActivity {
                 Log.e("The read failed: " ,databaseError.getMessage());
             }
         };
-
     }
 
     public void readAllProducts(){//final DataStatus dataStatus){
@@ -264,8 +263,8 @@ public class SpecificOrderActivity extends AppCompatActivity {
     @Override
     public void onBackPressed() {
     }
-
 */
+
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater inflater = getMenuInflater();
