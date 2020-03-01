@@ -2,7 +2,8 @@
     <string name="app_name">Quicoffee</string>
     <string name="title_activity_choose_location">Map</string>
     <string name="shops_that_close_to_you">Shops nearby you:</string>
-    <string name="clickOnThemTextView">Click on the product you want to add to your order :)</string>
+    <string name="clickOnThemTextViewAddProduct">Click on the product you want to add to your order :)</string>
+    <string name="clickOnThemTextViewDeleteProduct">Click on the product you want to delete from your order </string>
     <string name="saveButtonText">Save</string>
     <string name="myOrdersButtonText">My orders</string>
     <string name="textViewTitleSpecificOrderString">Your Order details:</string>

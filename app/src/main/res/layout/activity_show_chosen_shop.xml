@@ -38,7 +38,7 @@
         </TextView>
         <TextView
             android:id="@+id/clickOnThemTextView"
-            android:text="@string/clickOnThemTextView"
+            android:text="@string/clickOnThemTextViewAddProduct"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textSize="15dp"

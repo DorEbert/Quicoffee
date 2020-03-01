@@ -57,12 +57,16 @@ public class SpecificOrderActivity extends AppCompatActivity {
 
     //read the order from the DB:
     public FirebaseDatabase mDatabase;
-    public DatabaseReference orderRef;
-    public ValueEventListener readOrderListener;
+    public DatabaseReference orderProductsRef;
+    public ValueEventListener readOrderProductsListener;
     RecyclerView recyclerView;
     private ArrayList<Product> arrayToShowOnTheScreen;
     private List<String> keys;
     private ProductAdapter productAdapter;
+
+    //read total price from the DB:
+    public DatabaseReference orderTotalPriceRef;
+    public ValueEventListener readTotalPriceListener;
 
 
     @Override
@@ -73,6 +77,7 @@ public class SpecificOrderActivity extends AppCompatActivity {
         setSupportActionBar(myToolbar);
         InititalVariablesOfLocalActivity();
         readAllProducts();
+        readTotalPrice();
     }
 
     @Override
@@ -82,6 +87,9 @@ public class SpecificOrderActivity extends AppCompatActivity {
         arrayToShowOnTheScreen.clear();
         keys.clear();
         readAllProducts();
+        readTotalPrice();
+        textViewTotalPrice.setText(getApplication().getResources().getString
+                (R.string.textViewTotalPriceText)+ totalPrice);
     }
 
     @Override
@@ -90,24 +98,39 @@ public class SpecificOrderActivity extends AppCompatActivity {
         //DATA BASE:
         arrayToShowOnTheScreen.clear();
         keys.clear();
-        orderRef.removeEventListener(readOrderListener);
+        orderProductsRef.removeEventListener(readOrderProductsListener);
+        orderTotalPriceRef.removeEventListener(readTotalPriceListener);
     }
 
+    public void readTotalPrice(){
+        readTotalPriceListener = new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                Order someOrder = dataSnapshot.getValue(Order.class);
+                totalPrice = someOrder.getTotalPrice();
+                Log.e("totalprice","total price "+ totalPrice);
+            }
 
-    //TODO read total price also
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+                Log.e("The read failed: " ,databaseError.getMessage());
+            }
+        };
+
+    }
+
     public void readAllProducts(){//final DataStatus dataStatus){
         arrayToShowOnTheScreen.clear();
         keys.clear();
-        readOrderListener = new ValueEventListener(){
+        readOrderProductsListener = new ValueEventListener(){
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 for (DataSnapshot postSnapshot: dataSnapshot.getChildren()) {
                     keys.add(postSnapshot.getKey());
                     Product someProduct = postSnapshot.getValue(Product.class);
+                    //the calculation of the total price should  to be the order class not here!
                     //totalPrice = totalPrice + someProduct.getPrice();
                     arrayToShowOnTheScreen.add(someProduct);
-                    //Log.e("totalPrice","totalPrice "+ totalPrice);
-                    //Log.e("totalPrice","someProduct.getPrice() "+ someProduct.getPrice());
                 }
                 //textViewTotalPrice.setText(getApplication().getResources().getString(R.string.textViewTotalPriceText)+ totalPrice);
                 Collections.reverse(arrayToShowOnTheScreen);
@@ -118,8 +141,6 @@ public class SpecificOrderActivity extends AppCompatActivity {
                 productAdapter.SetOnItemClickListener(new ProductAdapter.OnItemClickListener() {
                     @Override
                     public void onItemClick(int position) {
-                        //TODO: delete the product:
-                        //TODO: add text view that tell the user to click if he want to delete a product
                         DatabaseReference ref=FirebaseDatabase.getInstance().getReference();
                         ref.child(Global_Variable.TABLE_ORDERS).child(orderID).child(arrayToShowOnTheScreen.get(position).getID()).removeValue();
                     }
@@ -131,12 +152,8 @@ public class SpecificOrderActivity extends AppCompatActivity {
                 Log.e("The read failed: " ,databaseError.getMessage());
             }
         };
-
-        Query queryRef = orderRef.orderByChild(Global_Variable.PRODUCT_NAME_COLUMN);
-        queryRef.addValueEventListener(readOrderListener);
-
-
-
+        Query queryRef = orderProductsRef.orderByChild(Global_Variable.PRODUCT_NAME_COLUMN);
+        queryRef.addValueEventListener(readOrderProductsListener);
     }
 
 
@@ -180,7 +197,8 @@ public class SpecificOrderActivity extends AppCompatActivity {
         arrayToShowOnTheScreen = new ArrayList<>();
         keys= new ArrayList<>();
         mDatabase = FirebaseDatabase.getInstance();
-        orderRef = mDatabase.getReference(Global_Variable.TABLE_ORDERS).child(orderID).child(Global_Variable.PRODUCTS_COLUMN);
+        orderProductsRef = mDatabase.getReference(Global_Variable.TABLE_ORDERS).child(orderID).child(Global_Variable.PRODUCTS_COLUMN);
+        orderTotalPriceRef = mDatabase.getReference(Global_Variable.TABLE_ORDERS).child(orderID);
     }
 
     private void  createTextViewUITitle(TextView textView,String title){
