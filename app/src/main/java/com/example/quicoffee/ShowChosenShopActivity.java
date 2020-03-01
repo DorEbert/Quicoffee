@@ -247,6 +247,7 @@ public class ShowChosenShopActivity extends AppCompatActivity {
         indexOrderExist = checkIfOrderExist(dataSnapshot);
         someOrder = new Order(nameShop);
         someOrder.setUserID(user.getUid());
+        someOrder.setIdShop(this.idShop);
         if(indexOrderExist.equals(Global_Variable.ORDER_NOT_EXIST)){
             idForPushOrderToDB = orderRef.push().getKey();
             orderID = idForPushOrderToDB;

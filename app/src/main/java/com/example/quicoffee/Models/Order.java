@@ -16,14 +16,34 @@ public class Order {
     private ArrayList<Product> products;
     private String generalComment;
     private Time orderPickUpTime;
+    private double totalPrice;
+    private String idShop;
 
     public Order(String shopName){
         this.shopName = shopName;
         products = new ArrayList<>();
+        totalPrice=0;
+        //TODO: time for order
     }
 
     public Order(){
 
+    }
+
+    public double getTotalPrice() {
+        return totalPrice;
+    }
+
+    public String getIdShop(){
+        return this.idShop;
+    }
+
+    public void setIdShop(String idShop){
+        this.idShop = idShop;
+    }
+
+    public void setTotalPrice(double totalPrice){
+        this.totalPrice = totalPrice;
     }
 
     public String getUserID() {
@@ -40,11 +60,13 @@ public class Order {
 
     public void addProduct(Product product){
         products.add(product);
+        totalPrice = totalPrice + product.getPrice();
     }
 
     private void removeProduct(Product product){
         //todo maybe instead of product use product ID
         products.remove(product);
+        totalPrice = totalPrice - product.getPrice();
     }
     private void addGeneralComment(String generalComment) {
         this.generalComment = generalComment;

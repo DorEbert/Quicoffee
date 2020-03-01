@@ -19,6 +19,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.quicoffee.Models.Order;
 import com.example.quicoffee.Models.Product;
 import com.example.quicoffee.Models.ProductAdapter;
 import com.example.quicoffee.Models.UserLocation;
@@ -71,6 +72,7 @@ public class SpecificOrderActivity extends AppCompatActivity {
         Toolbar myToolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(myToolbar);
         InititalVariablesOfLocalActivity();
+        readAllProducts();
     }
 
     @Override
@@ -92,6 +94,7 @@ public class SpecificOrderActivity extends AppCompatActivity {
     }
 
 
+    //TODO read total price also
     public void readAllProducts(){//final DataStatus dataStatus){
         arrayToShowOnTheScreen.clear();
         keys.clear();
@@ -101,12 +104,12 @@ public class SpecificOrderActivity extends AppCompatActivity {
                 for (DataSnapshot postSnapshot: dataSnapshot.getChildren()) {
                     keys.add(postSnapshot.getKey());
                     Product someProduct = postSnapshot.getValue(Product.class);
-                    totalPrice = totalPrice + someProduct.getPrice();
+                    //totalPrice = totalPrice + someProduct.getPrice();
                     arrayToShowOnTheScreen.add(someProduct);
-                    Log.e("totalPrice","totalPrice "+ totalPrice);
-                    Log.e("totalPrice","someProduct.getPrice() "+ someProduct.getPrice());
+                    //Log.e("totalPrice","totalPrice "+ totalPrice);
+                    //Log.e("totalPrice","someProduct.getPrice() "+ someProduct.getPrice());
                 }
-                textViewTotalPrice.setText(getApplication().getResources().getString(R.string.textViewTotalPriceText)+ totalPrice);
+                //textViewTotalPrice.setText(getApplication().getResources().getString(R.string.textViewTotalPriceText)+ totalPrice);
                 Collections.reverse(arrayToShowOnTheScreen);
                 recyclerView = (RecyclerView) findViewById(R.id.my_recycler_view);
                 recyclerView.setHasFixedSize(true);
@@ -131,6 +134,9 @@ public class SpecificOrderActivity extends AppCompatActivity {
 
         Query queryRef = orderRef.orderByChild(Global_Variable.PRODUCT_NAME_COLUMN);
         queryRef.addValueEventListener(readOrderListener);
+
+
+
     }
 
 

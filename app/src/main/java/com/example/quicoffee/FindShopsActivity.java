@@ -68,7 +68,6 @@ public class FindShopsActivity extends AppCompatActivity {
         setSupportActionBar(myToolbar);
         InititalVariablesOfLocalActivity();
         readFavoriteCoffeeFromDB();
-        //TODO: move this favoriteCoffee to other activities
     }
 
     @Override
