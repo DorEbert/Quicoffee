@@ -15,6 +15,9 @@ import android.os.Bundle;
 import android.provider.MediaStore;
 import android.text.TextUtils;
 import android.view.Gravity;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.inputmethod.EditorInfo;
 import android.widget.Button;
@@ -24,11 +27,14 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.quicoffee.Models.FavoriteCoffee;
 import com.example.quicoffee.Models.Product;
 import com.example.quicoffee.Models.Shop;
+import com.example.quicoffee.Models.UserLocation;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -54,6 +60,14 @@ public class AddShopMenuActivity extends AppCompatActivity {
     private String productIDToUpdate;
     private String ingredientTextToUpdate;
     private Shop shop;
+    public FirebaseUser user;
+    private FavoriteCoffee favoriteCoffee;
+    public UserLocation userLocation;
+    double x = 3;
+    double y = 3;
+    public Bundle bundle;
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -96,6 +110,15 @@ public class AddShopMenuActivity extends AppCompatActivity {
         linearLayout = findViewById(R.id.linear_layout);
         image = new ImageView(this);
         shop = getIntent().getParcelableExtra(Global_Variable.SHOP_INTENT);
+
+        user = (FirebaseUser) getIntent().getParcelableExtra(Global_Variable.USER_FOR_MOVE_INTENT);
+        //get location user from other activity:
+        bundle = new Bundle();
+        bundle = getIntent().getExtras();
+        x = bundle.getDouble(Global_Variable.USER_LOCATION_MOVE_INTENT_LONGITUDE);
+        y = bundle.getDouble(Global_Variable.USER_LOCATION_MOVE_INTENT_LATITUDE);
+        userLocation = new UserLocation(x,y);
+
     }
     private void BuildAddProductActivityUI(){
         LinearLayout.LayoutParams lparams = new LinearLayout.LayoutParams((int)(mainActivityWitdh *0.9),mainActivityHeight/20);
@@ -322,5 +345,79 @@ public class AddShopMenuActivity extends AppCompatActivity {
     @Override
     public void onBackPressed() {
         ReturnToManagerShopActivity();
+    }
+
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.main_menu, menu);
+        return true;
+    }
+
+    //TODO: init all the menu oprtions :)
+    //findShops, favoirtCoffee, myOrder, setUpAShop, setting,logOut
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        // Handle item selection
+        switch (item.getItemId()) {
+            case R.id.findShops:
+                findShops();
+                return true;
+            case R.id.favoriteCoffee:
+                favoriteCoffee();
+                return true;
+            case R.id.myOrder:
+                showMyOrders();
+                return true;
+            case R.id.setUpAShop:
+                AddShopActivity();
+                return true;
+            case R.id.setting:
+                return true;
+            case R.id.logOut:
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
+    }
+
+    public void findShops(){
+        Intent myIntent = new Intent(AddShopMenuActivity.this,
+                FindShopsActivity.class);
+        myIntent.putExtra(Global_Variable.USER_FOR_MOVE_INTENT,this.user);
+        bundle.putDouble(Global_Variable.USER_LOCATION_MOVE_INTENT_LONGITUDE, this.userLocation.getX());
+        bundle.putDouble(Global_Variable.USER_LOCATION_MOVE_INTENT_LATITUDE, this.userLocation.getY());
+        myIntent.putExtras(bundle);
+        startActivity(myIntent);
+    }
+
+    public void AddShopActivity(){
+        Intent myIntent = new Intent(AddShopMenuActivity.this,
+                ShopActivity.class);
+        bundle.putDouble(Global_Variable.USER_LOCATION_MOVE_INTENT_LONGITUDE, this.userLocation.getX());
+        bundle.putDouble(Global_Variable.USER_LOCATION_MOVE_INTENT_LATITUDE, this.userLocation.getY());
+        myIntent.putExtras(bundle);
+        myIntent.putExtra(Global_Variable.USER_FOR_MOVE_INTENT,this.user);
+        startActivity(myIntent);
+    }
+    public void favoriteCoffee(){
+        Intent myIntent = new Intent(AddShopMenuActivity.this,
+                FavoriteCoffeeActivity.class);
+        myIntent.putExtra(Global_Variable.USER_FOR_MOVE_INTENT,this.user);
+        bundle.putDouble(Global_Variable.USER_LOCATION_MOVE_INTENT_LONGITUDE, this.userLocation.getX());
+        bundle.putDouble(Global_Variable.USER_LOCATION_MOVE_INTENT_LATITUDE, this.userLocation.getY());
+        myIntent.putExtras(bundle);
+        startActivity(myIntent);
+    }
+
+    public void showMyOrders(){
+        Intent myIntent = new Intent(AddShopMenuActivity.this,
+                MyOrdersActivity.class);
+        myIntent.putExtra(Global_Variable.USER_FOR_MOVE_INTENT,this.user);
+        bundle.putDouble(Global_Variable.USER_LOCATION_MOVE_INTENT_LONGITUDE, this.userLocation.getX());
+        bundle.putDouble(Global_Variable.USER_LOCATION_MOVE_INTENT_LATITUDE, this.userLocation.getY());
+        myIntent.putExtras(bundle);
+        startActivity(myIntent);
     }
 }

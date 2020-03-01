@@ -5,4 +5,9 @@
     <string name="clickOnThemTextView">Click on the product you want to add to your order :)</string>
     <string name="saveButtonText">Save</string>
     <string name="myOrdersButtonText">My orders</string>
+    <string name="textViewTitleSpecificOrderString">Your Order details:</string>
+    <string name="payBySelfieButtonText">Pay by selfie</string>
+    <string name="textViewTotalPriceText">Total price:  </string>
+    <string name="deleteOrderButtonText">Delete Order</string>
+    <string name="textViewTitleMyOrdersString">My Orders</string>
 </resources>

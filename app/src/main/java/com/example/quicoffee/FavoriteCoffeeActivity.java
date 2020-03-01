@@ -45,7 +45,7 @@ public class FavoriteCoffeeActivity extends AppCompatActivity  {
     public FirebaseDatabase mDatabase;
     public DatabaseReference favoriteCoffeeRef;
     private FavoriteCoffee someFavoriteCoffee;
-    private String id; // for the push method DB
+    private String idForPushFCToDB; // for the push method DB
     public ValueEventListener saveListener;
     public String indexUserExist; // the Key from DB at Favorite coffee Table -> if isnt exist will be "none"
     public FavoriteCoffee FavoriteCoffeeFromDataSnapshot;
@@ -146,13 +146,13 @@ public class FavoriteCoffeeActivity extends AppCompatActivity  {
                 favoriteCoffee.getAmountOfEspresso(),"dorel",user.getUid());
         Log.e("writeFavoriteCoffee ","writeFavoriteCoffee get form?  : "+ favoriteCoffee.getWith_Form());
         if(indexUserExist.equals(Global_Variable.USER_NOT_EXIST)){
-            id = favoriteCoffeeRef.push().getKey();
-            favoriteCoffeeRef.child(id).setValue(someFavoriteCoffee);
+            idForPushFCToDB = favoriteCoffeeRef.push().getKey();
+            favoriteCoffeeRef.child(idForPushFCToDB).setValue(someFavoriteCoffee);
         }
         else{ // update:
             //Log.e("writeFavoriteCoffee ","writeFavoriteCoffee indexUserExist : "+ indexUserExist);
             //Dorel:
-            // because the user came from DB online its takes time to update the id from DB -> to favoriteCoffee.UserID
+            // because the user came from DB online its takes time to update the idForPushFCToDB from DB -> to favoriteCoffee.UserID
             // so I done it only here and not onCreate method:
             favoriteCoffee.setUserID(user.getUid());
             dataSnapshot.getRef().child(indexUserExist).setValue(favoriteCoffee);
@@ -260,7 +260,7 @@ public class FavoriteCoffeeActivity extends AppCompatActivity  {
                 favoriteCoffee();
                 return true;
             case R.id.myOrder:
-                //     showMyOrders();
+                     showMyOrders();
                 return true;
             case R.id.setUpAShop:
                 AddShopActivity();
@@ -302,5 +302,16 @@ public class FavoriteCoffeeActivity extends AppCompatActivity  {
         myIntent.putExtras(bundle);
         startActivity(myIntent);
     }
+
+    public void showMyOrders(){
+        Intent myIntent = new Intent(FavoriteCoffeeActivity.this,
+                MyOrdersActivity.class);
+        myIntent.putExtra(Global_Variable.USER_FOR_MOVE_INTENT,this.user);
+        bundle.putDouble(Global_Variable.USER_LOCATION_MOVE_INTENT_LONGITUDE, this.userLocation.getX());
+        bundle.putDouble(Global_Variable.USER_LOCATION_MOVE_INTENT_LATITUDE, this.userLocation.getY());
+        myIntent.putExtras(bundle);
+        startActivity(myIntent);
+    }
+
 
 }

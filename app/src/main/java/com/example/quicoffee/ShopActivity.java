@@ -307,6 +307,16 @@ public class ShopActivity extends AppCompatActivity implements OnMapReadyCallbac
         startActivity(myIntent);
     }
 
+    public void showMyOrders(){
+        Intent myIntent = new Intent(ShopActivity.this,
+                MyOrdersActivity.class);
+        myIntent.putExtra(Global_Variable.USER_FOR_MOVE_INTENT,this.user);
+        bundle.putDouble(Global_Variable.USER_LOCATION_MOVE_INTENT_LONGITUDE, this.userLocation.getX());
+        bundle.putDouble(Global_Variable.USER_LOCATION_MOVE_INTENT_LATITUDE, this.userLocation.getY());
+        myIntent.putExtras(bundle);
+        startActivity(myIntent);
+    }
+
 
     @Override
     public void onMapReady(GoogleMap googleMap) {

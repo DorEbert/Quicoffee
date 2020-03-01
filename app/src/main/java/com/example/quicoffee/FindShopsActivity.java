@@ -179,8 +179,8 @@ public class FindShopsActivity extends AppCompatActivity {
      //   Toast.makeText(this, "The Shop " + chosenShop.getID() + " is clicked", Toast.LENGTH_LONG).show();
         Intent intent = new Intent(FindShopsActivity.this, ShowChosenShopActivity.class);
         intent.putExtra(Global_Variable.SHOP_ID_MOVE_INTENT , chosenShop.getID());
-        intent.putExtra(Global_Variable.USER_FOR_MOVE_INTENT,this.user);
         intent.putExtra(Global_Variable.SHOP_NAME_MOVE_INTENT, this.chosenShop.getShopName());
+        intent.putExtra(Global_Variable.USER_FOR_MOVE_INTENT,this.user);
         intent.putExtra(Global_Variable.FAVORITE_COFFEE_MOVE_INTENT, this.favoriteCoffee);
         bundle.putDouble(Global_Variable.USER_LOCATION_MOVE_INTENT_LONGITUDE, this.userLocation.getX());
         bundle.putDouble(Global_Variable.USER_LOCATION_MOVE_INTENT_LATITUDE, this.userLocation.getY());
@@ -188,7 +188,6 @@ public class FindShopsActivity extends AppCompatActivity {
         //bundle.putParcelable(Global_Variable.FAVORITE_COFFEE_MOVE_INTENT, this.favoriteCoffee);
         startActivity(intent);
         finish();
-
     }
 
     @Override
@@ -205,13 +204,13 @@ public class FindShopsActivity extends AppCompatActivity {
         // Handle item selection
         switch (item.getItemId()) {
             case R.id.findShops:
-                   findShops();
+                findShops();
                 return true;
             case R.id.favoriteCoffee:
-                   favoriteCoffee();
+                favoriteCoffee();
                 return true;
             case R.id.myOrder:
-                //     showMyOrders();
+                showMyOrders();
                 return true;
             case R.id.setUpAShop:
                 AddShopActivity();
@@ -293,7 +292,15 @@ public class FindShopsActivity extends AppCompatActivity {
         startActivity(myIntent);
     }
 
-
+    public void showMyOrders(){
+        Intent myIntent = new Intent(FindShopsActivity.this,
+                MyOrdersActivity.class);
+        myIntent.putExtra(Global_Variable.USER_FOR_MOVE_INTENT,this.user);
+        bundle.putDouble(Global_Variable.USER_LOCATION_MOVE_INTENT_LONGITUDE, this.userLocation.getX());
+        bundle.putDouble(Global_Variable.USER_LOCATION_MOVE_INTENT_LATITUDE, this.userLocation.getY());
+        myIntent.putExtras(bundle);
+        startActivity(myIntent);
+    }
 
 
 }

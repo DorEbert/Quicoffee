@@ -21,7 +21,8 @@
         android:roundIcon="@mipmap/logowithmap_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.AppCompat.Light.NoActionBar">
-        <activity android:name=".specificOrderActivity"></activity>
+        <activity android:name=".MyOrdersActivity"></activity>
+        <activity android:name=".SpecificOrderActivity" />
         <activity android:name=".ShowChosenShopActivity" />
         <activity android:name=".OurDefaultActivity" />
         <activity android:name=".FavoriteCoffeeActivity" />

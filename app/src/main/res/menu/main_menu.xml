@@ -11,7 +11,7 @@
         app:showAsAction="never">
     </item>
     <item android:id="@+id/myOrder"
-        android:title="My Order"
+        android:title="@string/textViewTitleMyOrdersString"
         app:showAsAction="never">
     </item>
     <item android:id="@+id/setUpAShop"

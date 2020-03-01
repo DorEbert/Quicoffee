@@ -40,6 +40,7 @@ public class Global_Variable {
     //  ORDER TABLE
     public static final String TABLE_ORDERS = "Orders";
     public static final String ORDER_NOT_EXIST = "order_not_exist";
+    public static final String ORDER_ID = "Number of the order";
 
     //  USER TABLE
     public static final String TABLE_USERS = "Users";
@@ -109,9 +110,10 @@ public class Global_Variable {
     public static final String USER_FOR_MOVE_INTENT = "FirebaseUser";
     public static final String USER_LOCATION_MOVE_INTENT_LATITUDE = "Latitude";
     public static final String USER_LOCATION_MOVE_INTENT_LONGITUDE = "Longitude";
-    public static final String SHOP_ID_MOVE_INTENT = "idShop";
-    public static final String SHOP_NAME_MOVE_INTENT = "nameShop";
+    public static final String SHOP_ID_MOVE_INTENT = "shopIdMoveIntent";
+    public static final String SHOP_NAME_MOVE_INTENT = "shopNameMoveIntent";
     public static final String FAVORITE_COFFEE_MOVE_INTENT = "favoriteCoffeeIntent";
+    public static final String ORDER_ID_MOVE_INTENT = "orderIdMoveIntent";
    // public static final String USER_LOCATION_MOVE_INTENT = "userLocationForMoveing";
 
 }
