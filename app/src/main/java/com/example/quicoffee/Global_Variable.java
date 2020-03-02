@@ -78,6 +78,8 @@ public class Global_Variable {
     public static final String PRICE_COLUMN = "price";
     public static final String DESCRIPTION_COLUMN = "description";
     public static final String URI_INTENT = "Uri-Intent";
+    public static final String FAILED = "Failed";
+    public static final String WAIT = "Wait";
 
     public static int index = 10;
     // in order to save shared preferences-> used to login only once

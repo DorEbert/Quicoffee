@@ -242,6 +242,7 @@ public class ShopActivity extends AppCompatActivity implements OnMapReadyCallbac
         Intent intent = new Intent(ShopActivity.this,  ManageShopActivity.class);
         intent.putExtra(Global_Variable.SHOP_INTENT,shop);
         startActivity(intent);
+        finish();
     }
 
     @Override

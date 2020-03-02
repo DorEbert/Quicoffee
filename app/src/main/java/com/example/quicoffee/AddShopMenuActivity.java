@@ -32,8 +32,10 @@ import com.example.quicoffee.Models.Product;
 import com.example.quicoffee.Models.Shop;
 import com.example.quicoffee.Models.UserLocation;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -41,12 +43,16 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.OnProgressListener;
 import com.google.firebase.storage.StorageReference;
+import com.google.firebase.storage.StorageTask;
 import com.google.firebase.storage.UploadTask;
 
 import java.io.IOException;
 import java.net.URI;
 import java.util.List;
 import java.util.UUID;
+import java.util.concurrent.ExecutionException;
+
+import static com.google.android.gms.tasks.Tasks.await;
 
 public class AddShopMenuActivity extends AppCompatActivity {
     static final int REQUEST_IMAGE_CAPTURE = 1;
@@ -78,6 +84,7 @@ public class AddShopMenuActivity extends AppCompatActivity {
         InititalVariablesOfLocalActivity();
         IsProductOrIngredients();
     }
+
     private void IsProductOrIngredients(){
         Intent intent  = getIntent();
         String ingredient_or_product = intent.getStringExtra(Global_Variable.INGREDIENT_OR_PRODUCT);
@@ -107,6 +114,7 @@ public class AddShopMenuActivity extends AppCompatActivity {
             }
         }
     }
+
     private void InititalVariablesOfLocalActivity(){
         mainActivityWitdh = getResources().getDisplayMetrics().widthPixels;
         mainActivityHeight = getResources().getDisplayMetrics().heightPixels;
@@ -123,6 +131,7 @@ public class AddShopMenuActivity extends AppCompatActivity {
         userLocation = new UserLocation(x,y);
 
     }
+
     private void BuildAddProductActivityUI(){
         LinearLayout.LayoutParams lparams = new LinearLayout.LayoutParams((int)(mainActivityWitdh *0.9),mainActivityHeight/20);
         lparams.gravity = Gravity.CENTER;
@@ -163,18 +172,20 @@ public class AddShopMenuActivity extends AppCompatActivity {
                     return;
                 }
                 Product product = new Product(productName,price,description);
-                if(imageURI != null) {
-                    try {
-                        uploadImage(imageURI);
-                    }catch (Exception ex){
-                        ex.getMessage();
-                    }
-                }
                 //In case of UPDATE
                 if(productIDToUpdate != null)
                     product.setID(productIDToUpdate);
-                fireBaseUtill.AddOrUpdateShopProducts(shop,product);
-                ReturnToManagerShopActivity();
+                if(imageURI != null) {
+                    try {
+                        uploadImage(product,imageURI);
+                    }catch (Exception ex){
+                        ex.getMessage();
+                    }
+                }else{
+                    fireBaseUtill.AddOrUpdateShopProducts(shop,product);
+                    ReturnToManagerShopActivity();
+                }
+
             }
         });
         LinearLayout buttonLinearLayout = new LinearLayout(this);
@@ -195,6 +206,7 @@ public class AddShopMenuActivity extends AppCompatActivity {
         }
         linearLayout.addView(buttonLinearLayout);
     }
+
     private void BuildAddIngredientActivityUI(){
         LinearLayout.LayoutParams lparams = new LinearLayout.LayoutParams((int)(mainActivityWitdh *0.9),mainActivityHeight/20);
         lparams.gravity = Gravity.CENTER;
@@ -245,6 +257,7 @@ public class AddShopMenuActivity extends AppCompatActivity {
         }
         linearLayout.addView(buttonLinearLayout);
     }
+
     private TextView CreateTextView(String labelText){
         //Set Label Setting
         TextView textView = new TextView(this);
@@ -253,15 +266,16 @@ public class AddShopMenuActivity extends AppCompatActivity {
         textView.setTextSize(mainActivityWitdh/40);
         return textView;
     }
+
     private EditText CreateEditText(LinearLayout.LayoutParams lparams) {
         //Set EditText Setting
         EditText editText = new EditText(this);
-        editText.setMaxLines(1);
         editText.setImeOptions(EditorInfo.IME_ACTION_NEXT);
         editText.setBackgroundColor(getApplication().getResources().getColor(R.color.colorforAttributes));
         editText.setLayoutParams(lparams);
         return editText;
     }
+
     private int addPairOfTextViewAndEditText(String labelText,LinearLayout.LayoutParams lparams){
         TextView textView = CreateTextView(labelText);
         textView.setPadding(50,10,50,10);
@@ -271,6 +285,7 @@ public class AddShopMenuActivity extends AppCompatActivity {
         linearLayout.addView(editText);
         return editText.getId();
     }
+
     private Button CreateButton(String labelText) {
         //Set Button Settings
         Button button = new Button(this);
@@ -287,12 +302,14 @@ public class AddShopMenuActivity extends AppCompatActivity {
         button.setTextColor(getApplication().getResources().getColor(R.color.textViewColor));
         return button;
     }
+
     private void ReturnToManagerShopActivity(){
         Intent intent = new Intent(AddShopMenuActivity.this, ManageShopActivity.class);
         intent.putExtra(Global_Variable.SHOP_INTENT, shop);
         startActivity(intent);
         finish();
     }
+
     private void addCameraButton(){
         Button addProductButton = CreateButton(Global_Variable.CAMERA);
         addProductButton.setOnClickListener(new View.OnClickListener() {
@@ -310,46 +327,57 @@ public class AddShopMenuActivity extends AppCompatActivity {
         if (requestCode == REQUEST_IMAGE_CAPTURE) {
             if(resultCode == RESULT_OK) {
                 imageURI = (Uri) data.getExtras().get(Global_Variable.URI_INTENT);
-
-                //strEditText.getAuthority();
             }
         }
     }
-    private void uploadImage(Uri filePath) {
-        if(filePath != null)
-        {
+
+    private void uploadImage(final Product product, Uri filePath) {
+        if (filePath != null) {
             final ProgressDialog progressDialog = new ProgressDialog(this);
             progressDialog.setTitle("Uploading...");
             progressDialog.show();
 
-            StorageReference ref = fireBaseUtill.getStorageReference().child("images/"+ UUID.randomUUID().toString());
-            ref.putFile(filePath)
+            StorageReference storageReference = fireBaseUtill.getStorageReference().child("images/" + UUID.randomUUID().toString());
+            storageReference.putFile(filePath)
                     .addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
                         @Override
                         public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
                             progressDialog.dismiss();
                             Toast.makeText(AddShopMenuActivity.this, "Uploaded", Toast.LENGTH_SHORT).show();
+                            Uri uri = taskSnapshot.getUploadSessionUri();
+                            product.setImage(uri.toString());
+                            fireBaseUtill.AddOrUpdateShopProducts(shop, product);
+                            ReturnToManagerShopActivity();
                         }
                     })
                     .addOnFailureListener(new OnFailureListener() {
                         @Override
                         public void onFailure(@NonNull Exception e) {
                             progressDialog.dismiss();
-                            Toast.makeText(AddShopMenuActivity.this, "Failed "+e.getMessage(), Toast.LENGTH_SHORT).show();
+                            Toast.makeText(AddShopMenuActivity.this, Global_Variable.FAILED + " " + e.getMessage(), Toast.LENGTH_SHORT).show();
+                            product.setImage(Global_Variable.FAILED);
                         }
                     })
                     .addOnProgressListener(new OnProgressListener<UploadTask.TaskSnapshot>() {
                         @Override
                         public void onProgress(UploadTask.TaskSnapshot taskSnapshot) {
-                            double progress = (100.0*taskSnapshot.getBytesTransferred()/taskSnapshot
+                            double progress = (100.0 * taskSnapshot.getBytesTransferred() / taskSnapshot
                                     .getTotalByteCount());
-                            progressDialog.setMessage("Uploaded "+(int)progress+"%");
+                            progressDialog.setMessage("Uploaded " + (int) progress + "%");
                         }
                     });
+            storageReference.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
+                @Override
+                public void onSuccess(Uri uri) {
+
+                }
+            });
         }
     }
+
     @Override
     public void onBackPressed() {
+        super.onBackPressed();
         ReturnToManagerShopActivity();
     }
 
@@ -363,17 +391,18 @@ public class AddShopMenuActivity extends AppCompatActivity {
         t = (URI) bundle.get(Global_Variable.URI_INTENT);
 
     }
+
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.main_menu, menu);
         return true;
     }
-
     //TODO: init all the menu oprtions :)
     //findShops, favoirtCoffee, myOrder, setUpAShop, setting,logOut
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
+
         // Handle item selection
         switch (item.getItemId()) {
             case R.id.findShops:
@@ -416,6 +445,7 @@ public class AddShopMenuActivity extends AppCompatActivity {
         myIntent.putExtra(Global_Variable.USER_FOR_MOVE_INTENT,this.user);
         startActivity(myIntent);
     }
+
     public void favoriteCoffee(){
         Intent myIntent = new Intent(AddShopMenuActivity.this,
                 FavoriteCoffeeActivity.class);

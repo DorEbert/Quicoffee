@@ -108,6 +108,11 @@ public class ManageShopActivity extends AppCompatActivity {
         queryRef.addValueEventListener(postListener);
         linearLayout.addView(productRecyclerView);
     }
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        finish();
+    }
 
     private void AddIngredientRecycleView() {
         final ArrayList<String> ingredients = (ArrayList<String>) shop.getIngredients();
