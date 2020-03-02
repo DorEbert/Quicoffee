@@ -44,10 +44,12 @@ import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 
 import java.io.IOException;
+import java.net.URI;
 import java.util.List;
 import java.util.UUID;
 
 public class AddShopMenuActivity extends AppCompatActivity {
+    static final int REQUEST_IMAGE_CAPTURE = 1;
     private int productNameTextboxID;
     private int priceTextboxID;
     private int descriptionTextboxID;
@@ -59,6 +61,7 @@ public class AddShopMenuActivity extends AppCompatActivity {
     private FireBaseUtill fireBaseUtill = new FireBaseUtill();
     private String productIDToUpdate;
     private String ingredientTextToUpdate;
+    private Uri imageURI;
     private Shop shop;
     public FirebaseUser user;
     private FavoriteCoffee favoriteCoffee;
@@ -160,20 +163,12 @@ public class AddShopMenuActivity extends AppCompatActivity {
                     return;
                 }
                 Product product = new Product(productName,price,description);
-                if(getIntent().hasExtra(Global_Variable.RESULT_IMAGE)) {
-                    //Bitmap bitmap = BitmapFactory.decodeByteArray(
-                          //  getIntent().getByteArrayExtra(Global_Variable.RESULT_IMAGE),0,getIntent().getByteArrayExtra("byteArray").length);
-                    String uriString = getIntent().getStringExtra(Global_Variable.RESULT_IMAGE);
-                    Uri uri = Uri.parse(uriString);
-                    Bitmap bitmap = null;
+                if(imageURI != null) {
                     try {
-                        bitmap = MediaStore.Images.Media.getBitmap(getContentResolver(), uri);
-                    } catch (IOException e) {
-                        e.printStackTrace();
+                        uploadImage(imageURI);
+                    }catch (Exception ex){
+                        ex.getMessage();
                     }
-                    uploadImage(uri);
-                    image.setImageBitmap(bitmap);
-                    //product.setImage(image);
                 }
                 //In case of UPDATE
                 if(productIDToUpdate != null)
@@ -304,10 +299,21 @@ public class AddShopMenuActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(AddShopMenuActivity.this,MyCameraActivity.class);
-                startActivity(intent);
+                startActivityForResult(intent,REQUEST_IMAGE_CAPTURE);
             }
         });
         linearLayout.addView(addProductButton);
+    }
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == REQUEST_IMAGE_CAPTURE) {
+            if(resultCode == RESULT_OK) {
+                imageURI = (Uri) data.getExtras().get(Global_Variable.URI_INTENT);
+
+                //strEditText.getAuthority();
+            }
+        }
     }
     private void uploadImage(Uri filePath) {
         if(filePath != null)
@@ -347,7 +353,16 @@ public class AddShopMenuActivity extends AppCompatActivity {
         ReturnToManagerShopActivity();
     }
 
+    @Override
+    public void onResume() {
+        super.onResume();
+        //DATA BASE:
+        Intent intent  = getIntent();
+        URI t= null;
+        Bundle bundle = intent.getExtras();
+        t = (URI) bundle.get(Global_Variable.URI_INTENT);
 
+    }
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater inflater = getMenuInflater();

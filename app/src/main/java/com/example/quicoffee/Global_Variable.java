@@ -77,6 +77,7 @@ public class Global_Variable {
     public static final String PRODUCT_NAME_COLUMN = "productName";
     public static final String PRICE_COLUMN = "price";
     public static final String DESCRIPTION_COLUMN = "description";
+    public static final String URI_INTENT = "Uri-Intent";
 
     public static int index = 10;
     // in order to save shared preferences-> used to login only once
