@@ -18,6 +18,7 @@ public class Order {
     private Time orderPickUpTime;
     private double totalPrice;
     private String idShop;
+    private String image;
 
     public Order(String shopName){
         this.shopName = shopName;
@@ -79,7 +80,12 @@ public class Order {
     public Time getOrderPickUpTime() {
         return orderPickUpTime;
     }
-
+    public void setImage(String image) {
+        this.image = image;
+    }
+    public String getImage(){
+        return image;
+    }
 
     public ArrayList<Product> getProducts() {
         return products;

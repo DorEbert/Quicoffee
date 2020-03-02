@@ -6,7 +6,9 @@ import androidx.appcompat.widget.Toolbar;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.app.ProgressDialog;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Gravity;
@@ -23,6 +25,8 @@ import com.example.quicoffee.Models.Order;
 import com.example.quicoffee.Models.Product;
 import com.example.quicoffee.Models.ProductAdapter;
 import com.example.quicoffee.Models.UserLocation;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -30,15 +34,21 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.storage.OnProgressListener;
+import com.google.firebase.storage.StorageReference;
+import com.google.firebase.storage.UploadTask;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.UUID;
 
 public class SpecificOrderActivity extends AppCompatActivity {
+    static final int REQUEST_IMAGE_CAPTURE = 1;
     private int mainActivityWitdh;
     private int mainActivityHeight;
     private LinearLayout linearLayout;
+    private FireBaseUtill fireBaseUtill = new FireBaseUtill();
     public Bundle bundle;
     public FirebaseUser user;
     public UserLocation userLocation;
@@ -67,7 +77,7 @@ public class SpecificOrderActivity extends AppCompatActivity {
     //read total price from the DB:
     public DatabaseReference orderTotalPriceRef;
     public ValueEventListener readTotalPriceListener;
-
+    private Uri imageURI;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -154,8 +164,43 @@ public class SpecificOrderActivity extends AppCompatActivity {
         Query queryRef = orderProductsRef.orderByChild(Global_Variable.PRODUCT_NAME_COLUMN);
         queryRef.addValueEventListener(readOrderProductsListener);
     }
+    // the function upload to storage the picture and save the URi to order
+    //todo call to upload image
+    private void uploadImage(final Order order, Uri filePath) {
+        if (filePath != null) {
+            final ProgressDialog progressDialog = new ProgressDialog(this);
+            progressDialog.setTitle("Uploading...");
+            progressDialog.show();
 
-
+            StorageReference storageReference = fireBaseUtill.getStorageReference().child("images/" + UUID.randomUUID().toString());
+            storageReference.putFile(filePath)
+                    .addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+                        @Override
+                        public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                            progressDialog.dismiss();
+                            Toast.makeText(SpecificOrderActivity.this, "Uploaded", Toast.LENGTH_SHORT).show();
+                            Uri uri = taskSnapshot.getUploadSessionUri();
+                            order.setImage(uri.toString());
+                            //todo update order on db to have the image
+                        }
+                    })
+                    .addOnFailureListener(new OnFailureListener() {
+                        @Override
+                        public void onFailure(@NonNull Exception e) {
+                            progressDialog.dismiss();
+                            Toast.makeText(SpecificOrderActivity.this, Global_Variable.FAILED + " " + e.getMessage(), Toast.LENGTH_SHORT).show();
+                        }
+                    })
+                    .addOnProgressListener(new OnProgressListener<UploadTask.TaskSnapshot>() {
+                        @Override
+                        public void onProgress(UploadTask.TaskSnapshot taskSnapshot) {
+                            double progress = (100.0 * taskSnapshot.getBytesTransferred() / taskSnapshot
+                                    .getTotalByteCount());
+                            progressDialog.setMessage("Uploaded " + (int) progress + "%");
+                        }
+                    });
+        }
+    }
 
 
     private void InititalVariablesOfLocalActivity(){
@@ -230,12 +275,20 @@ public class SpecificOrderActivity extends AppCompatActivity {
         payBySelfieButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Toast.makeText(SpecificOrderActivity.this , "Selfie time :)!", Toast.LENGTH_SHORT).show();
-                //TODO: selfie;
+                Intent intent = new Intent(SpecificOrderActivity.this,MyCameraActivity.class);
+                startActivityForResult(intent,REQUEST_IMAGE_CAPTURE);
             }
         });
     }
-
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == REQUEST_IMAGE_CAPTURE) {
+            if(resultCode == RESULT_OK) {
+                imageURI = (Uri) data.getExtras().get(Global_Variable.URI_INTENT);
+            }
+        }
+    }
     public void initDeleteOrderButton(){
         deleteOrderButton = (Button) findViewById(R.id.deleteOrderButton);
         deleteOrderButton.setText(R.string.deleteOrderButtonText);
