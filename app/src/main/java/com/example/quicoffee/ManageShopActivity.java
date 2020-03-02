@@ -79,6 +79,7 @@ public class ManageShopActivity extends AppCompatActivity {
                 //Log.e(TAG+ " Count " ,""+dataSnapshot.getChildrenCount());
                 for (DataSnapshot postSnapshot: dataSnapshot.getChildren()) {
                     Product product = postSnapshot.getValue(Product.class);
+
                     productArrayList.add(product);
                 }
                 productRecyclerView.setHasFixedSize(true);

@@ -336,8 +336,8 @@ public class AddShopMenuActivity extends AppCompatActivity {
             final ProgressDialog progressDialog = new ProgressDialog(this);
             progressDialog.setTitle("Uploading...");
             progressDialog.show();
-
-            StorageReference storageReference = fireBaseUtill.getStorageReference().child("images/" + UUID.randomUUID().toString());
+            final String imageID = UUID.randomUUID().toString();
+            StorageReference storageReference = fireBaseUtill.getStorageReference().child("images/" +imageID);
             storageReference.putFile(filePath)
                     .addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
                         @Override
@@ -345,7 +345,8 @@ public class AddShopMenuActivity extends AppCompatActivity {
                             progressDialog.dismiss();
                             Toast.makeText(AddShopMenuActivity.this, "Uploaded", Toast.LENGTH_SHORT).show();
                             Uri uri = taskSnapshot.getUploadSessionUri();
-                            product.setImage(uri.toString());
+                            //product.setImage(uri.toString());
+                            product.setImage(imageID);
                             fireBaseUtill.AddOrUpdateShopProducts(shop, product);
                             ReturnToManagerShopActivity();
                         }
