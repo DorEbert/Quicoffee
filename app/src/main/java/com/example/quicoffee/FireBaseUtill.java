@@ -91,4 +91,8 @@ public class FireBaseUtill {
         public StorageReference getStorageReference(){
     return storageRef;
     }
+
+    public void RemovePictureFromStorage(String image) {
+        storageRef.child("images/" + image).delete();
+    }
 }

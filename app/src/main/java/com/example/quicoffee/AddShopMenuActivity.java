@@ -342,8 +342,10 @@ public class AddShopMenuActivity extends AppCompatActivity {
                         public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
                             progressDialog.dismiss();
                             Toast.makeText(AddShopMenuActivity.this, "Uploaded", Toast.LENGTH_SHORT).show();
-                            Uri uri = taskSnapshot.getUploadSessionUri();
-                            //product.setImage(uri.toString());
+                            // In case of update an image->delete old image
+                            if(product.getImage() != null) {
+                                fireBaseUtill.RemovePictureFromStorage(product.getImage());
+                            }
                             product.setImage(imageID);
                             fireBaseUtill.AddOrUpdateShopProducts(shop, product);
                             ReturnToManagerShopActivity();
