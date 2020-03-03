@@ -16,6 +16,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.inputmethod.EditorInfo;
 import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -59,6 +60,9 @@ public class ShopActivity extends AppCompatActivity implements OnMapReadyCallbac
     //location
     private GoogleMap mMap;
     private int addressTextViewID;
+    private double userLongitudeToUpdate;
+    private double userLatitudeToUpdate;
+    private int cbID;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -70,10 +74,13 @@ public class ShopActivity extends AppCompatActivity implements OnMapReadyCallbac
         //get location user from other activity:
         bundle = new Bundle();
         bundle = getIntent().getExtras();
+        //In case of existing shop, those arguments(userLongitude,userLatitude) will be override
         userLongitude = bundle.getDouble(Global_Variable.USER_LOCATION_MOVE_INTENT_LONGITUDE);
         userLatitude = bundle.getDouble(Global_Variable.USER_LOCATION_MOVE_INTENT_LATITUDE);
+        //In case of updating a location saving the current location of the user
+        userLongitudeToUpdate =  bundle.getDouble(Global_Variable.USER_LOCATION_MOVE_INTENT_LONGITUDE);
+        userLatitudeToUpdate = bundle.getDouble(Global_Variable.USER_LOCATION_MOVE_INTENT_LATITUDE);
         userLocation = new UserLocation(userLongitude, userLatitude);
-
         InititalVariablesOfLocalActivity();
         BuildActivityUI();
         CheckIfUserOwnedShop();
@@ -114,13 +121,19 @@ public class ShopActivity extends AppCompatActivity implements OnMapReadyCallbac
     private void FillExistingShop(Shop shop){
         ((EditText)findViewById(shopNameTextboxID)).setText(shop.getShopName());
         ((EditText)findViewById(descriptionTextboxID)).setText(shop.getDescription());
+        //In case of updating a shop->is to update location checkbox
+        CheckBox cb = new CheckBox(getApplicationContext());
+        cbID = Global_Variable.GetID();
+        cb.setId(cbID);
+        cb.setText("Is to update shop to current locaiton?");
+        linearLayout.addView(cb);
         userLatitude = shop.GetLocation().latitude;
         userLongitude = shop.GetLocation().longitude;
         setLocation();
         ((Button)findViewById(shopButtonID)).setText(Global_Variable.UPDATE_SHOP);
     }
     private void BuildActivityUI() {
-        LinearLayout.LayoutParams lparams = new LinearLayout.LayoutParams((int)(mainActivityWitdh *0.9),mainActivityHeight/20);
+        LinearLayout.LayoutParams lparams = new LinearLayout.LayoutParams((int)(mainActivityWitdh *0.9),mainActivityHeight/18);
         lparams.gravity = Gravity.CENTER;
         //shop Name TextView and EditText
         shopNameTextboxID = addPairOfTextViewAndEditText(Global_Variable.SHOP_NAME,lparams);
@@ -237,12 +250,14 @@ public class ShopActivity extends AppCompatActivity implements OnMapReadyCallbac
             shop.setProducts(this.shop.getProducts());
             shop.setIngredients(this.shop.getIngredients());
          }
+        //In case of updating a location
+        if(((CheckBox)findViewById(cbID)).isChecked()) {
+            shop.setLatitude(userLatitudeToUpdate);
+            shop.setLongitude(userLongitudeToUpdate);
+        }
         this.shop = shop;
         fireBaseUtill.AddShopToUser(this.shop);
-        Intent intent = new Intent(ShopActivity.this,  ManageShopActivity.class);
-        intent.putExtra(Global_Variable.SHOP_INTENT,shop);
-        startActivity(intent);
-        finish();
+        AddShopActivity();
     }
 
     @Override
@@ -291,13 +306,14 @@ public class ShopActivity extends AppCompatActivity implements OnMapReadyCallbac
 
     public void AddShopActivity(){
         Intent myIntent = new Intent(ShopActivity.this,
-                ShopActivity.class);
+                ManageShopActivity.class);
+        myIntent.putExtra(Global_Variable.USER_FOR_MOVE_INTENT,this.user);
         bundle.putDouble(Global_Variable.USER_LOCATION_MOVE_INTENT_LONGITUDE, this.userLocation.getX());
         bundle.putDouble(Global_Variable.USER_LOCATION_MOVE_INTENT_LATITUDE, this.userLocation.getY());
         myIntent.putExtras(bundle);
-        myIntent.putExtra(Global_Variable.USER_FOR_MOVE_INTENT,this.user);
         startActivity(myIntent);
     }
+
     public void favoriteCoffee(){
         Intent myIntent = new Intent(ShopActivity.this,
                 FavoriteCoffeeActivity.class);
@@ -317,7 +333,6 @@ public class ShopActivity extends AppCompatActivity implements OnMapReadyCallbac
         myIntent.putExtras(bundle);
         startActivity(myIntent);
     }
-
 
     @Override
     public void onMapReady(GoogleMap googleMap) {
