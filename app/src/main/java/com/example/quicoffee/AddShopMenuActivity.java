@@ -13,6 +13,7 @@ import android.media.Image;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
+import android.text.Layout;
 import android.text.TextUtils;
 import android.view.Gravity;
 import android.view.Menu;
@@ -121,8 +122,7 @@ public class AddShopMenuActivity extends AppCompatActivity {
         linearLayout = findViewById(R.id.linear_layout);
         image = new ImageView(this);
         shop = getIntent().getParcelableExtra(Global_Variable.SHOP_INTENT);
-
-        user = (FirebaseUser) getIntent().getParcelableExtra(Global_Variable.USER_FOR_MOVE_INTENT);
+        user = getIntent().getParcelableExtra(Global_Variable.USER_FOR_MOVE_INTENT);
         //get location user from other activity:
         bundle = new Bundle();
         bundle = getIntent().getExtras();
@@ -133,7 +133,7 @@ public class AddShopMenuActivity extends AppCompatActivity {
     }
 
     private void BuildAddProductActivityUI(){
-        LinearLayout.LayoutParams lparams = new LinearLayout.LayoutParams((int)(mainActivityWitdh *0.9),mainActivityHeight/20);
+        LinearLayout.LayoutParams lparams = new LinearLayout.LayoutParams((int)(mainActivityWitdh *0.9),mainActivityHeight/18);
         lparams.gravity = Gravity.CENTER;
         //product Name label and textBox
         productNameTextboxID = addPairOfTextViewAndEditText(Global_Variable.PRODUCT_NAME,lparams);
@@ -198,8 +198,7 @@ public class AddShopMenuActivity extends AppCompatActivity {
             removeProductButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    shop.RemoveProduct(productIDToUpdate);
-                    fireBaseUtill.removeProduct(shop);
+                    fireBaseUtill.removeProduct(shop,productIDToUpdate);
                     ReturnToManagerShopActivity();
                 }
             });
@@ -208,12 +207,10 @@ public class AddShopMenuActivity extends AppCompatActivity {
     }
 
     private void BuildAddIngredientActivityUI(){
-        LinearLayout.LayoutParams lparams = new LinearLayout.LayoutParams((int)(mainActivityWitdh *0.9),mainActivityHeight/20);
+        LinearLayout.LayoutParams lparams = new LinearLayout.LayoutParams((int)(mainActivityWitdh *0.9),mainActivityHeight/18);
         lparams.gravity = Gravity.CENTER;
         //product Name label and textBox
         ingredientTextboxID = addPairOfTextViewAndEditText(Global_Variable.INGREDIENT_NAME,lparams);
-        //add camera button
-        addCameraButton();
         //add ingredient button
         String addOrUpdateButtonName;
         if(ingredientTextToUpdate != null){
@@ -306,6 +303,7 @@ public class AddShopMenuActivity extends AppCompatActivity {
     private void ReturnToManagerShopActivity(){
         Intent intent = new Intent(AddShopMenuActivity.this, ManageShopActivity.class);
         intent.putExtra(Global_Variable.SHOP_INTENT, shop);
+        intent.putExtra(Global_Variable.USER_FOR_MOVE_INTENT,user);
         startActivity(intent);
         finish();
     }
