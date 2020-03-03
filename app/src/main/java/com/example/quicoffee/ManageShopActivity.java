@@ -17,6 +17,9 @@ import com.example.quicoffee.Models.IngredientAdapter;
 import com.example.quicoffee.Models.Product;
 import com.example.quicoffee.Models.ProductAdapter;
 import com.example.quicoffee.Models.Shop;
+import com.example.quicoffee.Models.UserLocation;
+import com.google.android.gms.maps.model.LatLng;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -24,6 +27,7 @@ import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class ManageShopActivity extends AppCompatActivity {
     private int mainActivityWitdh;
@@ -44,6 +48,13 @@ public class ManageShopActivity extends AppCompatActivity {
     private ArrayList<String> ingredientsArrayList;
     public  ValueEventListener ingredientsListener;
     private RecyclerView.LayoutManager ingredientLayoutManager;
+    //User
+
+    private FirebaseUser user;
+    public UserLocation userLocation;
+    double userLongitude = 3;
+    double userLatitude = 3;
+    public Bundle bundle;
 
     private FireBaseUtill fireBaseUtill = new FireBaseUtill();
 
@@ -55,19 +66,21 @@ public class ManageShopActivity extends AppCompatActivity {
         //DATA BASE:
         productArrayList.clear();
     }
+
     @Override
     public void onStop() {
         super.onStop();
         //DATA BASE:
         productArrayList.clear();
-        fireBaseUtill.getRefrencesShops().removeEventListener(postListener);
+        if(postListener != null)
+            fireBaseUtill.getRefrencesShops().removeEventListener(postListener);
     }
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_manage_shop);
         InititalVariablesOfLocalActivity();
-        BuildActivityUI();
+        CheckIfUserOwnedShop();
     }
 
     public void AddProductRecycleView(){
@@ -79,7 +92,6 @@ public class ManageShopActivity extends AppCompatActivity {
                 //Log.e(TAG+ " Count " ,""+dataSnapshot.getChildrenCount());
                 for (DataSnapshot postSnapshot: dataSnapshot.getChildren()) {
                     Product product = postSnapshot.getValue(Product.class);
-
                     productArrayList.add(product);
                 }
                 productRecyclerView.setHasFixedSize(true);
@@ -92,6 +104,7 @@ public class ManageShopActivity extends AppCompatActivity {
                         intent.putExtra(Global_Variable.INGREDIENT_OR_PRODUCT, Global_Variable.PRODUCT_TYPE);
                         intent.putExtra(Global_Variable.ACTION_TYPE, Global_Variable.UPDATE);
                         intent.putExtra(Global_Variable.ADD_PRODUCT, productArrayList.get(position));
+                        intent.putExtra(Global_Variable.USER_FOR_MOVE_INTENT,user);
                         intent.putExtra(Global_Variable.SHOP_INTENT, shop);
                         startActivity(intent);
                         finish();
@@ -134,6 +147,7 @@ public class ManageShopActivity extends AppCompatActivity {
                     intent.putExtra(Global_Variable.ACTION_TYPE, Global_Variable.UPDATE);
                     intent.putExtra(Global_Variable.ADD_INGREDIENT, ingredients.get(position));
                     intent.putExtra(Global_Variable.SHOP_INTENT, shop);
+                    intent.putExtra(Global_Variable.USER_FOR_MOVE_INTENT,user);
                     startActivity(intent);
                     finish();
                 }
@@ -145,11 +159,12 @@ public class ManageShopActivity extends AppCompatActivity {
     private void InititalVariablesOfLocalActivity(){
         mainActivityWitdh = getResources().getDisplayMetrics().widthPixels;
         mainActivityHeight = getResources().getDisplayMetrics().heightPixels;
+        user = getIntent().getParcelableExtra(Global_Variable.USER_FOR_MOVE_INTENT);
         linearLayout = findViewById(R.id.linear_layout);
-        shop = getIntent().getParcelableExtra(Global_Variable.SHOP_INTENT);
-        shopsRef = fireBaseUtill.getRefrencesShops()
-                .child(shop.getID())
-                .child(Global_Variable.PRODUCTS_COLUMN);
+        bundle = getIntent().getExtras();
+        userLongitude = bundle.getDouble(Global_Variable.USER_LOCATION_MOVE_INTENT_LONGITUDE);
+        userLatitude = bundle.getDouble(Global_Variable.USER_LOCATION_MOVE_INTENT_LATITUDE);
+        userLocation = new UserLocation(userLongitude, userLatitude);
         //init for read shops from DB:
         productArrayList = new ArrayList<>();
 
@@ -166,6 +181,7 @@ public class ManageShopActivity extends AppCompatActivity {
                 Intent intent = new Intent(ManageShopActivity.this, AddShopMenuActivity.class);
                 intent.putExtra(Global_Variable.INGREDIENT_OR_PRODUCT,Global_Variable.PRODUCT_TYPE);
                 intent.putExtra(Global_Variable.ACTION_TYPE,Global_Variable.CREATE);
+                intent.putExtra(Global_Variable.USER_FOR_MOVE_INTENT,user);
                 intent.putExtra(Global_Variable.SHOP_INTENT, shop);
                 startActivity(intent);
                 finish();
@@ -179,15 +195,25 @@ public class ManageShopActivity extends AppCompatActivity {
                 Intent intent = new Intent(ManageShopActivity.this, AddShopMenuActivity.class);
                 intent.putExtra(Global_Variable.INGREDIENT_OR_PRODUCT,Global_Variable.INGREDIENT_TYPE);
                 intent.putExtra(Global_Variable.ACTION_TYPE,Global_Variable.CREATE);
+                intent.putExtra(Global_Variable.USER_FOR_MOVE_INTENT,user);
                 intent.putExtra(Global_Variable.SHOP_INTENT, shop);
                 startActivity(intent);
                 finish();
+            }
+        });
+        Button updateShopButton = CreateButton(Global_Variable.UPDATE_SHOP_DETAILS);
+        updateShopButton.setOnClickListener(new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View v) {
+                AddShopActivity();
             }
         });
         linearLayout.addView(addProductButton);
         AddProductRecycleView();
         linearLayout.addView(addIngredientButton);
         AddIngredientRecycleView();
+        linearLayout.addView(updateShopButton);
     }
 
     private Button CreateButton(String labelText) {
@@ -205,5 +231,56 @@ public class ManageShopActivity extends AppCompatActivity {
         button.setBackgroundResource(R.color.colorCoffee);
         button.setTextColor(getApplication().getResources().getColor(R.color.textViewColor));
         return button;
+    }
+
+    private void CheckIfUserOwnedShop() {
+        fireBaseUtill.getRefrencesShops().
+                orderByChild(Global_Variable.USER_ID_COLUMN).equalTo(user.getUid())
+                .addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                        for (DataSnapshot usersSnapShot : dataSnapshot.getChildren()) {
+                            try {
+                                String ID = usersSnapShot.child(Global_Variable.ID).getValue().toString();
+                                String shopName = usersSnapShot.child(Global_Variable.SHOP_NAME_COLUMN).getValue().toString();
+                                String userID = usersSnapShot.child(Global_Variable.USER_ID_COLUMN).getValue().toString();
+                                double latitude = Double.parseDouble(usersSnapShot.child(Global_Variable.LATITUDE_COLUMN.toLowerCase()).getValue().toString());
+                                double longitude = Double.parseDouble(usersSnapShot.child(Global_Variable.LONGITUDE_COLUMN.toLowerCase()).getValue().toString());
+                                LatLng location = new LatLng(latitude, longitude);
+                                List<Product> products = (List<Product>) usersSnapShot.child(Global_Variable.PRODUCTS_COLUMN.toLowerCase()).getValue();
+                                List<String> ingredients = (List<String>) usersSnapShot.child(Global_Variable.INGREDIENT_COLUMN.toLowerCase()).getValue();
+                                String description = usersSnapShot.child(Global_Variable.DESCRIPTION.toLowerCase()).getValue().toString();
+                                shop = new Shop(shopName, location, description,userID);
+                                shop.setID(ID);
+                                shop.setProducts(products);
+                                shop.setIngredients(ingredients);
+                                break;
+                            } catch (Exception e) {
+                                e.getMessage();
+                            }
+                        }
+                        if(shop == null){
+                            AddShopActivity();
+                        }else{
+                            shopsRef = fireBaseUtill.getRefrencesShops()
+                                    .child(shop.getID())
+                                    .child(Global_Variable.PRODUCTS_COLUMN);
+                            BuildActivityUI();
+                        }
+                    }
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError databaseError) {
+                    }
+                });
+    }
+
+    public void AddShopActivity(){
+        Intent myIntent = new Intent(ManageShopActivity.this,
+                ShopActivity.class);
+        bundle.putDouble(Global_Variable.USER_LOCATION_MOVE_INTENT_LONGITUDE, this.userLocation.getX());
+        bundle.putDouble(Global_Variable.USER_LOCATION_MOVE_INTENT_LATITUDE, this.userLocation.getY());
+        myIntent.putExtras(bundle);
+        myIntent.putExtra(Global_Variable.USER_FOR_MOVE_INTENT,this.user);
+        startActivity(myIntent);
     }
 }

@@ -13,6 +13,7 @@ public class Shop implements Parcelable {
     private String ID;
     private String shopName;
     private String userID;
+
     // location of the shop
     private double latitude;
     private double longitude;
@@ -143,6 +144,15 @@ public class Shop implements Parcelable {
         return userID;
     }
 
+
+    public void setLatitude(double latitude) {
+        this.latitude = latitude;
+    }
+
+    public void setLongitude(double longitude) {
+        this.longitude = longitude;
+    }
+
     public void AddOrUpdateProduct(String productIDToUpdate, Product product) {
         if(product instanceof  Product) {
             if (productIDToUpdate != null) {
@@ -157,12 +167,12 @@ public class Shop implements Parcelable {
         }
     }
 
-    public void RemoveProduct(String productIDToUpdate) {
+    public Product RemoveProduct(String productIDToUpdate) {
         for (int i = 0; i < products.size(); i++)
             if (products.get(i).getID().equals(productIDToUpdate)) {
-                products.remove(i);
-                return;
+                return products.remove(i);
             }
+        return null;
     }
 
     public void setProducts(List<Product> products) {
