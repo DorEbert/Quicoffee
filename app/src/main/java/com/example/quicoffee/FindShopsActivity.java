@@ -175,7 +175,6 @@ public class FindShopsActivity extends AppCompatActivity {
     }
 
     private void showAShop(){
-     //   Toast.makeText(this, "The Shop " + chosenShop.getID() + " is clicked", Toast.LENGTH_LONG).show();
         Intent intent = new Intent(FindShopsActivity.this, ShowChosenShopActivity.class);
         intent.putExtra(Global_Variable.SHOP_ID_MOVE_INTENT , chosenShop.getID());
         intent.putExtra(Global_Variable.SHOP_NAME_MOVE_INTENT, this.chosenShop.getShopName());
@@ -283,11 +282,11 @@ public class FindShopsActivity extends AppCompatActivity {
 
     public void AddShopActivity(){
         Intent myIntent = new Intent(FindShopsActivity.this,
-                ShopActivity.class);
+                ManageShopActivity.class);
+        myIntent.putExtra(Global_Variable.USER_FOR_MOVE_INTENT,this.user);
         bundle.putDouble(Global_Variable.USER_LOCATION_MOVE_INTENT_LONGITUDE, this.userLocation.getX());
         bundle.putDouble(Global_Variable.USER_LOCATION_MOVE_INTENT_LATITUDE, this.userLocation.getY());
         myIntent.putExtras(bundle);
-        myIntent.putExtra(Global_Variable.USER_FOR_MOVE_INTENT,this.user);
         startActivity(myIntent);
     }
 
