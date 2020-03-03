@@ -76,7 +76,7 @@ public class AddShopMenuActivity extends AppCompatActivity {
     double x = 3;
     double y = 3;
     public Bundle bundle;
-
+    public Product product;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -92,7 +92,7 @@ public class AddShopMenuActivity extends AppCompatActivity {
         String action_type = intent.getStringExtra(Global_Variable.ACTION_TYPE);
         if(action_type.equals(Global_Variable.UPDATE)){
             if(ingredient_or_product.equals(Global_Variable.PRODUCT_TYPE)){
-                Product product = intent.getParcelableExtra(Global_Variable.ADD_PRODUCT);
+                product = intent.getParcelableExtra(Global_Variable.ADD_PRODUCT);
                 productIDToUpdate = product.getID();
                 BuildAddProductActivityUI();
                 if(product != null){
@@ -171,18 +171,19 @@ public class AddShopMenuActivity extends AppCompatActivity {
                     Toast.makeText(getApplicationContext(), Global_Variable.PRICE_INFORMATION, Toast.LENGTH_SHORT).show();
                     return;
                 }
-                Product product = new Product(productName,price,description);
+                Product productToUpdate = new Product(productName,price,description);
+                productToUpdate.setImage(product.getImage());
                 //In case of UPDATE
                 if(productIDToUpdate != null)
-                    product.setID(productIDToUpdate);
+                    productToUpdate.setID(productIDToUpdate);
                 if(imageURI != null) {
                     try {
-                        uploadImage(product,imageURI);
+                        uploadImage(productToUpdate,imageURI);
                     }catch (Exception ex){
                         ex.getMessage();
                     }
                 }else{
-                    fireBaseUtill.AddOrUpdateShopProducts(shop,product);
+                    fireBaseUtill.AddOrUpdateShopProducts(shop,productToUpdate);
                     ReturnToManagerShopActivity();
                 }
 
