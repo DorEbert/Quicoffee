@@ -74,12 +74,18 @@ public class FireBaseUtill {
                 .child(Global_Variable.PRODUCTS_COLUMN)
                 .setValue(shop.getProducts());
     }
-    public void removeProduct(Shop shop) {
+    public void removeProduct(Shop shop,String productIDToUpdate) {
+        Product product = shop.RemoveProduct(productIDToUpdate);
+        if(product == null)
+            return;
         DatabaseReference shopReference = databaseReference.getReference(Global_Variable.TABLE_SHOP);
         shopReference
                 .child(shop.getID())
                 .child(Global_Variable.PRODUCTS_COLUMN)
                 .setValue(shop.getProducts());
+        storageRef.child("images/" + product.getImage()).delete();
+
+
     }
 
         public StorageReference getStorageReference(){
