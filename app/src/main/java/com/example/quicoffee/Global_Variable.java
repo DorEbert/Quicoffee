@@ -65,7 +65,7 @@ public class Global_Variable {
     public static final String PRODUCTS_COLUMN = "products";
     public static final String PRICE_INFORMATION = "Price is not valid!";
     public static final String RESULT_IMAGE = "Result_Image";
-    public static final String CAMERA = "Camera";
+    public static final String CAMERA = "Take Picture";
     public static final String SHOP_NAME_COLUMN = "shopName";
     public static final String LATITUDE_COLUMN = "latitude";
     public static final String LONGITUDE_COLUMN = "longitude";
@@ -81,7 +81,11 @@ public class Global_Variable {
     public static final String FAILED = "Failed";
     public static final String WAIT = "Wait";
     public static final String UPDATE_SHOP_DETAILS = "Update shop details";
-
+    public static final String ITEM_PRESS_ACTION_DESCRPTION = "Tap on item to update";
+    public static final String MY_INGREDIENT = "My ingredients" ;
+    public static final String MY_PRODUCTS = "My products";
+    public static final String CLICK_TO_TAKE_PICTURE = "Click here to take picture";
+    public static final String PICTURE_SUCCEED = "Taking picture succeed";
     public static int index = 10;
     // in order to save shared preferences-> used to login only once
     public static final String PREFS_NAME = "MyPrefsFile";

@@ -132,6 +132,7 @@ public class AddShopMenuActivity extends AppCompatActivity {
 
     }
 
+
     private void BuildAddProductActivityUI(){
         LinearLayout.LayoutParams lparams = new LinearLayout.LayoutParams((int)(mainActivityWitdh *0.9),mainActivityHeight/18);
         lparams.gravity = Gravity.CENTER;
@@ -326,6 +327,7 @@ public class AddShopMenuActivity extends AppCompatActivity {
         if (requestCode == REQUEST_IMAGE_CAPTURE) {
             if(resultCode == RESULT_OK) {
                 imageURI = (Uri) data.getExtras().get(Global_Variable.URI_INTENT);
+                Toast.makeText(getApplicationContext(), Global_Variable.PICTURE_SUCCEED, Toast.LENGTH_SHORT).show();
             }
         }
     }
