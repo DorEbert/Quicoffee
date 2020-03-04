@@ -109,7 +109,7 @@ public class SpecificOrderActivity extends AppCompatActivity {
 
 
     // the function upload to storage the picture and save the URi to order
-    //todo call to upload image
+    //TODO: call to upload image
     private void uploadImage(final Order order, Uri filePath) {
         if (filePath != null) {
             final ProgressDialog progressDialog = new ProgressDialog(this);
@@ -126,6 +126,7 @@ public class SpecificOrderActivity extends AppCompatActivity {
                             Uri uri = taskSnapshot.getUploadSessionUri();
                             order.setImage(uri.toString());
                             //todo update order on db to have the image
+                            //TODO: showMyOrders();
                         }
                     })
                     .addOnFailureListener(new OnFailureListener() {
@@ -227,6 +228,7 @@ public class SpecificOrderActivity extends AppCompatActivity {
         if (requestCode == REQUEST_IMAGE_CAPTURE) {
             if(resultCode == RESULT_OK) {
                 imageURI = (Uri) data.getExtras().get(Global_Variable.URI_INTENT);
+                uploadImage(order,imageURI);
             }
         }
     }
@@ -255,13 +257,12 @@ public class SpecificOrderActivity extends AppCompatActivity {
             }
         });
     }
-
 /*
     @Override
     public void onBackPressed() {
+        super.onBackPressed();
     }
 */
-
     private void deleteTheOrderUI(){
         order.getProducts().clear();
         order.setTotalPrice(Global_Variable.INIT_PRICE_ORDER);
