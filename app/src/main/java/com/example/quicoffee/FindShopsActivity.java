@@ -11,6 +11,7 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -110,10 +111,13 @@ public class FindShopsActivity extends AppCompatActivity {
                 Collections.reverse(arrayToShowOnTheScreen);
                 recyclerView = (RecyclerView) findViewById(R.id.my_recycler_view);
                 recyclerView.setHasFixedSize(true);
+                ViewGroup.LayoutParams params= recyclerView.getLayoutParams();
+                params.height= (int) (mainActivityHeight*0.8);
+                recyclerView.setLayoutParams(params);
                 LinearLayoutManager linearLayoutManager =  new LinearLayoutManager(FindShopsActivity.this);
                 linearLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
                 recyclerView.setLayoutManager(linearLayoutManager);
-                shopAdapter = new ShopAdapter(arrayToShowOnTheScreen);
+                shopAdapter = new ShopAdapter(arrayToShowOnTheScreen,userLocation.getX(),userLocation.getY());
                 shopAdapter.SetOnItemClickListener(new ShopAdapter.OnItemClickListener() {
                     @Override
                     public void onItemClick(int position) {
