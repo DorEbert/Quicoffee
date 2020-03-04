@@ -86,7 +86,6 @@ public class SpecificOrderActivity extends AppCompatActivity {
     @Override
     public void onResume() {
         super.onResume();
-        //DATA BASE:
     }
 
     @Override
@@ -115,7 +114,7 @@ public class SpecificOrderActivity extends AppCompatActivity {
             final ProgressDialog progressDialog = new ProgressDialog(this);
             progressDialog.setTitle("Uploading...");
             progressDialog.show();
-
+            final String imageID = UUID.randomUUID().toString();
             StorageReference storageReference = fireBaseUtill.getStorageReference().child("images/" + UUID.randomUUID().toString());
             storageReference.putFile(filePath)
                     .addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
@@ -124,7 +123,13 @@ public class SpecificOrderActivity extends AppCompatActivity {
                             progressDialog.dismiss();
                             Toast.makeText(SpecificOrderActivity.this, "Uploaded", Toast.LENGTH_SHORT).show();
                             Uri uri = taskSnapshot.getUploadSessionUri();
-                            order.setImage(uri.toString());
+                            // In case of update an image->delete old image
+                            if(order.getImage() != null) {
+                                fireBaseUtill.RemovePictureFromStorage(order.getImage());
+                            }
+                            order.setImage(imageID);
+                           // orderProductsRef.setValue(order);
+                            showMyOrders();
                             //todo update order on db to have the image
                             //TODO: showMyOrders();
                         }
@@ -179,12 +184,14 @@ public class SpecificOrderActivity extends AppCompatActivity {
         createTextViewUI(textViewOrderId,Global_Variable.ORDER_ID + ": " +orderID);
         createTextViewUI(textViewTotalPrice, getApplication().getResources().getString(R.string.textViewTotalPriceText) + totalPrice);
         textViewTotalPrice.setTextColor(getApplication().getResources().getColor(R.color.colorCoffee));
-        iinitPayBySelfieButtonButton();
-        initDeleteOrderButton();
 
         //init for save order image to DB:
         mDatabase = FirebaseDatabase.getInstance();
         orderProductsRef = mDatabase.getReference(Global_Variable.TABLE_ORDERS).child(orderID);
+
+        iinitPayBySelfieButtonButton();
+        initDeleteOrderButton();
+
     }
 
     private void  createTextViewUITitle(TextView textView,String title){
@@ -251,6 +258,7 @@ public class SpecificOrderActivity extends AppCompatActivity {
             public void onClick(View v) {
                 //delete the order:
                 deleteTheOrderUI();
+                //TODO: delete the potho from the storage
                 DatabaseReference ref=FirebaseDatabase.getInstance().getReference();
                 ref.child(Global_Variable.TABLE_ORDERS).child(orderID).removeValue();
 
