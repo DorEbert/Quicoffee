@@ -30,6 +30,7 @@ import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 public class FindShopsActivity extends AppCompatActivity {
@@ -108,7 +109,6 @@ public class FindShopsActivity extends AppCompatActivity {
                     //TODO: show only shops nearby :)
                     arrayToShowOnTheScreen.add(someShop);
                 }
-                Collections.reverse(arrayToShowOnTheScreen);
                 recyclerView = (RecyclerView) findViewById(R.id.my_recycler_view);
                 recyclerView.setHasFixedSize(true);
                 ViewGroup.LayoutParams params= recyclerView.getLayoutParams();
@@ -117,6 +117,7 @@ public class FindShopsActivity extends AppCompatActivity {
                 LinearLayoutManager linearLayoutManager =  new LinearLayoutManager(FindShopsActivity.this);
                 linearLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
                 recyclerView.setLayoutManager(linearLayoutManager);
+
                 shopAdapter = new ShopAdapter(arrayToShowOnTheScreen,userLocation.getX(),userLocation.getY());
                 shopAdapter.SetOnItemClickListener(new ShopAdapter.OnItemClickListener() {
                     @Override
@@ -129,7 +130,26 @@ public class FindShopsActivity extends AppCompatActivity {
                 recyclerView.setNestedScrollingEnabled(true);
                 recyclerView.setAdapter(shopAdapter);
             }
+            private double distance(double lat1, double lon1, double lat2, double lon2) {
+                double theta = lon1 - lon2;
+                double dist = Math.sin(deg2rad(lat1))
+                        * Math.sin(deg2rad(lat2))
+                        + Math.cos(deg2rad(lat1))
+                        * Math.cos(deg2rad(lat2))
+                        * Math.cos(deg2rad(theta));
+                dist = Math.acos(dist);
+                dist = rad2deg(dist);
+                dist = dist * 60 * 1.1515;
+                return (dist);
+            }
 
+            private double deg2rad(double deg) {
+                return (deg * Math.PI / 180.0);
+            }
+
+            private double rad2deg(double rad) {
+                return (rad * 180.0 / Math.PI);
+            }
             public void onCancelled(@NonNull DatabaseError databaseError) {
                 Log.e("The read failed: " ,databaseError.getMessage());
             }

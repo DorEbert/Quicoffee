@@ -13,6 +13,8 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.quicoffee.R;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 
 public class ShopAdapter extends RecyclerView.Adapter<ShopAdapter.ShopViewHolder> {
     private ArrayList<Shop> mShops;
@@ -28,6 +30,15 @@ public class ShopAdapter extends RecyclerView.Adapter<ShopAdapter.ShopViewHolder
         mShops = shops;
         userLongitude = x;
         userLatitude = y;
+        Collections.sort(shops, new Comparator<Shop>() {
+            @Override
+            public int compare(Shop first_shop, Shop second_shop) {
+                double first_shop_distance = distance(userLatitude,userLongitude,first_shop.getLatitude(),first_shop.getLongitude());
+                double second_shop_distance = distance(userLatitude,userLongitude,second_shop.getLatitude(),second_shop.getLongitude());
+                // -1 - less than, 1 - greater than, 0 - equal, all inversed for descending
+                return second_shop_distance > first_shop_distance ? -1 : (second_shop_distance < first_shop_distance ) ? 1 : 0;
+            }
+        });
     }
 
 
