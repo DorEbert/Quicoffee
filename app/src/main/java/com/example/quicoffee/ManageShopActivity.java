@@ -2,6 +2,7 @@ package com.example.quicoffee;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -9,9 +10,13 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Gravity;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.LinearLayout;
+import android.widget.TextView;
 
 import com.example.quicoffee.Models.IngredientAdapter;
 import com.example.quicoffee.Models.Product;
@@ -157,6 +162,8 @@ public class ManageShopActivity extends AppCompatActivity {
     }
 
     private void InititalVariablesOfLocalActivity(){
+        Toolbar myToolbar = (Toolbar) findViewById(R.id.toolbar);
+        setSupportActionBar(myToolbar);
         mainActivityWitdh = getResources().getDisplayMetrics().widthPixels;
         mainActivityHeight = getResources().getDisplayMetrics().heightPixels;
         user = getIntent().getParcelableExtra(Global_Variable.USER_FOR_MOVE_INTENT);
@@ -168,7 +175,22 @@ public class ManageShopActivity extends AppCompatActivity {
         //init for read shops from DB:
         productArrayList = new ArrayList<>();
 
-
+    }
+    private TextView createTextViewUI(String text){
+        TextView textView = new TextView(this);
+        textView.setText(text);
+        textView.setTextSize(20);
+        textView.setTextColor(getApplication().getResources().getColor(R.color.colorBlack));
+        textView.setPadding(15,7,0,7);
+        return textView;
+    }
+    private TextView createTextViewUITitle(String text){
+        TextView textView = new TextView(this);
+        textView.setText(text);
+        textView.setTextSize(22);
+        textView.setTextColor(getApplication().getResources().getColor(R.color.colorCoffee));
+        textView.setPadding(15,7,0,7);
+        return textView;
     }
 
     private void BuildActivityUI() {
@@ -209,9 +231,14 @@ public class ManageShopActivity extends AppCompatActivity {
                 AddShopActivity();
             }
         });
+
         linearLayout.addView(addProductButton);
+        linearLayout.addView(createTextViewUITitle(Global_Variable.MY_PRODUCTS));
+        linearLayout.addView(createTextViewUI(Global_Variable.ITEM_PRESS_ACTION_DESCRPTION));
         AddProductRecycleView();
         linearLayout.addView(addIngredientButton);
+        linearLayout.addView(createTextViewUITitle(Global_Variable.MY_INGREDIENT));
+        linearLayout.addView(createTextViewUI(Global_Variable.ITEM_PRESS_ACTION_DESCRPTION));
         AddIngredientRecycleView();
         linearLayout.addView(updateShopButton);
     }
@@ -283,4 +310,68 @@ public class ManageShopActivity extends AppCompatActivity {
         myIntent.putExtra(Global_Variable.USER_FOR_MOVE_INTENT,this.user);
         startActivity(myIntent);
     }
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.main_menu, menu);
+        return true;
+    }
+
+
+    //TODO: init all the menu oprtions :)
+    //findShops, favoirtCoffee, myOrder, setUpAShop, setting,logOut
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        // Handle item selection
+        switch (item.getItemId()) {
+            case R.id.findShops:
+                findShops();
+                return true;
+            case R.id.favoriteCoffee:
+                favoriteCoffee();
+                return true;
+            case R.id.myOrder:
+                showMyOrders();
+                return true;
+            case R.id.setUpAShop:
+                AddShopActivity();
+                return true;
+            case R.id.setting:
+                return true;
+            case R.id.logOut:
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
+    }
+    public void findShops(){
+        Intent myIntent = new Intent(ManageShopActivity.this,
+                FindShopsActivity.class);
+        myIntent.putExtra(Global_Variable.USER_FOR_MOVE_INTENT,this.user);
+        bundle.putDouble(Global_Variable.USER_LOCATION_MOVE_INTENT_LONGITUDE, this.userLocation.getX());
+        bundle.putDouble(Global_Variable.USER_LOCATION_MOVE_INTENT_LATITUDE, this.userLocation.getY());
+        myIntent.putExtras(bundle);
+        startActivity(myIntent);
+    }
+
+    public void favoriteCoffee(){
+        Intent myIntent = new Intent(ManageShopActivity.this,
+                FavoriteCoffeeActivity.class);
+        myIntent.putExtra(Global_Variable.USER_FOR_MOVE_INTENT,this.user);
+        bundle.putDouble(Global_Variable.USER_LOCATION_MOVE_INTENT_LONGITUDE, this.userLocation.getX());
+        bundle.putDouble(Global_Variable.USER_LOCATION_MOVE_INTENT_LATITUDE, this.userLocation.getY());
+        myIntent.putExtras(bundle);
+        startActivity(myIntent);
+    }
+
+    public void showMyOrders(){
+        Intent myIntent = new Intent(ManageShopActivity.this,
+                MyOrdersActivity.class);
+        myIntent.putExtra(Global_Variable.USER_FOR_MOVE_INTENT,this.user);
+        bundle.putDouble(Global_Variable.USER_LOCATION_MOVE_INTENT_LONGITUDE, this.userLocation.getX());
+        bundle.putDouble(Global_Variable.USER_LOCATION_MOVE_INTENT_LATITUDE, this.userLocation.getY());
+        myIntent.putExtras(bundle);
+        startActivity(myIntent);
+    }
+
 }

@@ -11,6 +11,21 @@
         android:layout_height="match_parent"
         tools:context=".LoginActivity"
         android:orientation="vertical">
+        <androidx.appcompat.widget.Toolbar
+            android:id="@+id/toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="?attr/actionBarSize"
+            android:background="@color/colorPrimary"
+            android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
+            app:popupTheme="@style/ThemeOverlay.AppCompat.Dark"
+            app:titleTextColor="@color/textViewColor">
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:scaleType="fitXY"
+                android:background="@mipmap/logowithmap_foreground">
+            </ImageView>
+        </androidx.appcompat.widget.Toolbar>
     </LinearLayout>
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/my_recycler_view"
