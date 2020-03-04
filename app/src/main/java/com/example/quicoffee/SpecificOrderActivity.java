@@ -61,22 +61,16 @@ public class SpecificOrderActivity extends AppCompatActivity {
     public String orderID;
     private String idShop;
     private String nameShop;
+    private Order order;
     public Button payBySelfieButton;
     public Button deleteOrderButton;
     private double totalPrice;
 
-    //read the order from the DB:
     public FirebaseDatabase mDatabase;
     public DatabaseReference orderProductsRef;
-    public ValueEventListener readOrderProductsListener;
     RecyclerView recyclerView;
-    private ArrayList<Product> arrayToShowOnTheScreen;
-    private List<String> keys;
     private ProductAdapter productAdapter;
 
-    //read total price from the DB:
-    public DatabaseReference orderTotalPriceRef;
-    public ValueEventListener readTotalPriceListener;
     private Uri imageURI;
 
     @Override
@@ -86,84 +80,34 @@ public class SpecificOrderActivity extends AppCompatActivity {
         Toolbar myToolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(myToolbar);
         InititalVariablesOfLocalActivity();
-        readTotalPrice();
-        readAllProducts();
-        textViewTotalPrice.setText(getApplication().getResources().getString(R.string.textViewTotalPriceText)+ totalPrice);
+        showTheOrderOnTheScreen();
     }
 
     @Override
     public void onResume() {
         super.onResume();
         //DATA BASE:
-        arrayToShowOnTheScreen.clear();
-        keys.clear();
-        totalPrice = 0;
-        readTotalPrice();
-        readAllProducts();
     }
 
     @Override
     public void onStop() {
         super.onStop();
-        //DATA BASE:
-        arrayToShowOnTheScreen.clear();
-        keys.clear();
-        totalPrice = 0 ;
-        orderProductsRef.removeEventListener(readOrderProductsListener);
-        orderTotalPriceRef.removeEventListener(readTotalPriceListener);
     }
 
-    public void readTotalPrice(){
-        readTotalPriceListener = new ValueEventListener() {
+    public void showTheOrderOnTheScreen(){
+        recyclerView = (RecyclerView) findViewById(R.id.my_recycler_view);
+        recyclerView.setHasFixedSize(true);
+        recyclerView.setLayoutManager(new LinearLayoutManager(SpecificOrderActivity.this));
+        productAdapter = new ProductAdapter(order.getProducts());
+        productAdapter.SetOnItemClickListener(new ProductAdapter.OnItemClickListener() {
             @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                Order someOrder = dataSnapshot.getValue(Order.class);
-                totalPrice = someOrder.getTotalPrice();
+            public void onItemClick(int position) {
             }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
-                Log.e("The read failed: " ,databaseError.getMessage());
-            }
-        };
+        });
+        recyclerView.setAdapter(productAdapter);
     }
 
-    public void readAllProducts(){//final DataStatus dataStatus){
-        arrayToShowOnTheScreen.clear();
-        keys.clear();
-        readOrderProductsListener = new ValueEventListener(){
-            @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                for (DataSnapshot postSnapshot: dataSnapshot.getChildren()) {
-                    keys.add(postSnapshot.getKey());
-                    Product someProduct = postSnapshot.getValue(Product.class);
-                    //the calculation of the total price should  to be the order class not here!
-                    //totalPrice = totalPrice + someProduct.getPrice();
-                    arrayToShowOnTheScreen.add(someProduct);
-                }
-                //textViewTotalPrice.setText(getApplication().getResources().getString(R.string.textViewTotalPriceText)+ totalPrice);
-                Collections.reverse(arrayToShowOnTheScreen);
-                recyclerView = (RecyclerView) findViewById(R.id.my_recycler_view);
-                recyclerView.setHasFixedSize(true);
-                recyclerView.setLayoutManager(new LinearLayoutManager(SpecificOrderActivity.this));
-                productAdapter = new ProductAdapter(arrayToShowOnTheScreen);
-                productAdapter.SetOnItemClickListener(new ProductAdapter.OnItemClickListener() {
-                    @Override
-                    public void onItemClick(int position) {
-                        DatabaseReference ref=FirebaseDatabase.getInstance().getReference();
-                        ref.child(Global_Variable.TABLE_ORDERS).child(orderID).child(arrayToShowOnTheScreen.get(position).getID()).removeValue();
-                    }
-                });
-                recyclerView.setAdapter(productAdapter);
-            }
 
-            public void onCancelled(@NonNull DatabaseError databaseError) {
-                Log.e("The read failed: " ,databaseError.getMessage());
-            }
-        };
-        Query queryRef = orderProductsRef.orderByChild(Global_Variable.PRODUCT_NAME_COLUMN);
-        queryRef.addValueEventListener(readOrderProductsListener);
-    }
     // the function upload to storage the picture and save the URi to order
     //todo call to upload image
     private void uploadImage(final Order order, Uri filePath) {
@@ -216,10 +160,12 @@ public class SpecificOrderActivity extends AppCompatActivity {
         x = bundle.getDouble(Global_Variable.USER_LOCATION_MOVE_INTENT_LONGITUDE);
         y = bundle.getDouble(Global_Variable.USER_LOCATION_MOVE_INTENT_LATITUDE);
         userLocation = new UserLocation(x,y);
-        idShop = getIntent().getStringExtra(Global_Variable.SHOP_ID_MOVE_INTENT);
-        nameShop = getIntent().getStringExtra(Global_Variable.SHOP_NAME_MOVE_INTENT);
         orderID = getIntent().getStringExtra(Global_Variable.ORDER_ID_MOVE_INTENT);
-        //Log.e("orderID",orderID);
+        order = (Order)bundle.getParcelable(Global_Variable.ORDER_MOVE_INTENT);
+        nameShop = order.getShopName();
+        idShop = order.getIdShop();
+        totalPrice = order.getTotalPrice();
+;
 
        // orderID = "-M1KN9rJwKewkFrr2b2n";
 
@@ -234,15 +180,10 @@ public class SpecificOrderActivity extends AppCompatActivity {
         textViewTotalPrice.setTextColor(getApplication().getResources().getColor(R.color.colorCoffee));
         iinitPayBySelfieButtonButton();
         initDeleteOrderButton();
-        //TODO: init totalPrice zero -> at global?
-        totalPrice = 0;
 
-        //init for read order from DB:
-        arrayToShowOnTheScreen = new ArrayList<>();
-        keys= new ArrayList<>();
+        //init for save order image to DB:
         mDatabase = FirebaseDatabase.getInstance();
-        orderProductsRef = mDatabase.getReference(Global_Variable.TABLE_ORDERS).child(orderID).child(Global_Variable.PRODUCTS_COLUMN);
-        orderTotalPriceRef = mDatabase.getReference(Global_Variable.TABLE_ORDERS).child(orderID);
+        orderProductsRef = mDatabase.getReference(Global_Variable.TABLE_ORDERS).child(orderID);
     }
 
     private void  createTextViewUITitle(TextView textView,String title){
@@ -289,6 +230,7 @@ public class SpecificOrderActivity extends AppCompatActivity {
             }
         }
     }
+
     public void initDeleteOrderButton(){
         deleteOrderButton = (Button) findViewById(R.id.deleteOrderButton);
         deleteOrderButton.setText(R.string.deleteOrderButtonText);
@@ -306,8 +248,10 @@ public class SpecificOrderActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 //delete the order:
+                deleteTheOrderUI();
                 DatabaseReference ref=FirebaseDatabase.getInstance().getReference();
                 ref.child(Global_Variable.TABLE_ORDERS).child(orderID).removeValue();
+
             }
         });
     }
@@ -317,6 +261,15 @@ public class SpecificOrderActivity extends AppCompatActivity {
     public void onBackPressed() {
     }
 */
+
+    private void deleteTheOrderUI(){
+        order.getProducts().clear();
+        order.setTotalPrice(Global_Variable.INIT_PRICE_ORDER);
+        totalPrice = Global_Variable.INIT_PRICE_ORDER;
+        textViewShopName.setText(Global_Variable.SHOP_NAME);
+        textViewTotalPrice.setText(getApplication().getResources().getString(R.string.textViewTotalPriceText) + totalPrice);
+        showTheOrderOnTheScreen();
+    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {

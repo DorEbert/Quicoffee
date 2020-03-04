@@ -176,6 +176,7 @@ public class FindShopsActivity extends AppCompatActivity {
 
     private void showAShop(){
         Intent intent = new Intent(FindShopsActivity.this, ShowChosenShopActivity.class);
+
         intent.putExtra(Global_Variable.SHOP_ID_MOVE_INTENT , chosenShop.getID());
         intent.putExtra(Global_Variable.SHOP_NAME_MOVE_INTENT, this.chosenShop.getShopName());
         intent.putExtra(Global_Variable.USER_FOR_MOVE_INTENT,this.user);

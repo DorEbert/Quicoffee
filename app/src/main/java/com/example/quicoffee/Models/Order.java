@@ -1,6 +1,10 @@
 package com.example.quicoffee.Models;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.Parcel;
+import android.os.Parcelable;
 
+import com.example.quicoffee.Global_Variable;
 import com.google.firebase.auth.FirebaseUser;
 
 import java.sql.Time;
@@ -8,7 +12,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
-public class Order {
+public class Order implements Parcelable{
 
     public String userID;
     private String shopName;
@@ -23,12 +27,52 @@ public class Order {
     public Order(String shopName){
         this.shopName = shopName;
         products = new ArrayList<>();
-        totalPrice=0;
+        totalPrice= Global_Variable.INIT_PRICE_ORDER;
         //TODO: time for order
     }
 
     public Order(){
 
+    }
+
+
+    protected Order(Parcel in) {
+        idShop = in.readString();
+        userID = in.readString();
+        shopName = in.readString();
+        totalPrice = in.readDouble();
+        image = in.readString();
+        products = new ArrayList<Product>();
+        in.readList(products, Product.class.getClassLoader());
+        //products = in.readParcelable(Product.class.getClassLoader());
+        generalComment = in.readString();
+    }
+
+    public static final Creator<Order> CREATOR = new Creator<Order>() {
+        @Override
+        public Order createFromParcel(Parcel in) {
+            return new Order(in);
+        }
+
+        @Override
+        public Order[] newArray(int size) {
+            return new Order[size];
+        }
+    };
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeString(this.idShop);
+        dest.writeString(this.userID);
+        dest.writeString(this.shopName);
+        dest.writeDouble(this.totalPrice);
+        dest.writeString(image);
+        dest.writeList(this.products);
+        dest.writeString(generalComment);
     }
 
     public double getTotalPrice() {
@@ -65,7 +109,7 @@ public class Order {
     }
 
     private void removeProduct(Product product){
-        //todo maybe instead of product use product ID
+        //TODO: maybe instead of product use product ID
         products.remove(product);
         totalPrice = totalPrice - product.getPrice();
     }

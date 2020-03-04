@@ -165,8 +165,7 @@ public class MyOrdersActivity extends AppCompatActivity {
         Intent myIntent = new Intent(MyOrdersActivity.this,
                 SpecificOrderActivity.class);
         myIntent.putExtra(Global_Variable.ORDER_ID_MOVE_INTENT, this.orderID);
-        myIntent.putExtra(Global_Variable.SHOP_ID_MOVE_INTENT , this.chosenOrder.getIdShop());
-        myIntent.putExtra(Global_Variable.SHOP_NAME_MOVE_INTENT, this.chosenOrder.getShopName());
+        myIntent.putExtra(Global_Variable.ORDER_MOVE_INTENT, this.chosenOrder);
         myIntent.putExtra(Global_Variable.USER_FOR_MOVE_INTENT,this.user);
         myIntent.putExtra(Global_Variable.FAVORITE_COFFEE_MOVE_INTENT, this.favoriteCoffee);
         bundle.putDouble(Global_Variable.USER_LOCATION_MOVE_INTENT_LONGITUDE, this.userLocation.getX());

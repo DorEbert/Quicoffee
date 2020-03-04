@@ -59,20 +59,25 @@ public class ShowChosenShopActivity extends AppCompatActivity {
     //Read form firebase:
     public FirebaseDatabase mDatabase;
     public DatabaseReference shopsRef;
-    RecyclerView recyclerView;
-    private ArrayList<Product> arrayToShowOnTheScreen;
+    RecyclerView recyclerViewFromDB;
+    private ArrayList<Product> arrayToShowOnTheScreenFromDB;
     private List<String> keys;
     public ValueEventListener postListener;
-    private ProductAdapter productAdapter;
+    private ProductAdapter productAdapterDB;
     private Product productChosen;
 
-    //for order table:
+    //save order to DB::
     public DatabaseReference orderRef;
     private Order someOrder;
     private String idForPushOrderToDB; // for the push method DB
     public ValueEventListener saveOrderListener;
     public String indexOrderExist; // the Key from DB at Favorite coffee Table -> if isnt exist will be "none"
     public Order OrderFromDataSnapshot;
+
+    //my cart:
+    RecyclerView myCartRecyclerView;
+    private ArrayList<Product> arrayToAddToMyCart;
+    private ProductAdapter productAdapterCart;
 
 
     @Override
@@ -83,6 +88,7 @@ public class ShowChosenShopActivity extends AppCompatActivity {
         setSupportActionBar(myToolbar);
         InititalVariablesOfLocalActivity();
         iinitSaveOrderButton();
+        showTheCartRecyclerViewOnTheScreen();
        // iinitMyOrderButton();
     }
 
@@ -90,7 +96,7 @@ public class ShowChosenShopActivity extends AppCompatActivity {
     public void onResume() {
         super.onResume();
         //DATA BASE:
-        arrayToShowOnTheScreen.clear();
+        arrayToShowOnTheScreenFromDB.clear();
         keys.clear();
         readAllProducts();
     }
@@ -99,7 +105,7 @@ public class ShowChosenShopActivity extends AppCompatActivity {
     public void onStop() {
         super.onStop();
         //DATA BASE:
-        arrayToShowOnTheScreen.clear();
+        arrayToShowOnTheScreenFromDB.clear();
         keys.clear();
         shopsRef.removeEventListener(postListener);
         if(saveOrderListener != null ){
@@ -109,8 +115,24 @@ public class ShowChosenShopActivity extends AppCompatActivity {
         }
     }
 
+
+    public void showTheCartRecyclerViewOnTheScreen(){
+        myCartRecyclerView = (RecyclerView) findViewById(R.id.myCartRecyclerView);
+        myCartRecyclerView.setHasFixedSize(true);
+        myCartRecyclerView.setLayoutManager(new LinearLayoutManager(ShowChosenShopActivity.this));
+        productAdapterCart = new ProductAdapter(order.getProducts());
+        productAdapterCart.SetOnItemClickListener(new ProductAdapter.OnItemClickListener() {
+            @Override
+            public void onItemClick(int position) {
+                arrayToAddToMyCart.remove(position);
+                showTheCartRecyclerViewOnTheScreen();
+            }
+        });
+        myCartRecyclerView.setAdapter(productAdapterCart);
+    }
+
     public void readAllProducts(){//final DataStatus dataStatus){
-        arrayToShowOnTheScreen.clear();
+        arrayToShowOnTheScreenFromDB.clear();
         keys.clear();
         postListener = new ValueEventListener(){
             @Override
@@ -119,22 +141,24 @@ public class ShowChosenShopActivity extends AppCompatActivity {
                 for (DataSnapshot postSnapshot: dataSnapshot.getChildren()) {
                     keys.add(postSnapshot.getKey());
                     Product someProduct = postSnapshot.getValue(Product.class);
-                    arrayToShowOnTheScreen.add(someProduct);
+                    arrayToShowOnTheScreenFromDB.add(someProduct);
                 }
-                Collections.reverse(arrayToShowOnTheScreen);
-                recyclerView = (RecyclerView) findViewById(R.id.my_recycler_view);
-                recyclerView.setHasFixedSize(true);
-                recyclerView.setLayoutManager(new LinearLayoutManager(ShowChosenShopActivity.this));
-                productAdapter = new ProductAdapter(arrayToShowOnTheScreen);
-                productAdapter.SetOnItemClickListener(new ProductAdapter.OnItemClickListener() {
+                Collections.reverse(arrayToShowOnTheScreenFromDB);
+                recyclerViewFromDB = (RecyclerView) findViewById(R.id.recyclerViewProducts);
+                recyclerViewFromDB.setHasFixedSize(true);
+                recyclerViewFromDB.setLayoutManager(new LinearLayoutManager(ShowChosenShopActivity.this));
+                productAdapterDB = new ProductAdapter(arrayToShowOnTheScreenFromDB);
+                productAdapterDB.SetOnItemClickListener(new ProductAdapter.OnItemClickListener() {
                     @Override
                     public void onItemClick(int position) {
-                        productChosen = arrayToShowOnTheScreen.get(position);
+                        productChosen = arrayToShowOnTheScreenFromDB.get(position);
                         saveOrderButton.setVisibility(Button.VISIBLE);
                         order.addProduct(productChosen);
+                        arrayToAddToMyCart.add(productChosen);
+                        showTheCartRecyclerViewOnTheScreen();
                     }
                 });
-                recyclerView.setAdapter(productAdapter);
+                recyclerViewFromDB.setAdapter(productAdapterDB);
             }
 
             public void onCancelled(@NonNull DatabaseError databaseError) {
@@ -171,13 +195,14 @@ public class ShowChosenShopActivity extends AppCompatActivity {
         order = new Order(nameShop);
 
         //init for read shops from DB:
-        arrayToShowOnTheScreen = new ArrayList<>();
+        arrayToShowOnTheScreenFromDB = new ArrayList<>();
         keys= new ArrayList<>();
         mDatabase = FirebaseDatabase.getInstance();
         shopsRef = mDatabase.getReference(Global_Variable.TABLE_SHOP).child(idShop).child(Global_Variable.PRODUCTS_COLUMN);
 
         //init for write order to DB:
         orderRef = mDatabase.getReference(Global_Variable.TABLE_ORDERS);
+        arrayToAddToMyCart = new ArrayList<>();
     }
 
     public void iinitSaveOrderButton(){
@@ -278,11 +303,9 @@ public class ShowChosenShopActivity extends AppCompatActivity {
     }
 
     private void showAllDetailsOfTheOrder(){
-        Intent myIntent = new Intent(ShowChosenShopActivity.this,
-                SpecificOrderActivity.class);
+        Intent myIntent = new Intent(ShowChosenShopActivity.this,SpecificOrderActivity.class);
+        myIntent.putExtra(Global_Variable.ORDER_MOVE_INTENT, this.order);
         myIntent.putExtra(Global_Variable.ORDER_ID_MOVE_INTENT, this.orderID);
-        myIntent.putExtra(Global_Variable.SHOP_ID_MOVE_INTENT , this.idShop);
-        myIntent.putExtra(Global_Variable.SHOP_NAME_MOVE_INTENT, this.nameShop);
         myIntent.putExtra(Global_Variable.USER_FOR_MOVE_INTENT,this.user);
         myIntent.putExtra(Global_Variable.FAVORITE_COFFEE_MOVE_INTENT, this.favoriteCoffee);
         bundle.putDouble(Global_Variable.USER_LOCATION_MOVE_INTENT_LONGITUDE, this.userLocation.getX());

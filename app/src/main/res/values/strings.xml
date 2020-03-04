@@ -11,4 +11,6 @@
     <string name="textViewTotalPriceText">Total price:  </string>
     <string name="deleteOrderButtonText">Delete Order</string>
     <string name="textViewTitleMyOrdersString">My Orders</string>
+    <string name="productsString">Products:</string>
+    <string name="cartString">My cart</string>
 </resources>
