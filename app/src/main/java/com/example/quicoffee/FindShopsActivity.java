@@ -12,6 +12,8 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.ViewGroup;
+import android.widget.CheckBox;
+import android.widget.CompoundButton;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -98,6 +100,7 @@ public class FindShopsActivity extends AppCompatActivity {
     public void readShops(){//final DataStatus dataStatus){
         arrayToShowOnTheScreen.clear();
         keys.clear();
+        final CheckBox checkBox = findViewById(R.id.findMyCoffee);
         postListener = new ValueEventListener(){
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
@@ -107,8 +110,19 @@ public class FindShopsActivity extends AppCompatActivity {
                     //Shop someShop = new Shop();
                     Shop someShop = postSnapshot.getValue(Shop.class);
                     //TODO: show only shops nearby :)
-                    arrayToShowOnTheScreen.add(someShop);
-                }
+                    //In case of my favorite coffee
+                    if (checkBox.isChecked()){
+                            if(favoriteCoffee != null
+                                    &&someShop.getIngredients() != null
+                                    &&favoriteCoffee.getTypeOfMilk() != null)
+                            if (someShop.getIngredients().contains(favoriteCoffee.typeOfMilk))
+                                arrayToShowOnTheScreen.add(someShop);
+                    }
+                    //add all shops
+                    else
+                            arrayToShowOnTheScreen.add(someShop);
+                    }
+
                 recyclerView = (RecyclerView) findViewById(R.id.my_recycler_view);
                 recyclerView.setHasFixedSize(true);
                 ViewGroup.LayoutParams params= recyclerView.getLayoutParams();
@@ -279,6 +293,12 @@ public class FindShopsActivity extends AppCompatActivity {
         someFavoriteCoffee = new FavoriteCoffee();
         FavoriteCoffeeFromDataSnapshot = new FavoriteCoffee();
         favoriteCoffeeRef = mDatabase.getReference(Global_Variable.FAVORITE_COFFEE_TABLE);
+        ((CheckBox)findViewById(R.id.findMyCoffee)).setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                readShops();
+            }
+            });
     }
 
 

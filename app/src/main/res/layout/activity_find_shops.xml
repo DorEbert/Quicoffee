@@ -36,6 +36,12 @@
             android:paddingBottom="15dp"
             android:paddingTop="15dp">
         </TextView>
+        <CheckBox
+            android:id="@+id/findMyCoffee"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Find my coffee"/>
+
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/my_recycler_view"
             android:scrollbars="vertical"
