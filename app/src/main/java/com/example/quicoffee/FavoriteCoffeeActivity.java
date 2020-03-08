@@ -84,7 +84,7 @@ public class FavoriteCoffeeActivity extends AppCompatActivity  {
         //DATA BASE:
         if(saveListener != null ){
             favoriteCoffeeRef.removeEventListener(saveListener);
-            //saveOrderListener init only if the user click on "save"
+            //updateOrderListener init only if the user click on "save"
             //so we have to check this :)
         }
     }
@@ -118,8 +118,8 @@ public class FavoriteCoffeeActivity extends AppCompatActivity  {
                 Toast.makeText(FavoriteCoffeeActivity.this , "Your favorite coffee save :)!", Toast.LENGTH_SHORT).show();
                 saveFavoriteCoffeeToDB(favoriteCoffee,user);
              //delete all the table:
-             //DatabaseReference ref=FirebaseDatabase.getInstance().getReference();
-             //ref.child("favoriteCoffeeTable").removeValue();
+             //DatabaseReference refForDeleteOrder=FirebaseDatabase.getInstance().getReference();
+             //refForDeleteOrder.child("favoriteCoffeeTable").removeValue();
             }
         });
         linearLayout.addView(saveButton);

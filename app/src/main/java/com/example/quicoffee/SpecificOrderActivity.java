@@ -10,7 +10,6 @@ import android.app.ProgressDialog;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -22,7 +21,6 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.quicoffee.Models.Order;
-import com.example.quicoffee.Models.Product;
 import com.example.quicoffee.Models.ProductAdapter;
 import com.example.quicoffee.Models.UserLocation;
 import com.google.android.gms.tasks.OnFailureListener;
@@ -32,15 +30,11 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.OnProgressListener;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
 import java.util.UUID;
 
 public class SpecificOrderActivity extends AppCompatActivity {
@@ -66,12 +60,20 @@ public class SpecificOrderActivity extends AppCompatActivity {
     public Button deleteOrderButton;
     private double totalPrice;
 
-    public FirebaseDatabase mDatabase;
-    public DatabaseReference orderProductsRef;
     RecyclerView recyclerView;
     private ProductAdapter productAdapter;
-
     private Uri imageURI;
+
+    //update image to the order on DB::
+    public FirebaseDatabase mDatabase;
+    public DatabaseReference orderRef;
+    private Order someOrder;
+    public ValueEventListener updateOrderListener;
+    public String indexOrderExist; // the Key from DB at Favorite coffee Table -> if isnt exist will be "none"
+    public Order OrderFromDataSnapshot;
+
+    public DatabaseReference refForDeleteOrder;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -91,6 +93,11 @@ public class SpecificOrderActivity extends AppCompatActivity {
     @Override
     public void onStop() {
         super.onStop();
+        if(updateOrderListener != null ){
+            orderRef.removeEventListener(updateOrderListener);
+            //updateOrderListener init only if the user click on "save"
+            //so we have to check this :)
+        }
     }
 
     public void showTheOrderOnTheScreen(){
@@ -115,7 +122,7 @@ public class SpecificOrderActivity extends AppCompatActivity {
             progressDialog.setTitle("Uploading...");
             progressDialog.show();
             final String imageID = UUID.randomUUID().toString();
-            StorageReference storageReference = fireBaseUtill.getStorageReference().child("images/" + UUID.randomUUID().toString());
+            StorageReference storageReference = fireBaseUtill.getStorageReference().child("images/" +imageID);
             storageReference.putFile(filePath)
                     .addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
                         @Override
@@ -128,10 +135,8 @@ public class SpecificOrderActivity extends AppCompatActivity {
                                 fireBaseUtill.RemovePictureFromStorage(order.getImage());
                             }
                             order.setImage(imageID);
-                           // orderProductsRef.setValue(order);
+                            updateImageToTheOrder(order,user);
                             showMyOrders();
-                            //todo update order on db to have the image
-                            //TODO: showMyOrders();
                         }
                     })
                     .addOnFailureListener(new OnFailureListener() {
@@ -139,6 +144,7 @@ public class SpecificOrderActivity extends AppCompatActivity {
                         public void onFailure(@NonNull Exception e) {
                             progressDialog.dismiss();
                             Toast.makeText(SpecificOrderActivity.this, Global_Variable.FAILED + " " + e.getMessage(), Toast.LENGTH_SHORT).show();
+                            order.setImage(Global_Variable.FAILED);
                         }
                     })
                     .addOnProgressListener(new OnProgressListener<UploadTask.TaskSnapshot>() {
@@ -150,6 +156,52 @@ public class SpecificOrderActivity extends AppCompatActivity {
                         }
                     });
         }
+    }
+
+    private void updateImageToTheOrder(final Order order, final FirebaseUser user){
+        updateOrderListener = new ValueEventListener(){
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                order.setUserID(user.getUid());
+                writeOrder(order,user,dataSnapshot);
+            }
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        };
+        orderRef.addValueEventListener(updateOrderListener);
+    }
+
+
+    private void writeOrder(Order order, FirebaseUser user, DataSnapshot dataSnapshot) {
+        indexOrderExist = checkIfOrderExist(dataSnapshot);
+        someOrder = new Order(nameShop);
+        someOrder.setUserID(user.getUid());
+        someOrder.setIdShop(this.idShop);
+        if(!indexOrderExist.equals(Global_Variable.ORDER_NOT_EXIST)){
+            orderID = indexOrderExist;
+            order.setUserID(user.getUid());
+            dataSnapshot.getRef().child(indexOrderExist).setValue(order);
+        }
+        //Log.e("orderID",orderID);
+    }
+
+
+    public String checkIfOrderExist(DataSnapshot dataSnapshot) {
+        if (dataSnapshot.getChildrenCount() == 0 ){
+            return Global_Variable.ORDER_NOT_EXIST;
+        }
+        for (DataSnapshot postSnapshot: dataSnapshot.getChildren()) {
+            OrderFromDataSnapshot = postSnapshot.getValue(Order.class);
+            //Log.e("checkIfOrderExist", "checkIfUserExist: OrderFromDataSnapshot.getUserID() "+OrderFromDataSnapshot.getUserID());
+            //  Log.e("checkIfOrderExist", "checkIfUserExist: user.getUid() "+user.getUid());
+            if (OrderFromDataSnapshot.getUserID().equals(user.getUid())
+                    && OrderFromDataSnapshot.getShopName().equals(nameShop)) {
+                return postSnapshot.getKey();
+            }
+        }
+        return Global_Variable.ORDER_NOT_EXIST;
     }
 
 
@@ -171,10 +223,6 @@ public class SpecificOrderActivity extends AppCompatActivity {
         nameShop = order.getShopName();
         idShop = order.getIdShop();
         totalPrice = order.getTotalPrice();
-;
-
-       // orderID = "-M1KN9rJwKewkFrr2b2n";
-
         textViewOrderId = (TextView) findViewById(R.id.textViewOrderId);
         textViewShopName = (TextView) findViewById(R.id.textViewShopName);
         textViewTitle = (TextView) findViewById(R.id.textViewTitle);
@@ -185,13 +233,12 @@ public class SpecificOrderActivity extends AppCompatActivity {
         createTextViewUI(textViewTotalPrice, getApplication().getResources().getString(R.string.textViewTotalPriceText) + totalPrice);
         textViewTotalPrice.setTextColor(getApplication().getResources().getColor(R.color.colorCoffee));
 
-        //init for save order image to DB:
+        //init for update the order to DB:
         mDatabase = FirebaseDatabase.getInstance();
-        orderProductsRef = mDatabase.getReference(Global_Variable.TABLE_ORDERS).child(orderID);
+        orderRef = mDatabase.getReference(Global_Variable.TABLE_ORDERS);
 
         iinitPayBySelfieButtonButton();
         initDeleteOrderButton();
-
     }
 
     private void  createTextViewUITitle(TextView textView,String title){
@@ -258,9 +305,10 @@ public class SpecificOrderActivity extends AppCompatActivity {
             public void onClick(View v) {
                 //delete the order:
                 deleteTheOrderUI();
-                //TODO: delete the potho from the storage
-                DatabaseReference ref=FirebaseDatabase.getInstance().getReference();
-                ref.child(Global_Variable.TABLE_ORDERS).child(orderID).removeValue();
+                refForDeleteOrder =FirebaseDatabase.getInstance().getReference();
+                refForDeleteOrder.child(Global_Variable.TABLE_ORDERS).child(orderID).removeValue();
+                StorageReference storageReference = fireBaseUtill.getStorageReference().child("images/" +order.getImage());
+                storageReference.delete();
 
             }
         });

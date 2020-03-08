@@ -104,8 +104,6 @@ public class MyOrdersActivity extends AppCompatActivity {
         keys= new ArrayList<>();
         mDatabase = FirebaseDatabase.getInstance();
         orderRef = mDatabase.getReference(Global_Variable.TABLE_ORDERS);
-
-
     }
 
     public void readOrders(){//final DataStatus dataStatus){
@@ -138,7 +136,6 @@ public class MyOrdersActivity extends AppCompatActivity {
                         showAllDetailsOfTheOrder();
                     }
                 });
-
                 recyclerView.setNestedScrollingEnabled(true);
                 recyclerView.setAdapter(orderAdapter);
             }
