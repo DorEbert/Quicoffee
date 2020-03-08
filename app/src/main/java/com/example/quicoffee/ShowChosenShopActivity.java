@@ -14,6 +14,7 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -118,12 +119,20 @@ public class ShowChosenShopActivity extends AppCompatActivity {
         }
     }
 
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        findShops();
+    }
 
     public void showTheCartRecyclerViewOnTheScreen(){
         myCartRecyclerView = (RecyclerView) findViewById(R.id.myCartRecyclerView);
         myCartRecyclerView.setHasFixedSize(true);
         myCartRecyclerView.setLayoutManager(new LinearLayoutManager(ShowChosenShopActivity.this));
         productAdapterCart = new ProductAdapter(order.getProducts());
+        ViewGroup.LayoutParams params= myCartRecyclerView.getLayoutParams();
+        params.height= (int) (mainActivityHeight*0.25);
+        myCartRecyclerView.setLayoutParams(params);
         productAdapterCart.SetOnItemClickListener(new ProductAdapter.OnItemClickListener() {
             @Override
             public void onItemClick(int position) {
@@ -148,6 +157,9 @@ public class ShowChosenShopActivity extends AppCompatActivity {
                 }
                 Collections.reverse(arrayToShowOnTheScreenFromDB);
                 recyclerViewFromDB = (RecyclerView) findViewById(R.id.recyclerViewProducts);
+                ViewGroup.LayoutParams params= recyclerViewFromDB.getLayoutParams();
+                params.height= (int) (mainActivityHeight*0.25);
+                recyclerViewFromDB.setLayoutParams(params);
                 recyclerViewFromDB.setHasFixedSize(true);
                 recyclerViewFromDB.setLayoutManager(new LinearLayoutManager(ShowChosenShopActivity.this));
                 productAdapterDB = new ProductAdapter(arrayToShowOnTheScreenFromDB);

@@ -32,8 +32,8 @@
             android:layout_height="wrap_content"
             android:textSize="22dp"
             android:textColor="@color/colorCoffee"
-            android:paddingBottom="7dp"
-            android:paddingTop="15dp"
+            android:paddingBottom="4dp"
+            android:paddingTop="5dp"
             android:paddingLeft="15dp">
         </TextView>
         <TextView
@@ -43,8 +43,8 @@
             android:layout_height="wrap_content"
             android:textSize="22dp"
             android:textColor="@color/colorCoffee"
-            android:paddingBottom="7dp"
-            android:paddingTop="15dp"
+            android:paddingBottom="5dp"
+            android:paddingTop="7dp"
             android:paddingLeft="15dp">
         </TextView>
         <TextView
@@ -55,7 +55,7 @@
             android:textSize="15dp"
             android:textColor="@color/colorBlack"
             android:paddingBottom="15dp"
-            android:paddingTop="15dp"
+            android:paddingTop="7dp"
             android:paddingLeft="15dp">
         </TextView>
         <androidx.recyclerview.widget.RecyclerView
@@ -82,8 +82,8 @@
             android:layout_height="wrap_content"
             android:textSize="15dp"
             android:textColor="@color/colorBlack"
-            android:paddingBottom="15dp"
-            android:paddingTop="15dp"
+            android:paddingBottom="7dp"
+            android:paddingTop="7dp"
             android:paddingLeft="15dp">
         </TextView>
         <androidx.recyclerview.widget.RecyclerView
