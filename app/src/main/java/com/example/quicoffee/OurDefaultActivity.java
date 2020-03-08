@@ -46,8 +46,6 @@ public class OurDefaultActivity extends AppCompatActivity {
                 return true;
             case R.id.setUpAShop:
                 return true;
-            case R.id.setting:
-                return true;
             case R.id.logOut:
                 return true;
             default:

@@ -260,8 +260,6 @@ public class FindShopsActivity extends AppCompatActivity {
             case R.id.setUpAShop:
                 AddShopActivity();
                 return true;
-            case R.id.setting:
-                return true;
             case R.id.logOut:
                 logOut();
                 return true;

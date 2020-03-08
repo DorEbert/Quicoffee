@@ -18,10 +18,6 @@
         android:title="Set up a Shop"
         app:showAsAction="never">
     </item>
-    <item android:id="@+id/setting"
-        android:title="Settings"
-        app:showAsAction="never">
-    </item>
     <item android:id="@+id/logOut"
         android:title="Log out "
         app:showAsAction="never">

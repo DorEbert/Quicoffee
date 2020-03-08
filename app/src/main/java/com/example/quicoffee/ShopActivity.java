@@ -288,8 +288,6 @@ public class ShopActivity extends AppCompatActivity implements OnMapReadyCallbac
             case R.id.setUpAShop:
                 AddShopActivity();
                 return true;
-            case R.id.setting:
-                return true;
             case R.id.logOut:
                 logOut();
                 return true;
