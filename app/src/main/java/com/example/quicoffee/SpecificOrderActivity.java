@@ -102,6 +102,9 @@ public class SpecificOrderActivity extends AppCompatActivity {
             //updateOrderListener init only if the user click on "save"
             //so we have to check this :)
         }
+        confirmTheOrderButton.setVisibility(View.GONE);
+        payBySelfieButton.setVisibility(View.GONE);
+        finish();
     }
 
     public void showTheOrderOnTheScreen(){
@@ -227,7 +230,7 @@ public class SpecificOrderActivity extends AppCompatActivity {
 
         //is_to_display_user = false; -> for a seller
         //is_to_display_user = true; -> for a buyer
-        is_to_display_user = bundle.getBoolean(Global_Variable.IS_TO_DISPLAY_USER_MOVE_INTENT, true);
+        is_to_display_user = bundle.getBoolean(Global_Variable.IS_TO_DISPLAY_USER_MOVE_INTENT);
 
         nameShop = order.getShopName();
         idShop = order.getIdShop();
@@ -246,10 +249,15 @@ public class SpecificOrderActivity extends AppCompatActivity {
         mDatabase = FirebaseDatabase.getInstance();
         orderRef = mDatabase.getReference(Global_Variable.TABLE_ORDERS);
 
+        payBySelfieButton = (Button) findViewById(R.id.payBySelfieButton);
+        confirmTheOrderButton = (Button) findViewById(R.id.confirmTheOrderButton);
+
         if(is_to_display_user == true){
+            confirmTheOrderButton.setVisibility(View.GONE);
             iinitPayBySelfieButtonButton();
         }
         else {
+            payBySelfieButton.setVisibility(View.GONE);
             iinitConfirmTheOrderButton();
         }
 
@@ -271,7 +279,6 @@ public class SpecificOrderActivity extends AppCompatActivity {
     }
 
     private void iinitConfirmTheOrderButton(){
-        confirmTheOrderButton = (Button) findViewById(R.id.confirmTheOrderButton);
         confirmTheOrderButton.setVisibility(Button.VISIBLE);
         confirmTheOrderButton.setText(R.string.confirmTheOrderButtonText);
         LinearLayout.LayoutParams confirmTheOrderButtonLayoutParams =
@@ -295,7 +302,6 @@ public class SpecificOrderActivity extends AppCompatActivity {
     }
 
     public void iinitPayBySelfieButtonButton(){
-        payBySelfieButton = (Button) findViewById(R.id.payBySelfieButton);
         payBySelfieButton.setVisibility(Button.VISIBLE);
         payBySelfieButton.setText(R.string.payBySelfieButtonText);
         LinearLayout.LayoutParams saveButtonLayoutParams =
