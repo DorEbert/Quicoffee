@@ -16,10 +16,8 @@ import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.example.quicoffee.Models.FavoriteCoffee;
-import com.example.quicoffee.Models.Order;
 import com.example.quicoffee.Models.Shop;
 import com.example.quicoffee.Models.ShopAdapter;
 import com.example.quicoffee.Models.UserLocation;
@@ -51,19 +49,18 @@ public class FindShopsActivity extends AppCompatActivity {
 
     //Read form firebase the table favorite coffee:
     private FavoriteCoffee favoriteCoffee;
-    private FavoriteCoffee someFavoriteCoffee;
     private FavoriteCoffee FavoriteCoffeeFromDataSnapshot;
     public String indexUserExistForFoundFC;
     public DatabaseReference favoriteCoffeeRef;
     public ValueEventListener readListener;
 
-    //Read form firebase the table shops:
+    //Read form fireBase the table shops:
     public FirebaseDatabase mDatabase;
     public DatabaseReference shopsRef;
     RecyclerView recyclerView;
     private ArrayList<Shop> arrayToShowOnTheScreen;
     private List<String> keys;
-    public ValueEventListener postListener;
+    public ValueEventListener readShopsListener;
     private ShopAdapter shopAdapter;
     private Shop chosenShop;
 
@@ -92,7 +89,7 @@ public class FindShopsActivity extends AppCompatActivity {
         //DATA BASE:
        arrayToShowOnTheScreen.clear();
         keys.clear();
-        shopsRef.removeEventListener(postListener);
+        shopsRef.removeEventListener(readShopsListener);
         if(readListener != null ){
                 favoriteCoffeeRef.removeEventListener(readListener);
                 //updateOrderListener init only if the user click on "save"
@@ -104,7 +101,7 @@ public class FindShopsActivity extends AppCompatActivity {
         arrayToShowOnTheScreen.clear();
         keys.clear();
         final CheckBox checkBox = findViewById(R.id.findMyCoffee);
-        postListener = new ValueEventListener(){
+        readShopsListener = new ValueEventListener(){
             @Override
             public void onDataChange(@NonNull final DataSnapshot dataSnapshot) {
                 //Log.e(TAG+ " Count " ,""+dataSnapshot.getChildrenCount());
@@ -172,7 +169,7 @@ public class FindShopsActivity extends AppCompatActivity {
             }
         };
         Query queryRef = shopsRef.orderByChild(Global_Variable.SHOP_NAME);
-        queryRef.addValueEventListener(postListener);
+        queryRef.addValueEventListener(readShopsListener);
     }
 
     private void foundShopId(DataSnapshot dataSnapshot , String nameOfShop){
@@ -213,8 +210,6 @@ public class FindShopsActivity extends AppCompatActivity {
         }
         for (DataSnapshot postSnapshot: dataSnapshot.getChildren()) {
             FavoriteCoffeeFromDataSnapshot = postSnapshot.getValue(FavoriteCoffee.class);
-            //Log.e("checkIfUserExist", "checkIfUserExist: someFavoriteCoffee.getUserID() "+f.getUserID());
-            // Log.e("checkIfUserExist", "checkIfUserExist: user.getUid() "+user.getUid());
             if (FavoriteCoffeeFromDataSnapshot.getUserID().equals(user.getUid())) {
                 favoriteCoffee = FavoriteCoffeeFromDataSnapshot;
                 return postSnapshot.getKey();
@@ -299,7 +294,6 @@ public class FindShopsActivity extends AppCompatActivity {
 
         //init for read favorite coffee from DB:
         favoriteCoffee = new FavoriteCoffee();
-        someFavoriteCoffee = new FavoriteCoffee();
         FavoriteCoffeeFromDataSnapshot = new FavoriteCoffee();
         favoriteCoffeeRef = mDatabase.getReference(Global_Variable.FAVORITE_COFFEE_TABLE);
         ((CheckBox)findViewById(R.id.findMyCoffee)).setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {

@@ -126,4 +126,5 @@ public class Global_Variable {
    // public static final String USER_LOCATION_MOVE_INTENT = "userLocationForMoveing";
 
     public static final int INIT_PRICE_ORDER = 0;
+
 }

@@ -13,6 +13,7 @@ import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -20,6 +21,7 @@ import android.widget.TextView;
 import com.example.quicoffee.Models.FavoriteCoffee;
 import com.example.quicoffee.Models.Order;
 import com.example.quicoffee.Models.OrderAdapter;
+import com.example.quicoffee.Models.Shop;
 import com.example.quicoffee.Models.UserLocation;
 import com.firebase.ui.auth.AuthUI;
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -49,17 +51,23 @@ public class MyOrdersActivity extends AppCompatActivity {
     private FavoriteCoffee favoriteCoffee;
     private Button showMyOrdersAsABuyer;
     private Button showMyOrdersAsASeller;
+    private boolean is_to_display_user;
 
-    //Read form firebase the table shops:
+    //Read form fireBase the table shops:
     public FirebaseDatabase mDatabase;
     public DatabaseReference orderRef;
     RecyclerView recyclerView;
     private ArrayList<Order> arrayToShowOnTheScreen;
     private List<String> keys;
-    public ValueEventListener postListener;
+    public ValueEventListener readOrdersListener;
     private OrderAdapter orderAdapter;
     private Order chosenOrder;
     public String orderID;
+
+    //Read form fireBase the table shops:
+    public DatabaseReference shopsRef;
+    public ValueEventListener readShopListener;
+    private String shopId;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -67,7 +75,11 @@ public class MyOrdersActivity extends AppCompatActivity {
         setContentView(R.layout.activity_my_orders);
         Toolbar myToolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(myToolbar);
+        is_to_display_user = true;
         InititalVariablesOfLocalActivity();
+        addListenerToShowMyOrdersAsASellerButton();
+        foundShopID();
+        addListenerToShowMyOrdersAsABuyerButton();
     }
 
     @Override
@@ -85,7 +97,10 @@ public class MyOrdersActivity extends AppCompatActivity {
         //DATA BASE:
         arrayToShowOnTheScreen.clear();
         keys.clear();
-        orderRef.removeEventListener(postListener);
+        orderRef.removeEventListener(readOrdersListener);
+        if (readShopListener != null){
+            shopsRef.removeEventListener(readShopListener);
+        }
     }
 
     private void InititalVariablesOfLocalActivity(){
@@ -102,36 +117,50 @@ public class MyOrdersActivity extends AppCompatActivity {
         y = bundle.getDouble(Global_Variable.USER_LOCATION_MOVE_INTENT_LATITUDE);
         userLocation = new UserLocation(x,y);
         favoriteCoffee = new FavoriteCoffee();
+        shopId = new String();
 
         textViewTitle = (TextView) findViewById(R.id.textViewTitle);
         createTextViewUITitle(textViewTitle, getApplication().getResources().getString(R.string.textViewTitleMyOrdersString));
 
         showMyOrdersAsABuyer = findViewById(R.id.showMyOrdersAsABuyer);
         showMyOrdersAsASeller = findViewById(R.id.showMyOrdersAsASeller);
-        CreateButton(showMyOrdersAsABuyer,getApplication().getResources().getString(R.string.showMyOrdersAsABuyerText));
-        CreateButton(showMyOrdersAsASeller,getApplication().getResources().getString(R.string.showMyOrdersAsASellerText));
+        createButton(showMyOrdersAsABuyer,getApplication().getResources().getString(R.string.showMyOrdersAsABuyerText));
+        createButton(showMyOrdersAsASeller,getApplication().getResources().getString(R.string.showMyOrdersAsASellerText));
 
-        //init for read shops from DB:
+
+        //init for read orders from DB:
         arrayToShowOnTheScreen = new ArrayList<>();
         keys= new ArrayList<>();
         mDatabase = FirebaseDatabase.getInstance();
         orderRef = mDatabase.getReference(Global_Variable.TABLE_ORDERS);
+
+        //init for read the shop's user from DB:
+        shopsRef = mDatabase.getReference(Global_Variable.TABLE_SHOP);
+
     }
 
     public void readOrders(){//final DataStatus dataStatus){
         arrayToShowOnTheScreen.clear();
         keys.clear();
-        postListener = new ValueEventListener(){
+        readOrdersListener = new ValueEventListener(){
             @Override
             public void onDataChange(@NonNull final DataSnapshot dataSnapshot) {
-                //Log.e(TAG+ " Count " ,""+dataSnapshot.getChildrenCount());
                 for (DataSnapshot postSnapshot: dataSnapshot.getChildren()) {
                     keys.add(postSnapshot.getKey());
-                    //Shop someShop = new Shop();
                     Order someOrder = postSnapshot.getValue(Order.class);
-                    if(someOrder.getUserID().equals(user.getUid())){
-                        arrayToShowOnTheScreen.add(someOrder);
+                    //found orders by id user:
+                    if(is_to_display_user == true){
+                        if(someOrder.getUserID().equals(user.getUid())){
+                            arrayToShowOnTheScreen.add(someOrder);
+                        }
                     }
+                    else{
+                        //found shops by shops id for seller:
+                        if(someOrder.getIdShop().equals(shopId)){
+                            arrayToShowOnTheScreen.add(someOrder);
+                        }
+                    }
+
                 }
                 Collections.reverse(arrayToShowOnTheScreen);
                 recyclerView = (RecyclerView) findViewById(R.id.my_recycler_view);
@@ -157,9 +186,8 @@ public class MyOrdersActivity extends AppCompatActivity {
             }
         };
         Query queryRef = orderRef.orderByChild(Global_Variable.SHOP_NAME);
-        queryRef.addValueEventListener(postListener);
+        queryRef.addValueEventListener(readOrdersListener);
     }
-
 
     private void foundOrderId(DataSnapshot dataSnapshot , String nameOfShop){
         for (DataSnapshot postSnapshot: dataSnapshot.getChildren()) {
@@ -191,7 +219,7 @@ public class MyOrdersActivity extends AppCompatActivity {
         textView.setPadding(15,7,0,7);
     }
 
-    private void CreateButton(Button button ,String labelText) {
+    private void createButton(Button button , String labelText) {
         button.setText(labelText);
         LinearLayout.LayoutParams loginButtonLayoutParams =
                 new LinearLayout.LayoutParams((int)(mainActivityWitdh *0.5),mainActivityHeight/20);
@@ -205,14 +233,51 @@ public class MyOrdersActivity extends AppCompatActivity {
         button.setTextColor(getApplication().getResources().getColor(R.color.textViewColor));
     }
 
+    private void addListenerToShowMyOrdersAsASellerButton(){
+        showMyOrdersAsASeller.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                is_to_display_user = false;
+                readOrders();
+            }
+        });
+    }
+
+    private void addListenerToShowMyOrdersAsABuyerButton(){
+        showMyOrdersAsABuyer.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                is_to_display_user = true;
+                readOrders();
+            }
+        });
+    }
+
+    private void foundShopID(){
+        readShopListener = new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                for (DataSnapshot postSnapshot: dataSnapshot.getChildren()) {
+                    Shop someShop = postSnapshot.getValue(Shop.class);
+                    if(someShop.getUserID().equals(user.getUid())){
+                        shopId = postSnapshot.getKey();
+                    }
+                }
+            }
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        };
+        shopsRef.addValueEventListener(readShopListener);
+    }
+
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.main_menu, menu);
         return true;
     }
-
-
 
     //findShops, favoirteCoffee, myOrder, setUpAShop, setting,logOut
     @Override
