@@ -15,4 +15,5 @@
     <string name="cartString">My cart</string>
     <string name="showMyOrdersAsABuyerText">Show orders as a buyer</string>
     <string name="showMyOrdersAsASellerText">Show orders as a seller</string>
+    <string name="confirmTheOrderButtonText">Confirm the order</string>
 </resources>

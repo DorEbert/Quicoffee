@@ -201,6 +201,7 @@ public class MyOrdersActivity extends AppCompatActivity {
     private void showAllDetailsOfTheOrder(){
         Intent myIntent = new Intent(MyOrdersActivity.this,
                 SpecificOrderActivity.class);
+        myIntent.putExtra(Global_Variable.IS_TO_DISPLAY_USER_MOVE_INTENT , this.is_to_display_user);
         myIntent.putExtra(Global_Variable.ORDER_ID_MOVE_INTENT, this.orderID);
         myIntent.putExtra(Global_Variable.ORDER_MOVE_INTENT, this.chosenOrder);
         myIntent.putExtra(Global_Variable.USER_FOR_MOVE_INTENT,this.user);
@@ -237,6 +238,7 @@ public class MyOrdersActivity extends AppCompatActivity {
         showMyOrdersAsASeller.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                //show all the order for a seller
                 is_to_display_user = false;
                 readOrders();
             }

@@ -1,8 +1,11 @@
 package com.example.quicoffee.Models;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.os.Build;
 import android.os.Parcel;
 import android.os.Parcelable;
+
+import androidx.annotation.RequiresApi;
 
 import com.example.quicoffee.Global_Variable;
 import com.google.firebase.auth.FirebaseUser;
@@ -23,12 +26,14 @@ public class Order implements Parcelable{
     private double totalPrice;
     private String idShop;
     private String image;
+    private boolean confirmTheOrder;
 
     public Order(String shopName){
         this.shopName = shopName;
         products = new ArrayList<>();
         totalPrice= Global_Variable.INIT_PRICE_ORDER;
         //TODO: time for order
+        confirmTheOrder = false;
     }
 
     public Order(){
@@ -36,6 +41,7 @@ public class Order implements Parcelable{
     }
 
 
+    @RequiresApi(api = Build.VERSION_CODES.Q)
     protected Order(Parcel in) {
         idShop = in.readString();
         userID = in.readString();
@@ -46,9 +52,11 @@ public class Order implements Parcelable{
         in.readList(products, Product.class.getClassLoader());
         //products = in.readParcelable(Product.class.getClassLoader());
         generalComment = in.readString();
+        confirmTheOrder = in.readBoolean();
     }
 
     public static final Creator<Order> CREATOR = new Creator<Order>() {
+        @RequiresApi(api = Build.VERSION_CODES.Q)
         @Override
         public Order createFromParcel(Parcel in) {
             return new Order(in);
@@ -64,6 +72,7 @@ public class Order implements Parcelable{
     public int describeContents() {
         return 0;
     }
+    @RequiresApi(api = Build.VERSION_CODES.Q)
     @Override
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeString(this.idShop);
@@ -73,6 +82,7 @@ public class Order implements Parcelable{
         dest.writeString(image);
         dest.writeList(this.products);
         dest.writeString(generalComment);
+        dest.writeBoolean(this.confirmTheOrder);
     }
 
     public double getTotalPrice() {
@@ -81,6 +91,14 @@ public class Order implements Parcelable{
 
     public String getIdShop(){
         return this.idShop;
+    }
+
+    public boolean getConfirmTheOrder(){
+        return confirmTheOrder;
+    }
+
+    public void setConfirmTheOrder(boolean confirmTheOrder){
+        this.confirmTheOrder = confirmTheOrder;
     }
 
     public void setIdShop(String idShop){

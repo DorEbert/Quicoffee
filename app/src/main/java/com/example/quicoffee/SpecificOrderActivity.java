@@ -61,6 +61,7 @@ public class SpecificOrderActivity extends AppCompatActivity {
     private Order order;
     public Button payBySelfieButton;
     public Button deleteOrderButton;
+    public Button confirmTheOrderButton;
     private double totalPrice;
 
     RecyclerView recyclerView;
@@ -74,7 +75,7 @@ public class SpecificOrderActivity extends AppCompatActivity {
     public ValueEventListener updateOrderListener;
     public String indexOrderExist; // the Key from DB at Favorite coffee Table -> if isnt exist will be "none"
     public Order OrderFromDataSnapshot;
-
+    private boolean is_to_display_user;
     public DatabaseReference refForDeleteOrder;
 
 
@@ -138,7 +139,7 @@ public class SpecificOrderActivity extends AppCompatActivity {
                                 fireBaseUtill.RemovePictureFromStorage(order.getImage());
                             }
                             order.setImage(imageID);
-                            updateImageToTheOrder(order,user);
+                            updateTheOrder(order,user);
                             showMyOrders();
                         }
                     })
@@ -161,7 +162,7 @@ public class SpecificOrderActivity extends AppCompatActivity {
         }
     }
 
-    private void updateImageToTheOrder(final Order order, final FirebaseUser user){
+    private void updateTheOrder(final Order order, final FirebaseUser user){
         updateOrderListener = new ValueEventListener(){
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
@@ -223,6 +224,11 @@ public class SpecificOrderActivity extends AppCompatActivity {
         userLocation = new UserLocation(x,y);
         orderID = getIntent().getStringExtra(Global_Variable.ORDER_ID_MOVE_INTENT);
         order = (Order)bundle.getParcelable(Global_Variable.ORDER_MOVE_INTENT);
+
+        //is_to_display_user = false; -> for a seller
+        //is_to_display_user = true; -> for a buyer
+        is_to_display_user = bundle.getBoolean(Global_Variable.IS_TO_DISPLAY_USER_MOVE_INTENT, true);
+
         nameShop = order.getShopName();
         idShop = order.getIdShop();
         totalPrice = order.getTotalPrice();
@@ -240,7 +246,13 @@ public class SpecificOrderActivity extends AppCompatActivity {
         mDatabase = FirebaseDatabase.getInstance();
         orderRef = mDatabase.getReference(Global_Variable.TABLE_ORDERS);
 
-        iinitPayBySelfieButtonButton();
+        if(is_to_display_user == true){
+            iinitPayBySelfieButtonButton();
+        }
+        else {
+            iinitConfirmTheOrderButton();
+        }
+
         initDeleteOrderButton();
     }
 
@@ -258,8 +270,33 @@ public class SpecificOrderActivity extends AppCompatActivity {
         textView.setPadding(15,7,0,7);
     }
 
+    private void iinitConfirmTheOrderButton(){
+        confirmTheOrderButton = (Button) findViewById(R.id.confirmTheOrderButton);
+        confirmTheOrderButton.setVisibility(Button.VISIBLE);
+        confirmTheOrderButton.setText(R.string.confirmTheOrderButtonText);
+        LinearLayout.LayoutParams confirmTheOrderButtonLayoutParams =
+                new LinearLayout.LayoutParams((int)(mainActivityWitdh *0.5),mainActivityHeight/20);
+        confirmTheOrderButtonLayoutParams.gravity = Gravity.CENTER;
+        confirmTheOrderButtonLayoutParams.setMargins(0
+                ,mainActivityHeight/20
+                ,0
+                ,mainActivityHeight/40);
+        confirmTheOrderButton.setLayoutParams(confirmTheOrderButtonLayoutParams);
+        confirmTheOrderButton.setBackgroundResource(R.color.colorCoffee);
+        confirmTheOrderButton.setTextColor(getApplication().getResources().getColor(R.color.textViewColor));
+        confirmTheOrderButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                order.setConfirmTheOrder(true);
+                updateTheOrder(order,user);
+                showMyOrders();
+            }
+        });
+    }
+
     public void iinitPayBySelfieButtonButton(){
         payBySelfieButton = (Button) findViewById(R.id.payBySelfieButton);
+        payBySelfieButton.setVisibility(Button.VISIBLE);
         payBySelfieButton.setText(R.string.payBySelfieButtonText);
         LinearLayout.LayoutParams saveButtonLayoutParams =
                 new LinearLayout.LayoutParams((int)(mainActivityWitdh *0.5),mainActivityHeight/20);
@@ -279,6 +316,7 @@ public class SpecificOrderActivity extends AppCompatActivity {
             }
         });
     }
+
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);

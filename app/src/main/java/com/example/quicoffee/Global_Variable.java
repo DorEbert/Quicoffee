@@ -123,7 +123,7 @@ public class Global_Variable {
     public static final String FAVORITE_COFFEE_MOVE_INTENT = "favoriteCoffeeIntent";
     public static final String ORDER_ID_MOVE_INTENT = "orderIdMoveIntent";
     public static final String ORDER_MOVE_INTENT = "orderMoveIntent";
-   // public static final String USER_LOCATION_MOVE_INTENT = "userLocationForMoveing";
+    public static final String IS_TO_DISPLAY_USER_MOVE_INTENT = "isToDisplayUserMoveIntent";
 
     public static final int INIT_PRICE_ORDER = 0;
 

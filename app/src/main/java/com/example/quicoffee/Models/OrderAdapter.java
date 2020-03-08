@@ -54,6 +54,7 @@ public class OrderAdapter extends RecyclerView.Adapter<OrderAdapter.OrderViewHol
         //holder.orderPickUpTime.setText(order.getOrderPickUpTime().toString());
         holder.totalPrice.setText(order.getTotalPrice()+"");
         holder.image.setImageURI((null));
+        holder.confirmTheOrder.setText(order.getConfirmTheOrder()+"");
         try {
             final File tmpFile = File.createTempFile("img", "jpeg");
             //  "id" is name of the image file....
@@ -80,12 +81,14 @@ public class OrderAdapter extends RecyclerView.Adapter<OrderAdapter.OrderViewHol
         //public TextView orderPickUpTime;
         public TextView totalPrice;
         public ImageView image;
+        public TextView confirmTheOrder;
         public OrderViewHolder(View itemView, final OrderAdapter.OnItemClickListener listener){
             super(itemView);
             shopName = itemView.findViewById(R.id.shopName);
             //orderPickUpTime = itemView.findViewById(R.id.orderPickUpTime);
             totalPrice = itemView.findViewById(R.id.totalPrice);
             image = itemView.findViewById(R.id.imageView);
+            confirmTheOrder = itemView.findViewById(R.id.confirmTheOrder);
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {

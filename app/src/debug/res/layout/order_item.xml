@@ -44,6 +44,14 @@
                 android:layout_alignParentLeft="true"
                 android:layout_alignParentTop="true"
                 android:layout_marginRight="16dp" />
+            <TextView
+                android:id="@+id/confirmTheOrder"
+                android:layout_width="match_parent"
+                android:layout_marginTop="10dp"
+                android:textSize="20dp"
+                android:layout_marginBottom="5dp"
+                android:layout_marginRight="20dp"
+                android:layout_height="match_parent" />
 
         </LinearLayout>
     </androidx.cardview.widget.CardView>

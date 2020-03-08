@@ -54,7 +54,12 @@
             tools:ignore="MissingConstraints" />
         <Button
             android:id="@+id/payBySelfieButton"
-            android:visibility="visible"
+            android:visibility="gone"
+            android:layout_width="157dp"
+            android:layout_height="58dp"></Button>
+        <Button
+            android:id="@+id/confirmTheOrderButton"
+            android:visibility="gone"
             android:layout_width="157dp"
             android:layout_height="58dp"></Button>
         <Button
