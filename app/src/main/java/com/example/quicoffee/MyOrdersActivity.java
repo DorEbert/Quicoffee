@@ -9,9 +9,11 @@ import androidx.recyclerview.widget.RecyclerView;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -45,6 +47,8 @@ public class MyOrdersActivity extends AppCompatActivity {
     double y = 3;
     public TextView textViewTitle;
     private FavoriteCoffee favoriteCoffee;
+    private Button showMyOrdersAsABuyer;
+    private Button showMyOrdersAsASeller;
 
     //Read form firebase the table shops:
     public FirebaseDatabase mDatabase;
@@ -101,6 +105,11 @@ public class MyOrdersActivity extends AppCompatActivity {
 
         textViewTitle = (TextView) findViewById(R.id.textViewTitle);
         createTextViewUITitle(textViewTitle, getApplication().getResources().getString(R.string.textViewTitleMyOrdersString));
+
+        showMyOrdersAsABuyer = findViewById(R.id.showMyOrdersAsABuyer);
+        showMyOrdersAsASeller = findViewById(R.id.showMyOrdersAsASeller);
+        CreateButton(showMyOrdersAsABuyer,getApplication().getResources().getString(R.string.showMyOrdersAsABuyerText));
+        CreateButton(showMyOrdersAsASeller,getApplication().getResources().getString(R.string.showMyOrdersAsASellerText));
 
         //init for read shops from DB:
         arrayToShowOnTheScreen = new ArrayList<>();
@@ -182,6 +191,20 @@ public class MyOrdersActivity extends AppCompatActivity {
         textView.setPadding(15,7,0,7);
     }
 
+    private void CreateButton(Button button ,String labelText) {
+        button.setText(labelText);
+        LinearLayout.LayoutParams loginButtonLayoutParams =
+                new LinearLayout.LayoutParams((int)(mainActivityWitdh *0.5),mainActivityHeight/20);
+        loginButtonLayoutParams.gravity = Gravity.CENTER;
+        loginButtonLayoutParams.setMargins(0
+                ,mainActivityHeight/20
+                ,0
+                ,mainActivityHeight/20);
+        button.setLayoutParams(loginButtonLayoutParams);
+        button.setBackgroundResource(R.color.colorCoffee);
+        button.setTextColor(getApplication().getResources().getColor(R.color.textViewColor));
+    }
+
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater inflater = getMenuInflater();
@@ -229,10 +252,10 @@ public class MyOrdersActivity extends AppCompatActivity {
     public void AddShopActivity(){
         Intent myIntent = new Intent(MyOrdersActivity.this,
                 ShopActivity.class);
+        myIntent.putExtra(Global_Variable.USER_FOR_MOVE_INTENT,this.user);
         bundle.putDouble(Global_Variable.USER_LOCATION_MOVE_INTENT_LONGITUDE, this.userLocation.getX());
         bundle.putDouble(Global_Variable.USER_LOCATION_MOVE_INTENT_LATITUDE, this.userLocation.getY());
         myIntent.putExtras(bundle);
-        myIntent.putExtra(Global_Variable.USER_FOR_MOVE_INTENT,this.user);
         startActivity(myIntent);
     }
 

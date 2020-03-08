@@ -188,14 +188,16 @@ public class ShowChosenShopActivity extends AppCompatActivity {
         userLocation = new UserLocation(x,y);
         favoriteCoffee = bundle.getParcelable(Global_Variable.FAVORITE_COFFEE_MOVE_INTENT);
         idShop = getIntent().getStringExtra(Global_Variable.SHOP_ID_MOVE_INTENT);
+        Log.e("ISSHOP","ID SHOP "+ idShop);
         nameShop = getIntent().getStringExtra(Global_Variable.SHOP_NAME_MOVE_INTENT);
-
+        //Toast.makeText(ShowChosenShopActivity.this , "idShop!" + idShop, Toast.LENGTH_SHORT).show();
         title.setText("The products in "+  nameShop + " shop:" );
 
         orderID = new String();
 
         //init for save an order to DB:
         order = new Order(nameShop);
+        order.setIdShop(idShop);
 
         //init for read shops from DB:
         arrayToShowOnTheScreenFromDB = new ArrayList<>();

@@ -173,8 +173,14 @@ public class AddShopMenuActivity extends AppCompatActivity {
                     Toast.makeText(getApplicationContext(), Global_Variable.PRICE_INFORMATION, Toast.LENGTH_SHORT).show();
                     return;
                 }
+
                 Product productToUpdate = new Product(productName,price,description);
-                productToUpdate.setImage(product.getImage());
+                if (product != null) {
+                    if (!product.getImage().isEmpty()){
+                        productToUpdate.setImage(product.getImage());
+                    }
+                }
+
                 //In case of UPDATE
                 if(productIDToUpdate != null)
                     productToUpdate.setID(productIDToUpdate);

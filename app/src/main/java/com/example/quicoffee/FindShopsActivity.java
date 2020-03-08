@@ -19,6 +19,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.quicoffee.Models.FavoriteCoffee;
+import com.example.quicoffee.Models.Order;
 import com.example.quicoffee.Models.Shop;
 import com.example.quicoffee.Models.ShopAdapter;
 import com.example.quicoffee.Models.UserLocation;
@@ -46,6 +47,7 @@ public class FindShopsActivity extends AppCompatActivity {
     double x = 3;
     double y = 3;
     public Bundle bundle;
+    private String idShop;
 
     //Read form firebase the table favorite coffee:
     private FavoriteCoffee favoriteCoffee;
@@ -104,13 +106,12 @@ public class FindShopsActivity extends AppCompatActivity {
         final CheckBox checkBox = findViewById(R.id.findMyCoffee);
         postListener = new ValueEventListener(){
             @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+            public void onDataChange(@NonNull final DataSnapshot dataSnapshot) {
                 //Log.e(TAG+ " Count " ,""+dataSnapshot.getChildrenCount());
                 for (DataSnapshot postSnapshot: dataSnapshot.getChildren()) {
                     keys.add(postSnapshot.getKey());
                     //Shop someShop = new Shop();
                     Shop someShop = postSnapshot.getValue(Shop.class);
-                    //TODO: show only shops nearby :)
                     //In case of my favorite coffee
                     if (checkBox.isChecked()){
                             if(favoriteCoffee != null
@@ -138,6 +139,7 @@ public class FindShopsActivity extends AppCompatActivity {
                     @Override
                     public void onItemClick(int position) {
                         chosenShop = arrayToShowOnTheScreen.get(position);
+                        foundShopId(dataSnapshot ,chosenShop.getShopName());
                         showAShop();
                     }
                 });
@@ -173,6 +175,14 @@ public class FindShopsActivity extends AppCompatActivity {
         queryRef.addValueEventListener(postListener);
     }
 
+    private void foundShopId(DataSnapshot dataSnapshot , String nameOfShop){
+        for (DataSnapshot postSnapshot: dataSnapshot.getChildren()) {
+            Shop someShop = postSnapshot.getValue(Shop.class);
+            if(someShop.getShopName().equals(nameOfShop)){
+                idShop = postSnapshot.getKey();
+            }
+        }
+    }
 
     public void readFavoriteCoffeeFromDB(){
         readListener = new ValueEventListener(){
@@ -215,8 +225,7 @@ public class FindShopsActivity extends AppCompatActivity {
 
     private void showAShop(){
         Intent intent = new Intent(FindShopsActivity.this, ShowChosenShopActivity.class);
-
-        intent.putExtra(Global_Variable.SHOP_ID_MOVE_INTENT , chosenShop.getID());
+        intent.putExtra(Global_Variable.SHOP_ID_MOVE_INTENT , idShop);
         intent.putExtra(Global_Variable.SHOP_NAME_MOVE_INTENT, this.chosenShop.getShopName());
         intent.putExtra(Global_Variable.USER_FOR_MOVE_INTENT,this.user);
         intent.putExtra(Global_Variable.FAVORITE_COFFEE_MOVE_INTENT, this.favoriteCoffee);
@@ -275,6 +284,7 @@ public class FindShopsActivity extends AppCompatActivity {
 
         //get info from other activity:
         user = (FirebaseUser) getIntent().getParcelableExtra(Global_Variable.USER_FOR_MOVE_INTENT);
+        Log.e("USERID", "USER ID "+user.getUid());
         //get location user from other activity:
         bundle = getIntent().getExtras();
         x = bundle.getDouble(Global_Variable.USER_LOCATION_MOVE_INTENT_LONGITUDE);
