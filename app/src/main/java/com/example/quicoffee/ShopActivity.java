@@ -254,9 +254,10 @@ public class ShopActivity extends AppCompatActivity implements OnMapReadyCallbac
             shop.setIngredients(this.shop.getIngredients());
          }
         //In case of updating a location
-        if(((CheckBox)findViewById(cbID)).isChecked()) {
-            shop.setLatitude(userLatitudeToUpdate);
-            shop.setLongitude(userLongitudeToUpdate);
+        if(cbID > 0)
+            if(((CheckBox)findViewById(cbID)).isChecked()) {
+                shop.setLatitude(userLatitudeToUpdate);
+                shop.setLongitude(userLongitudeToUpdate);
         }
         this.shop = shop;
         fireBaseUtill.AddShopToUser(this.shop);
