@@ -26,14 +26,15 @@ public class Order implements Parcelable{
     private double totalPrice;
     private String idShop;
     private String image;
-    private boolean confirmTheOrder;
+    // 1 order confirmed, 0 order not confirmed
+    private int confirmTheOrder;
 
     public Order(String shopName){
         this.shopName = shopName;
         products = new ArrayList<>();
         totalPrice= Global_Variable.INIT_PRICE_ORDER;
         //TODO: time for order
-        confirmTheOrder = false;
+        confirmTheOrder = 0;
     }
 
     public Order(){
@@ -52,7 +53,7 @@ public class Order implements Parcelable{
         in.readList(products, Product.class.getClassLoader());
         //products = in.readParcelable(Product.class.getClassLoader());
         generalComment = in.readString();
-        confirmTheOrder = in.readBoolean();
+        confirmTheOrder = in.readInt();
     }
 
     public static final Creator<Order> CREATOR = new Creator<Order>() {
@@ -72,6 +73,7 @@ public class Order implements Parcelable{
     public int describeContents() {
         return 0;
     }
+
     @RequiresApi(api = Build.VERSION_CODES.Q)
     @Override
     public void writeToParcel(Parcel dest, int flags) {
@@ -82,7 +84,7 @@ public class Order implements Parcelable{
         dest.writeString(image);
         dest.writeList(this.products);
         dest.writeString(generalComment);
-        dest.writeBoolean(this.confirmTheOrder);
+        dest.writeInt(this.confirmTheOrder);
     }
 
     public double getTotalPrice() {
@@ -94,11 +96,11 @@ public class Order implements Parcelable{
     }
 
     public boolean getConfirmTheOrder(){
-        return confirmTheOrder;
+        return confirmTheOrder == 1;
     }
 
     public void setConfirmTheOrder(boolean confirmTheOrder){
-        this.confirmTheOrder = confirmTheOrder;
+        this.confirmTheOrder = confirmTheOrder ? 1 : 0;
     }
 
     public void setIdShop(String idShop){
