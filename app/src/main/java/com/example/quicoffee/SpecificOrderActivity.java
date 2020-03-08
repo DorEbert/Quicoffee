@@ -437,10 +437,12 @@ public class SpecificOrderActivity extends AppCompatActivity {
         Intent myIntent = new Intent(SpecificOrderActivity.this,
                 MyOrdersActivity.class);
         myIntent.putExtra(Global_Variable.USER_FOR_MOVE_INTENT,this.user);
+        this.is_to_display_user = true;
         bundle.putDouble(Global_Variable.USER_LOCATION_MOVE_INTENT_LONGITUDE, this.userLocation.getX());
         bundle.putDouble(Global_Variable.USER_LOCATION_MOVE_INTENT_LATITUDE, this.userLocation.getY());
         myIntent.putExtras(bundle);
         startActivity(myIntent);
+        finish();
     }
 
     public void logOut(){

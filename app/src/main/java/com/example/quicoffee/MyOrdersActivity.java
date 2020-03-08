@@ -51,7 +51,7 @@ public class MyOrdersActivity extends AppCompatActivity {
     private FavoriteCoffee favoriteCoffee;
     private Button showMyOrdersAsABuyer;
     private Button showMyOrdersAsASeller;
-    private boolean is_to_display_user;
+    public boolean is_to_display_user;
 
     //Read form fireBase the table shops:
     public FirebaseDatabase mDatabase;
@@ -75,7 +75,7 @@ public class MyOrdersActivity extends AppCompatActivity {
         setContentView(R.layout.activity_my_orders);
         Toolbar myToolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(myToolbar);
-        is_to_display_user = true;
+        this.is_to_display_user = true;
         InititalVariablesOfLocalActivity();
         addListenerToShowMyOrdersAsASellerButton();
         foundShopID();
@@ -201,7 +201,7 @@ public class MyOrdersActivity extends AppCompatActivity {
     private void showAllDetailsOfTheOrder(){
         Intent myIntent = new Intent(MyOrdersActivity.this,
                 SpecificOrderActivity.class);
-        myIntent.putExtra(Global_Variable.IS_TO_DISPLAY_USER_MOVE_INTENT , this.is_to_display_user);
+        myIntent.putExtra(Global_Variable.IS_TO_DISPLAY_USER_MOVE_INTENT ,is_to_display_user);
         myIntent.putExtra(Global_Variable.ORDER_ID_MOVE_INTENT, this.orderID);
         myIntent.putExtra(Global_Variable.ORDER_MOVE_INTENT, this.chosenOrder);
         myIntent.putExtra(Global_Variable.USER_FOR_MOVE_INTENT,this.user);
@@ -211,6 +211,7 @@ public class MyOrdersActivity extends AppCompatActivity {
         myIntent.putExtras(bundle);
         myIntent.putExtra(Global_Variable.USER_FOR_MOVE_INTENT,this.user);
         startActivity(myIntent);
+        finish();
     }
 
     private void  createTextViewUITitle(TextView textView,String title){

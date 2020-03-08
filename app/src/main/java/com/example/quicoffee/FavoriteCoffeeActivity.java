@@ -54,6 +54,8 @@ public class FavoriteCoffeeActivity extends AppCompatActivity  {
     public FavoriteCoffee FavoriteCoffeeFromDataSnapshot;
     public String itemValue;
 
+    public ValueEventListener readFCListener;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -78,6 +80,7 @@ public class FavoriteCoffeeActivity extends AppCompatActivity  {
 
         mDatabase = FirebaseDatabase.getInstance();
         favoriteCoffeeRef = mDatabase.getReference(Global_Variable.FAVORITE_COFFEE_TABLE);
+        initReadFCListener();
     }
 
 
@@ -100,7 +103,19 @@ public class FavoriteCoffeeActivity extends AppCompatActivity  {
        // writeFavoriteCoffee(favoriteCoffee,user);
     }
 
+    private void initReadFCListener(){
+        readFCListener = new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
 
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        };
+    }
 
     private void addSaveButton(){
         Button saveButton = new Button(this);
@@ -146,14 +161,13 @@ public class FavoriteCoffeeActivity extends AppCompatActivity  {
     private void writeFavoriteCoffee(FavoriteCoffee favoriteCoffee, FirebaseUser user, DataSnapshot dataSnapshot) {
         indexUserExist = checkIfUserExist(dataSnapshot);
         someFavoriteCoffee = new FavoriteCoffee(favoriteCoffee.getSizeOfCup(),favoriteCoffee.getTypeOfMilk(),
-                favoriteCoffee.getAmountOfEspresso(),"dorel",user.getUid());
-        Log.e("writeFavoriteCoffee ","writeFavoriteCoffee get form?  : "+ favoriteCoffee.getWith_Form());
+                favoriteCoffee.getAmountOfEspresso(),favoriteCoffee.getWith_Form(),user.getUid());
+        //Log.e("writeFavoriteCoffee ","writeFavoriteCoffee get form?  : "+ favoriteCoffee.getWith_Form());
         if(indexUserExist.equals(Global_Variable.USER_NOT_EXIST)){
             idForPushFCToDB = favoriteCoffeeRef.push().getKey();
             favoriteCoffeeRef.child(idForPushFCToDB).setValue(someFavoriteCoffee);
         }
-        else{ // update:
-            //Log.e("writeFavoriteCoffee ","writeFavoriteCoffee indexUserExist : "+ indexUserExist);
+        else{
             //Dorel:
             // because the user came from DB online its takes time to update the idForPushFCToDB from DB -> to favoriteCoffee.UserID
             // so I done it only here and not onCreate method:
@@ -202,15 +216,8 @@ public class FavoriteCoffeeActivity extends AppCompatActivity  {
                 else if (attribute.equals(Global_Variable.ESPRESSO)){
                     favoriteCoffee.setAmountOfEspresso(itemValue);
                 }
-                else {//(attribute.equals(Global_Variable.WITH_FOAM)){
+                else {
                     favoriteCoffee.setWith_Form(itemValue);
-                    //Log.e("initAttributesForCoffee","attribute get form?  :" +
-                      //      " "+ attribute);
-                   // Log.e("initAttributesForCoffee","favoriteCoffee.getWith_Form() get form?  :" +
-                   //         " "+ favoriteCoffee.getWith_Form());
-                   // Log.e("initAttributesForCoffee","itemValue  get form?  :" +
-                  //          " "+ favoriteCoffee.getWith_Form());
-                  //  Toast.makeText(FavoriteCoffeeActivity.this , itemValue, Toast.LENGTH_SHORT).show();
                 }
 
             }
