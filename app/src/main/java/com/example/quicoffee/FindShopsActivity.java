@@ -22,6 +22,8 @@ import com.example.quicoffee.Models.FavoriteCoffee;
 import com.example.quicoffee.Models.Shop;
 import com.example.quicoffee.Models.ShopAdapter;
 import com.example.quicoffee.Models.UserLocation;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -31,9 +33,8 @@ import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
 import java.util.List;
+import com.firebase.ui.auth.AuthUI;
 
 public class FindShopsActivity extends AppCompatActivity {
     public FirebaseUser user;
@@ -222,7 +223,6 @@ public class FindShopsActivity extends AppCompatActivity {
         bundle.putDouble(Global_Variable.USER_LOCATION_MOVE_INTENT_LONGITUDE, this.userLocation.getX());
         bundle.putDouble(Global_Variable.USER_LOCATION_MOVE_INTENT_LATITUDE, this.userLocation.getY());
         intent.putExtras(bundle);
-        //bundle.putParcelable(Global_Variable.FAVORITE_COFFEE_MOVE_INTENT, this.favoriteCoffee);
         startActivity(intent);
         finish();
     }
@@ -263,6 +263,7 @@ public class FindShopsActivity extends AppCompatActivity {
             case R.id.setting:
                 return true;
             case R.id.logOut:
+                logOut();
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
@@ -353,5 +354,16 @@ public class FindShopsActivity extends AppCompatActivity {
         startActivity(myIntent);
     }
 
+    public void logOut(){
+        AuthUI.getInstance()
+                .signOut(this)
+                .addOnCompleteListener(new OnCompleteListener<Void>() {
+                    public void onComplete(@NonNull Task<Void> task) {
+                        Intent myIntent = new Intent(FindShopsActivity.this,
+                                SignIn.class);
+                        startActivity(myIntent);
+                    }
+                });
+    }
 
 }

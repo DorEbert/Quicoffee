@@ -32,6 +32,7 @@ import com.example.quicoffee.Models.FavoriteCoffee;
 import com.example.quicoffee.Models.Product;
 import com.example.quicoffee.Models.Shop;
 import com.example.quicoffee.Models.UserLocation;
+import com.firebase.ui.auth.AuthUI;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
@@ -424,6 +425,7 @@ public class AddShopMenuActivity extends AppCompatActivity {
             case R.id.setting:
                 return true;
             case R.id.logOut:
+                logOut();
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
@@ -469,4 +471,18 @@ public class AddShopMenuActivity extends AppCompatActivity {
         myIntent.putExtras(bundle);
         startActivity(myIntent);
     }
+
+    public void logOut(){
+        AuthUI.getInstance()
+                .signOut(this)
+                .addOnCompleteListener(new OnCompleteListener<Void>() {
+                    public void onComplete(@NonNull Task<Void> task) {
+                        Intent myIntent = new Intent(AddShopMenuActivity.this,
+                                SignIn.class);
+                        startActivity(myIntent);
+                    }
+                });
+    }
+
+
 }

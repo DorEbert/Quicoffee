@@ -25,6 +25,9 @@ import com.example.quicoffee.Models.Order;
 import com.example.quicoffee.Models.Product;
 import com.example.quicoffee.Models.ProductAdapter;
 import com.example.quicoffee.Models.UserLocation;
+import com.firebase.ui.auth.AuthUI;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -344,6 +347,7 @@ public class ShowChosenShopActivity extends AppCompatActivity {
             case R.id.setting:
                 return true;
             case R.id.logOut:
+                logOut();
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
@@ -387,6 +391,18 @@ public class ShowChosenShopActivity extends AppCompatActivity {
         bundle.putDouble(Global_Variable.USER_LOCATION_MOVE_INTENT_LATITUDE, this.userLocation.getY());
         myIntent.putExtras(bundle);
         startActivity(myIntent);
+    }
+
+    public void logOut(){
+        AuthUI.getInstance()
+                .signOut(this)
+                .addOnCompleteListener(new OnCompleteListener<Void>() {
+                    public void onComplete(@NonNull Task<Void> task) {
+                        Intent myIntent = new Intent(ShowChosenShopActivity.this,
+                                SignIn.class);
+                        startActivity(myIntent);
+                    }
+                });
     }
 
 
