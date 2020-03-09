@@ -287,6 +287,7 @@ public class ShowChosenShopActivity extends AppCompatActivity {
                     Toast.makeText(getApplicationContext(), Global_Variable.PLEASE_CHOOSE_PRODUCT, Toast.LENGTH_SHORT).show();
                     return;
                 }
+                FireBaseUtill fireBaseUtill = new FireBaseUtill();
                 saveOrderToDB(order,user);
                 Toast.makeText(ShowChosenShopActivity.this , "Your order is saves :)!", Toast.LENGTH_SHORT).show();
                 showAllDetailsOfTheOrder();
@@ -365,7 +366,11 @@ public class ShowChosenShopActivity extends AppCompatActivity {
             orderID = indexOrderExist;
             order.setUserID(user.getUid());
             //todo sometimes raise an excpetion
-            //dataSnapshot.getRef().child(indexOrderExist).setValue(order);
+            try{
+                dataSnapshot.getRef().child(indexOrderExist).setValue(order);
+            }catch (Exception ex){
+                Log.e("EXCPETION ",ex.toString());
+            }
         }
         //Log.e("orderID",orderID);
     }
