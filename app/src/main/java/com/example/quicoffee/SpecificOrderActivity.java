@@ -136,7 +136,6 @@ public class SpecificOrderActivity extends AppCompatActivity {
                         public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
                             progressDialog.dismiss();
                             Toast.makeText(SpecificOrderActivity.this, "Uploaded", Toast.LENGTH_SHORT).show();
-                            Uri uri = taskSnapshot.getUploadSessionUri();
                             // In case of update an image->delete old image
                             if(order.getImage() != null) {
                                 fireBaseUtill.RemovePictureFromStorage(order.getImage());
@@ -360,12 +359,13 @@ public class SpecificOrderActivity extends AppCompatActivity {
             }
         });
     }
-/*
+
     @Override
     public void onBackPressed() {
         super.onBackPressed();
+        showMyOrders();
     }
-*/
+
     private void deleteTheOrderUI(){
         order.getProducts().clear();
         order.setTotalPrice(Global_Variable.INIT_PRICE_ORDER);
@@ -417,6 +417,7 @@ public class SpecificOrderActivity extends AppCompatActivity {
         bundle.putDouble(Global_Variable.USER_LOCATION_MOVE_INTENT_LATITUDE, this.userLocation.getY());
         myIntent.putExtras(bundle);
         startActivity(myIntent);
+        finish();
     }
 
     public void AddShopActivity(){
@@ -427,6 +428,7 @@ public class SpecificOrderActivity extends AppCompatActivity {
         myIntent.putExtras(bundle);
         myIntent.putExtra(Global_Variable.USER_FOR_MOVE_INTENT,this.user);
         startActivity(myIntent);
+        finish();
     }
 
     public void favoriteCoffee(){
@@ -437,6 +439,7 @@ public class SpecificOrderActivity extends AppCompatActivity {
         bundle.putDouble(Global_Variable.USER_LOCATION_MOVE_INTENT_LATITUDE, this.userLocation.getY());
         myIntent.putExtras(bundle);
         startActivity(myIntent);
+        finish();
     }
 
     public void showMyOrders(){
@@ -459,6 +462,7 @@ public class SpecificOrderActivity extends AppCompatActivity {
                         Intent myIntent = new Intent(SpecificOrderActivity.this,
                                 SignIn.class);
                         startActivity(myIntent);
+                        finish();
                     }
                 });
     }
