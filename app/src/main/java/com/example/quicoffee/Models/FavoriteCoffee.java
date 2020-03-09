@@ -3,21 +3,19 @@ package com.example.quicoffee.Models;
 import android.os.Parcel;
 import android.os.Parcelable;
 
-import com.example.quicoffee.Global_Variable;
-
 public class FavoriteCoffee implements Parcelable {
     public String sizeOfCup;
-    public String typeOfMilk;
+    public String typesOfMilk;
     public String amountOfEspresso;
-    public String with_Form;
+    public String withFoam;
     public String userID;
 
 
     public FavoriteCoffee(String sizeOfCup, String typeOfMile, String amountOfEspresso, String with_Form, String userID) {
         this.sizeOfCup = sizeOfCup;
-        this.typeOfMilk = typeOfMile;
+        this.typesOfMilk = typeOfMile;
         this.amountOfEspresso = amountOfEspresso;
-        this.with_Form = with_Form;
+        this.withFoam = with_Form;
         this.userID = userID;
     }
 
@@ -26,9 +24,9 @@ public class FavoriteCoffee implements Parcelable {
 
     protected FavoriteCoffee(Parcel in) {
         sizeOfCup = in.readString();
-        typeOfMilk = in.readString();
+        typesOfMilk = in.readString();
         amountOfEspresso = in.readString();
-        with_Form = in.readString();
+        withFoam = in.readString();
         userID = in.readString();
     }
 
@@ -48,16 +46,16 @@ public class FavoriteCoffee implements Parcelable {
         return sizeOfCup;
     }
 
-    public String getTypeOfMilk() {
-        return typeOfMilk;
+    public String getTypesOfMilk() {
+        return typesOfMilk;
     }
 
     public String getAmountOfEspresso() {
         return amountOfEspresso;
     }
 
-    public String getWith_Form() {
-        return with_Form;
+    public String getWithFoam() {
+        return withFoam;
     }
 
     public void setUserID(String userID) {
@@ -73,15 +71,15 @@ public class FavoriteCoffee implements Parcelable {
     }
 
     public void setTypeOfMile(String typeOfMile) {
-        this.typeOfMilk = typeOfMile;
+        this.typesOfMilk = typeOfMile;
     }
 
     public void setAmountOfEspresso(String amountOfEspresso) {
         this.amountOfEspresso = amountOfEspresso;
     }
 
-    public void setWith_Form(String with_Form) {
-        this.with_Form = with_Form;
+    public void setWithFoam(String withFoam) {
+        this.withFoam = withFoam;
     }
 
 
@@ -93,9 +91,9 @@ public class FavoriteCoffee implements Parcelable {
     @Override
     public void writeToParcel(Parcel out, int flags) {
         out.writeString(sizeOfCup);
-        out.writeString(typeOfMilk);
+        out.writeString(typesOfMilk);
         out.writeString(amountOfEspresso);
-        out.writeString(with_Form);
+        out.writeString(withFoam);
         out.writeString(userID);
     }
 }

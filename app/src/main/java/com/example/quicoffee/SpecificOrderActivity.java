@@ -107,6 +107,7 @@ public class SpecificOrderActivity extends AppCompatActivity {
         finish();
     }
 
+
     public void showTheOrderOnTheScreen(){
         recyclerView = (RecyclerView) findViewById(R.id.my_recycler_view);
         recyclerView.setHasFixedSize(true);
@@ -229,7 +230,9 @@ public class SpecificOrderActivity extends AppCompatActivity {
 
         //is_to_display_user = false; -> for a seller
         //is_to_display_user = true; -> for a buyer
-        is_to_display_user = bundle.getBoolean(Global_Variable.IS_TO_DISPLAY_USER_MOVE_INTENT);
+        //TODO: remove this!:
+        is_to_display_user = getIntent().getExtras().getBoolean(Global_Variable.IS_TO_DISPLAY_USER_MOVE_INTENT);
+        is_to_display_user = Global_Variable.IS_TO_DISPLAY_USER;
 
         nameShop = order.getShopName();
         idShop = order.getIdShop();

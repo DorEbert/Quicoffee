@@ -174,6 +174,8 @@ public class MyOrdersActivity extends AppCompatActivity {
                     public void onItemClick(int position) {
                         chosenOrder = arrayToShowOnTheScreen.get(position);
                         foundOrderId(dataSnapshot ,chosenOrder.getShopName());
+                        //TODO: remove this:
+                        Global_Variable.IS_TO_DISPLAY_USER = is_to_display_user;
                         showAllDetailsOfTheOrder();
                     }
                 });
@@ -315,6 +317,7 @@ public class MyOrdersActivity extends AppCompatActivity {
         bundle.putDouble(Global_Variable.USER_LOCATION_MOVE_INTENT_LATITUDE, this.userLocation.getY());
         myIntent.putExtras(bundle);
         startActivity(myIntent);
+        finish();
     }
 
     public void AddShopActivity(){
@@ -325,6 +328,7 @@ public class MyOrdersActivity extends AppCompatActivity {
         bundle.putDouble(Global_Variable.USER_LOCATION_MOVE_INTENT_LATITUDE, this.userLocation.getY());
         myIntent.putExtras(bundle);
         startActivity(myIntent);
+        finish();
     }
 
     public void favoriteCoffee(){
@@ -335,6 +339,7 @@ public class MyOrdersActivity extends AppCompatActivity {
         bundle.putDouble(Global_Variable.USER_LOCATION_MOVE_INTENT_LATITUDE, this.userLocation.getY());
         myIntent.putExtras(bundle);
         startActivity(myIntent);
+        finish();
     }
 
     public void logOut(){

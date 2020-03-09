@@ -93,8 +93,15 @@ public class ShowChosenShopActivity extends AppCompatActivity {
         InititalVariablesOfLocalActivity();
         iinitSaveOrderButton();
         showTheCartRecyclerViewOnTheScreen();
-       // iinitMyOrderButton();
+        // iinitMyOrderButton();
     }
+
+   // @Override
+   // protected void onNewIntent(Intent intent) {
+    //    super.onNewIntent(intent);
+// getIntent() should always return the most recent
+    //    setIntent(intent);
+   // }
 
     @Override
     public void onResume() {
@@ -117,6 +124,20 @@ public class ShowChosenShopActivity extends AppCompatActivity {
                 //updateOrderListener init only if the user click on "save"
                 //so we have to check this :)
         }
+        finish();
+    }
+
+
+    @Override
+    protected void onNewIntent(Intent intent)
+    {
+        super.onNewIntent(intent);
+        if ( intent != null  )
+        {
+            idShop = getIntent().getStringExtra(Global_Variable.SHOP_ID_MOVE_INTENT);
+            Log.e("showChosenShop","onNewIntent showChosenShop ID SHOP "+ idShop);
+        }
+        setIntent(intent);
     }
 
     @Override
@@ -136,6 +157,7 @@ public class ShowChosenShopActivity extends AppCompatActivity {
         productAdapterCart.SetOnItemClickListener(new ProductAdapter.OnItemClickListener() {
             @Override
             public void onItemClick(int position) {
+                order.removeProduct(arrayToAddToMyCart.get(position));
                 arrayToAddToMyCart.remove(position);
                 showTheCartRecyclerViewOnTheScreen();
             }
@@ -199,8 +221,14 @@ public class ShowChosenShopActivity extends AppCompatActivity {
         y = bundle.getDouble(Global_Variable.USER_LOCATION_MOVE_INTENT_LATITUDE);
         userLocation = new UserLocation(x,y);
         favoriteCoffee = bundle.getParcelable(Global_Variable.FAVORITE_COFFEE_MOVE_INTENT);
+
+
         idShop = getIntent().getStringExtra(Global_Variable.SHOP_ID_MOVE_INTENT);
-        Log.e("ISSHOP","ID SHOP "+ idShop);
+
+        //TODO: remove this!:
+        idShop = Global_Variable.ID_SHOP_TEMP;
+
+        Log.e("showChosenShop","showChosenShop ID SHOP "+ idShop);
         nameShop = getIntent().getStringExtra(Global_Variable.SHOP_NAME_MOVE_INTENT);
         //Toast.makeText(ShowChosenShopActivity.this , "idShop!" + idShop, Toast.LENGTH_SHORT).show();
         title.setText("The products in "+  nameShop + " shop:" );
@@ -330,6 +358,7 @@ public class ShowChosenShopActivity extends AppCompatActivity {
         myIntent.putExtras(bundle);
         myIntent.putExtra(Global_Variable.USER_FOR_MOVE_INTENT,this.user);
         startActivity(myIntent);
+        finish();
     }
 
     @Override
@@ -340,7 +369,7 @@ public class ShowChosenShopActivity extends AppCompatActivity {
     }
 
 
-    //TODO: init all the menu oprtions :)
+
     //findShops, favoirteCoffee, myOrder, setUpAShop, setting,logOut
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
@@ -369,11 +398,13 @@ public class ShowChosenShopActivity extends AppCompatActivity {
     public void findShops(){
         Intent myIntent = new Intent(ShowChosenShopActivity.this,
                 FindShopsActivity.class);
+        myIntent.setFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
         myIntent.putExtra(Global_Variable.USER_FOR_MOVE_INTENT,this.user);
         bundle.putDouble(Global_Variable.USER_LOCATION_MOVE_INTENT_LONGITUDE, this.userLocation.getX());
         bundle.putDouble(Global_Variable.USER_LOCATION_MOVE_INTENT_LATITUDE, this.userLocation.getY());
         myIntent.putExtras(bundle);
         startActivity(myIntent);
+        finish();
     }
 
     public void AddShopActivity(){
@@ -384,6 +415,7 @@ public class ShowChosenShopActivity extends AppCompatActivity {
         myIntent.putExtras(bundle);
         myIntent.putExtra(Global_Variable.USER_FOR_MOVE_INTENT,this.user);
         startActivity(myIntent);
+        finish();
     }
     public void favoriteCoffee(){
         Intent myIntent = new Intent(ShowChosenShopActivity.this,
@@ -393,6 +425,7 @@ public class ShowChosenShopActivity extends AppCompatActivity {
         bundle.putDouble(Global_Variable.USER_LOCATION_MOVE_INTENT_LATITUDE, this.userLocation.getY());
         myIntent.putExtras(bundle);
         startActivity(myIntent);
+        finish();
     }
 
     public void showMyOrders(){
@@ -403,6 +436,7 @@ public class ShowChosenShopActivity extends AppCompatActivity {
         bundle.putDouble(Global_Variable.USER_LOCATION_MOVE_INTENT_LATITUDE, this.userLocation.getY());
         myIntent.putExtras(bundle);
         startActivity(myIntent);
+        finish();
     }
 
     public void logOut(){

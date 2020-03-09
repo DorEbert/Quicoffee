@@ -128,7 +128,7 @@ public class Order implements Parcelable{
         totalPrice = totalPrice + product.getPrice();
     }
 
-    private void removeProduct(Product product){
+    public void removeProduct(Product product){
         //TODO: maybe instead of product use product ID
         products.remove(product);
         totalPrice = totalPrice - product.getPrice();

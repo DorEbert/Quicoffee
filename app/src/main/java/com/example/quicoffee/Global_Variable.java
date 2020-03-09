@@ -1,5 +1,6 @@
 package com.example.quicoffee;
 
+import com.example.quicoffee.Models.FavoriteCoffee;
 import com.example.quicoffee.Models.Shop;
 import com.firebase.ui.auth.data.model.User;
 
@@ -99,10 +100,15 @@ public class Global_Variable {
 
 
     //Variable for adding/updating favorite coffee:
-    public static final String SIZE_OF_CUP = "Size of coffee";
-    public static final String MILK = "Types Of milk";
+    //the same value at class FC:
+    //    public String sizeOfCup;
+    //    public String typesOfMilk;
+    //    public String amountOfEspresso;
+    //    public String withFoam;
+    public static final String SIZE_OF_CUP = "Size Of Cup";
+    public static final String MILK = "Types Of Milk";
     public static final String ESPRESSO = "Amount Of Espresso";
-    public static final String FOAM = "with foam?";
+    public static final String FOAM = "With Foam";
 
     public static final String[] SIZE_OF_COFFEE = new String[]{"Small", "Medium", "Large"};
     public static final String[] TYPES_OF_MILK = new String[]{"Regular milk", "soy milk", "almond milk", "low fat milk"};
@@ -125,6 +131,10 @@ public class Global_Variable {
     public static final String ORDER_MOVE_INTENT = "orderMoveIntent";
     public static final String IS_TO_DISPLAY_USER_MOVE_INTENT = "isToDisplayUserMoveIntent";
 
+    //temp:
+    public static boolean IS_TO_DISPLAY_USER = true;
+    public static String ID_SHOP_TEMP = "";
+    public static FavoriteCoffee FC_TEMP = new FavoriteCoffee();
     public static final int INIT_PRICE_ORDER = 0;
 
 }

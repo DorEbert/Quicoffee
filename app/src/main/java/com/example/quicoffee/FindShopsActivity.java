@@ -75,6 +75,13 @@ public class FindShopsActivity extends AppCompatActivity {
     }
 
     @Override
+    protected void onNewIntent(Intent intent) {
+        super.onNewIntent(intent);
+// getIntent() should always return the most recent
+        setIntent(intent);
+    }
+
+    @Override
     public void onResume() {
         super.onResume();
         //DATA BASE:
@@ -113,8 +120,8 @@ public class FindShopsActivity extends AppCompatActivity {
                     if (checkBox.isChecked()){
                             if(favoriteCoffee != null
                                     &&someShop.getIngredients() != null
-                                    &&favoriteCoffee.getTypeOfMilk() != null)
-                            if (someShop.getIngredients().contains(favoriteCoffee.typeOfMilk))
+                                    &&favoriteCoffee.getTypesOfMilk() != null)
+                            if (someShop.getIngredients().contains(favoriteCoffee.typesOfMilk))
                                 arrayToShowOnTheScreen.add(someShop);
                     }
                     //add all shops
@@ -137,7 +144,7 @@ public class FindShopsActivity extends AppCompatActivity {
                     public void onItemClick(int position) {
                         chosenShop = arrayToShowOnTheScreen.get(position);
                         foundShopId(dataSnapshot ,chosenShop.getShopName());
-                        showAShop();
+                        Log.e("FindShops","FindShops idShop "+idShop);
                     }
                 });
 
@@ -172,13 +179,19 @@ public class FindShopsActivity extends AppCompatActivity {
         queryRef.addValueEventListener(readShopsListener);
     }
 
-    private void foundShopId(DataSnapshot dataSnapshot , String nameOfShop){
+     private void foundShopId(DataSnapshot dataSnapshot , String nameOfShop){
         for (DataSnapshot postSnapshot: dataSnapshot.getChildren()) {
             Shop someShop = postSnapshot.getValue(Shop.class);
             if(someShop.getShopName().equals(nameOfShop)){
                 idShop = postSnapshot.getKey();
+                //TODO: remove this!:
+                Global_Variable.ID_SHOP_TEMP = idShop;
             }
+           // if(someShop.getID().equals(idToFind)){
+          //         idShop = postSnapshot.getKey();
+           //  }
         }
+        showAShop();
     }
 
     public void readFavoriteCoffeeFromDB(){
@@ -220,6 +233,7 @@ public class FindShopsActivity extends AppCompatActivity {
 
     private void showAShop(){
         Intent intent = new Intent(FindShopsActivity.this, ShowChosenShopActivity.class);
+        intent.setFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
         intent.putExtra(Global_Variable.SHOP_ID_MOVE_INTENT , idShop);
         intent.putExtra(Global_Variable.SHOP_NAME_MOVE_INTENT, this.chosenShop.getShopName());
         intent.putExtra(Global_Variable.USER_FOR_MOVE_INTENT,this.user);
@@ -319,21 +333,25 @@ public class FindShopsActivity extends AppCompatActivity {
     public void findShops(){
         Intent myIntent = new Intent(FindShopsActivity.this,
                 FindShopsActivity.class);
+        myIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
         myIntent.putExtra(Global_Variable.USER_FOR_MOVE_INTENT,this.user);
         bundle.putDouble(Global_Variable.USER_LOCATION_MOVE_INTENT_LONGITUDE, this.userLocation.getX());
         bundle.putDouble(Global_Variable.USER_LOCATION_MOVE_INTENT_LATITUDE, this.userLocation.getY());
         myIntent.putExtras(bundle);
         startActivity(myIntent);
+        finish();
     }
 
     public void favoriteCoffee(){
         Intent myIntent = new Intent(FindShopsActivity.this,
                 FavoriteCoffeeActivity.class);
+        myIntent.putExtra(Global_Variable.FAVORITE_COFFEE_MOVE_INTENT, this.favoriteCoffee);
         myIntent.putExtra(Global_Variable.USER_FOR_MOVE_INTENT,this.user);
         bundle.putDouble(Global_Variable.USER_LOCATION_MOVE_INTENT_LONGITUDE, this.userLocation.getX());
         bundle.putDouble(Global_Variable.USER_LOCATION_MOVE_INTENT_LATITUDE, this.userLocation.getY());
         myIntent.putExtras(bundle);
         startActivity(myIntent);
+        finish();
     }
 
     public void AddShopActivity(){
@@ -344,6 +362,7 @@ public class FindShopsActivity extends AppCompatActivity {
         bundle.putDouble(Global_Variable.USER_LOCATION_MOVE_INTENT_LATITUDE, this.userLocation.getY());
         myIntent.putExtras(bundle);
         startActivity(myIntent);
+        finish();
     }
 
     public void showMyOrders(){
@@ -354,6 +373,7 @@ public class FindShopsActivity extends AppCompatActivity {
         bundle.putDouble(Global_Variable.USER_LOCATION_MOVE_INTENT_LATITUDE, this.userLocation.getY());
         myIntent.putExtras(bundle);
         startActivity(myIntent);
+        finish();
     }
 
     public void logOut(){
@@ -367,5 +387,7 @@ public class FindShopsActivity extends AppCompatActivity {
                     }
                 });
     }
+
+
 
 }

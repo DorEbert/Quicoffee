@@ -4,6 +4,7 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
+import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
@@ -32,6 +33,11 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.Map;
 
 public class FavoriteCoffeeActivity extends AppCompatActivity  {
     public FirebaseUser user;
@@ -43,6 +49,8 @@ public class FavoriteCoffeeActivity extends AppCompatActivity  {
     double x = 3;
     double y = 3;
     public Bundle bundle;
+    private static int idForSpinner = 10000;
+    private HashMap hashMapSpinners;
 
     //for favorite coffee table:
     public FirebaseDatabase mDatabase;
@@ -54,7 +62,7 @@ public class FavoriteCoffeeActivity extends AppCompatActivity  {
     public FavoriteCoffee FavoriteCoffeeFromDataSnapshot;
     public String itemValue;
 
-    public ValueEventListener readFCListener;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -72,15 +80,30 @@ public class FavoriteCoffeeActivity extends AppCompatActivity  {
         userLocation = new UserLocation(x,y);
 
         inititalVariablesOfLocalActivity();
+        favoriteCoffee = bundle.getParcelable(Global_Variable.FAVORITE_COFFEE_MOVE_INTENT);
         initAttributesForCoffee(Global_Variable.SIZE_OF_CUP, Global_Variable.SIZE_OF_COFFEE);
         initAttributesForCoffee(Global_Variable.MILK, Global_Variable.TYPES_OF_MILK);
         initAttributesForCoffee(Global_Variable.ESPRESSO, Global_Variable.AMOUNT_OF_ESPRESSO);
         initAttributesForCoffee(Global_Variable.FOAM, Global_Variable.WITH_FOAM);
         addSaveButton();
 
+        if (favoriteCoffee != null){ //findShops read FC from the DB
+            //TODO: remove this!:
+            Global_Variable.FC_TEMP = favoriteCoffee;
+            try {
+                putAttributesFCFromDB();
+            } catch (NoSuchMethodException e) {
+                e.printStackTrace();
+            } catch (InvocationTargetException e) {
+                e.printStackTrace();
+            } catch (IllegalAccessException e) {
+                e.printStackTrace();
+            }
+        }
+
         mDatabase = FirebaseDatabase.getInstance();
         favoriteCoffeeRef = mDatabase.getReference(Global_Variable.FAVORITE_COFFEE_TABLE);
-        initReadFCListener();
+
     }
 
 
@@ -103,19 +126,37 @@ public class FavoriteCoffeeActivity extends AppCompatActivity  {
        // writeFavoriteCoffee(favoriteCoffee,user);
     }
 
-    private void initReadFCListener(){
-        readFCListener = new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
 
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
-
-            }
-        };
+    private void putAttributesFCFromDB() throws NoSuchMethodException, InvocationTargetException, IllegalAccessException {
+        // hashMapSpinners.put(id,attribute);
+        int idSpinner;
+        String attribute;
+        String favoriteCoffeeValue;
+        Iterator hmIterator = hashMapSpinners.entrySet().iterator();
+        while (hmIterator.hasNext()) {
+            Map.Entry mapElement = (Map.Entry)hmIterator.next();
+            attribute = ((String)mapElement.getValue());
+            idSpinner = (int)mapElement.getKey();
+            String methodName = buildGetMethodName(attribute);
+            Method method = null;
+            method = FavoriteCoffee.class.getMethod(methodName,new Class[]{});
+            favoriteCoffeeValue = (String) method.invoke(favoriteCoffee, new Object[]{});
+            Spinner mySpinner = findViewById(idSpinner);
+            ArrayAdapter myAdap = (ArrayAdapter) mySpinner.getAdapter(); //cast to an ArrayAdapter
+            int spinnerPosition = myAdap.getPosition(favoriteCoffeeValue);
+            //set the default according to value
+            mySpinner.setSelection(spinnerPosition);
+        }
     }
+
+    public static String buildGetMethodName(String fieldName) {
+        fieldName = fieldName.replace(" ","");
+        StringBuilder methodName = new StringBuilder("get");
+        methodName.append(fieldName.substring(0, 1) .toUpperCase());
+        methodName.append(fieldName.substring(1, fieldName.length()));
+        return methodName.toString();
+    }
+
 
     private void addSaveButton(){
         Button saveButton = new Button(this);
@@ -148,6 +189,8 @@ public class FavoriteCoffeeActivity extends AppCompatActivity  {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 writeFavoriteCoffee(favoriteCoffee,user,dataSnapshot);
+                //TODO: remove this!:
+                Global_Variable.FC_TEMP = someFavoriteCoffee;
             }
             @Override
             public void onCancelled(@NonNull DatabaseError databaseError) {
@@ -160,9 +203,9 @@ public class FavoriteCoffeeActivity extends AppCompatActivity  {
     ///DATA BASE //
     private void writeFavoriteCoffee(FavoriteCoffee favoriteCoffee, FirebaseUser user, DataSnapshot dataSnapshot) {
         indexUserExist = checkIfUserExist(dataSnapshot);
-        someFavoriteCoffee = new FavoriteCoffee(favoriteCoffee.getSizeOfCup(),favoriteCoffee.getTypeOfMilk(),
-                favoriteCoffee.getAmountOfEspresso(),favoriteCoffee.getWith_Form(),user.getUid());
-        //Log.e("writeFavoriteCoffee ","writeFavoriteCoffee get form?  : "+ favoriteCoffee.getWith_Form());
+        someFavoriteCoffee = new FavoriteCoffee(favoriteCoffee.getSizeOfCup(),favoriteCoffee.getTypesOfMilk(),
+                favoriteCoffee.getAmountOfEspresso(),favoriteCoffee.getWithFoam(),user.getUid());
+        //Log.e("writeFavoriteCoffee ","writeFavoriteCoffee get form?  : "+ favoriteCoffee.getWithFoam());
         if(indexUserExist.equals(Global_Variable.USER_NOT_EXIST)){
             idForPushFCToDB = favoriteCoffeeRef.push().getKey();
             favoriteCoffeeRef.child(idForPushFCToDB).setValue(someFavoriteCoffee);
@@ -174,6 +217,7 @@ public class FavoriteCoffeeActivity extends AppCompatActivity  {
             favoriteCoffee.setUserID(user.getUid());
             dataSnapshot.getRef().child(indexUserExist).setValue(favoriteCoffee);
         }
+
 
     }
 
@@ -193,8 +237,7 @@ public class FavoriteCoffeeActivity extends AppCompatActivity  {
         return Global_Variable.USER_NOT_EXIST;
     }
 
-
-
+    @SuppressLint("ResourceType")
     private void initAttributesForCoffee(final String attribute , String[] items){
         linearLayout.addView(CreateTextView(attribute));
         //init spinner:
@@ -203,6 +246,8 @@ public class FavoriteCoffeeActivity extends AppCompatActivity  {
         spinner.setScrollBarStyle(View.SCROLLBARS_OUTSIDE_OVERLAY);
         ArrayAdapter <String> adapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_dropdown_item, items);
         spinner.setAdapter(adapter);
+        spinner.setId(idForSpinner);
+        hashMapSpinners.put(idForSpinner,attribute);
         spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
@@ -217,7 +262,7 @@ public class FavoriteCoffeeActivity extends AppCompatActivity  {
                     favoriteCoffee.setAmountOfEspresso(itemValue);
                 }
                 else {
-                    favoriteCoffee.setWith_Form(itemValue);
+                    favoriteCoffee.setWithFoam(itemValue);
                 }
 
             }
@@ -227,6 +272,7 @@ public class FavoriteCoffeeActivity extends AppCompatActivity  {
             }
         });
         linearLayout.addView(spinner);
+        idForSpinner =idForSpinner+1;
     }
 
     private TextView CreateTextView(String labelText){
@@ -248,6 +294,7 @@ public class FavoriteCoffeeActivity extends AppCompatActivity  {
         favoriteCoffee = new FavoriteCoffee();
         someFavoriteCoffee = new FavoriteCoffee();
         FavoriteCoffeeFromDataSnapshot = new FavoriteCoffee();
+        hashMapSpinners = new HashMap <Integer,String>();
     }
 
     @Override
