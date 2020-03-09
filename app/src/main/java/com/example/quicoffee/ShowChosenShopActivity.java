@@ -6,7 +6,9 @@ import androidx.appcompat.widget.Toolbar;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.app.TimePickerDialog;
 import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Gravity;
@@ -19,6 +21,7 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.TimePicker;
 import android.widget.Toast;
 
 import com.example.quicoffee.Models.FavoriteCoffee;
@@ -37,6 +40,9 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 
+import java.sql.Time;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -57,8 +63,10 @@ public class ShowChosenShopActivity extends AppCompatActivity {
     public Bundle bundle;
     public Order order;
     public Button saveOrderButton;
-    public Button myOrderButton;
+    public Button getDateButton;
     public String orderID;
+   // public TimePicker picker;
+    public TimePickerDialog picker;
 
     //Read form firebase:
     public FirebaseDatabase mDatabase;
@@ -90,11 +98,14 @@ public class ShowChosenShopActivity extends AppCompatActivity {
         setContentView(R.layout.activity_show_chosen_shop);
         Toolbar myToolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(myToolbar);
+        //TimePickerDialog picker=(TimePicker)findViewById(R.id.datePicker);
+        //picker.setIs24HourView(true);
         InititalVariablesOfLocalActivity();
         iinitSaveOrderButton();
         showTheCartRecyclerViewOnTheScreen();
-        // iinitMyOrderButton();
+        iinitGetDateButton();
     }
+
 
    // @Override
    // protected void onNewIntent(Intent intent) {
@@ -276,22 +287,39 @@ public class ShowChosenShopActivity extends AppCompatActivity {
         });
     }
 
-    public void iinitMyOrderButton(){
-        saveOrderButton = (Button) findViewById(R.id.SaveOrderButton);
-        saveOrderButton.setText(R.string.saveButtonText);
-        LinearLayout.LayoutParams saveOrderButtonLayoutParams =
+    public void iinitGetDateButton(){
+        getDateButton = (Button) findViewById(R.id.getDateButton);
+        getDateButton.setText(R.string.getDateButtonText);
+        LinearLayout.LayoutParams getDateButtonLayoutParams =
                 new LinearLayout.LayoutParams((int)(mainActivityWitdh *0.5),mainActivityHeight/20);
-        saveOrderButtonLayoutParams.gravity = Gravity.CENTER;
-        saveOrderButtonLayoutParams.setMargins(0
+        getDateButtonLayoutParams.gravity = Gravity.CENTER;
+        getDateButtonLayoutParams.setMargins(0
                 ,mainActivityHeight/20
                 ,0
                 ,mainActivityHeight/40);
-        saveOrderButton.setLayoutParams(saveOrderButtonLayoutParams);
-        saveOrderButton.setBackgroundResource(R.color.colorCoffee);
-        saveOrderButton.setTextColor(getApplication().getResources().getColor(R.color.textViewColor));
-        saveOrderButton.setOnClickListener(new View.OnClickListener() {
+        getDateButton.setLayoutParams(getDateButtonLayoutParams);
+        getDateButton.setBackgroundResource(R.color.colorCoffee);
+        getDateButton.setTextColor(getApplication().getResources().getColor(R.color.textViewColor));
+        getDateButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                final Calendar cldr = Calendar.getInstance();
+                int hour = cldr.get(Calendar.HOUR_OF_DAY);
+                int minutes = cldr.get(Calendar.MINUTE);
+                // time picker dialog
+                picker = new TimePickerDialog(ShowChosenShopActivity.this,
+                        new TimePickerDialog.OnTimeSetListener() {
+                            @Override
+                            public void onTimeSet(TimePicker tp, int sHour, int sMinute) {
+                                //eText.setText(sHour + ":" + sMinute);
+                                Log.e("ORDERTIME","ORDER TIME "+sHour);
+                                Time t = new Time(sHour);
+                                t.setMinutes(sMinute);
+                                order.setOrderPickUpTime(t);
+                            }
+                        }, hour, minutes, true);
+                picker.show();
+
             }
         });
     }

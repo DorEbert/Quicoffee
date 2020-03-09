@@ -16,4 +16,5 @@
     <string name="showMyOrdersAsABuyerText">Show orders as a buyer</string>
     <string name="showMyOrdersAsASellerText">Show orders as a seller</string>
     <string name="confirmTheOrderButtonText">Confirm the order</string>
+    <string name="getDateButtonText">Estimate Pickup time</string>
 </resources>

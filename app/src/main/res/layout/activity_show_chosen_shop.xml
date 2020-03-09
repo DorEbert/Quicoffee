@@ -26,6 +26,13 @@
                 android:background="@mipmap/logowithmap_foreground">
             </ImageView>
         </androidx.appcompat.widget.Toolbar>
+        <Button
+            android:id="@+id/getDateButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:layout_marginLeft="160dp"
+            android:text="Get Date" />
         <TextView
             android:id="@+id/shopNameTextView"
             android:layout_width="wrap_content"
@@ -39,6 +46,7 @@
         <TextView
             android:id="@+id/productsTextView"
             android:text="@string/productsString"
+            android:visibility="gone"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textSize="22dp"
@@ -94,7 +102,7 @@
             tools:ignore="MissingConstraints" />
         <Button
             android:id="@+id/SaveOrderButton"
-            android:visibility="gone"
+            android:visibility="visible"
             android:layout_width="157dp"
             android:layout_height="58dp"></Button>
 

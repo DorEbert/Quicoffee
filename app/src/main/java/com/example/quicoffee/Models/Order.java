@@ -1,6 +1,4 @@
 package com.example.quicoffee.Models;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.os.Build;
 import android.os.Parcel;
 import android.os.Parcelable;
@@ -8,12 +6,10 @@ import android.os.Parcelable;
 import androidx.annotation.RequiresApi;
 
 import com.example.quicoffee.Global_Variable;
-import com.google.firebase.auth.FirebaseUser;
 
 import java.sql.Time;
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
+
 
 public class Order implements Parcelable{
 
@@ -158,6 +154,7 @@ public class Order implements Parcelable{
     public String getGeneralComment() {
         return generalComment;
     }
+
 
 
 }
