@@ -33,6 +33,7 @@ import com.example.quicoffee.Models.Product;
 import com.example.quicoffee.Models.Shop;
 import com.example.quicoffee.Models.UserLocation;
 import com.firebase.ui.auth.AuthUI;
+import com.google.android.gms.common.util.Strings;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
@@ -176,7 +177,7 @@ public class AddShopMenuActivity extends AppCompatActivity {
 
                 Product productToUpdate = new Product(productName,price,description);
                 if (product != null) {
-                    if (!product.getImage().isEmpty()){
+                    if (!Strings.isEmptyOrWhitespace(product.getImage())){
                         productToUpdate.setImage(product.getImage());
                     }
                 }
@@ -336,6 +337,7 @@ public class AddShopMenuActivity extends AppCompatActivity {
                 imageURI = (Uri) data.getExtras().get(Global_Variable.URI_INTENT);
                 Toast.makeText(getApplicationContext(), Global_Variable.PICTURE_SUCCEED, Toast.LENGTH_SHORT).show();
             }
+
         }
     }
 
