@@ -5,11 +5,13 @@ import android.widget.ImageView;
 
 import androidx.annotation.NonNull;
 
+import com.example.quicoffee.Models.Order;
 import com.example.quicoffee.Models.Product;
 import com.example.quicoffee.Models.Shop;
 import com.firebase.ui.auth.data.model.User;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.storage.FirebaseStorage;
@@ -95,4 +97,5 @@ public class FireBaseUtill {
     public void RemovePictureFromStorage(String image) {
         storageRef.child("images/" + image).delete();
     }
+
 }

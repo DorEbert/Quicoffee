@@ -69,22 +69,6 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.ProductV
         } catch (Exception e) {
             e.printStackTrace();
         }
-        //holder.image.setImageURI(uri);
-                /*.addOnSuccessListener(new OnSuccessListener<Uri>() {
-            @Override
-            public void onSuccess(Uri uri) {
-                holder.image.setImageURI((null));
-                holder.image.setImageURI((uri));
-            }
-        }).addOnFailureListener(new OnFailureListener() {
-            @Override
-            public void onFailure(@NonNull Exception exception) {
-                // Handle failed download
-                // ...
-                exception.getMessage();
-            }
-        });*/
-
     }
 
     @Override

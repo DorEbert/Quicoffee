@@ -8,51 +8,43 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="center">
-        <LinearLayout
+        <RelativeLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:orientation="horizontal">
             <TextView
-                android:id="@+id/shopName"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_marginTop="10dp"
-                android:textSize="20dp"
-                android:layout_marginBottom="5dp"
-                android:layout_marginRight="20dp"/>
-            <TextView
                 android:id="@+id/orderPickUpTime"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="10dp"
+                android:layout_alignParentTop="true"
+                android:text="Title"
+                android:textSize="20sp"/>
+            <TextView
+                android:id="@+id/shopName"
+                android:layout_width="wrap_content"
+                android:layout_marginLeft="10dp"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/orderPickUpTime"
+                android:text="Description"/>
+            <TextView
+                android:id="@+id/confirmTheOrder"
+                android:text="text"
                 android:layout_width="match_parent"
                 android:layout_marginTop="10dp"
                 android:textSize="20dp"
+                android:layout_toRightOf="@+id/shopName"
                 android:layout_marginBottom="5dp"
-                android:layout_marginRight="20dp"
+                android:layout_marginLeft="20dp"
                 android:layout_height="match_parent" />
             <TextView
                 android:id="@+id/totalPrice"
                 android:layout_width="match_parent"
-                android:layout_marginTop="10dp"
-                android:textSize="20dp"
-                android:layout_marginBottom="5dp"
-                android:layout_marginRight="20dp"
-                android:layout_height="match_parent" />
-            <ImageView
-                android:id="@+id/imageView"
-                android:layout_width="60dp"
+                android:layout_height="match_parent"
+                android:gravity="right"
+                android:text="totalPrice"
                 android:padding="2dp"
-                android:layout_height="60dp"
-                android:layout_alignParentLeft="true"
-                android:layout_alignParentTop="true"
-                android:layout_marginRight="16dp" />
-            <TextView
-                android:id="@+id/confirmTheOrder"
-                android:layout_width="match_parent"
-                android:layout_marginTop="10dp"
-                android:textSize="20dp"
-                android:layout_marginBottom="5dp"
-                android:layout_marginRight="20dp"
-                android:layout_height="match_parent" />
-
-        </LinearLayout>
+                android:textSize="25dp" />
+        </RelativeLayout>
     </androidx.cardview.widget.CardView>
 </LinearLayout>
