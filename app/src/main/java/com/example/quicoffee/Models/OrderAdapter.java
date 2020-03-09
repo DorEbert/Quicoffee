@@ -12,6 +12,7 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.quicoffee.FireBaseUtill;
+import com.example.quicoffee.Global_Variable;
 import com.example.quicoffee.R;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.storage.FileDownloadTask;
@@ -53,22 +54,7 @@ public class OrderAdapter extends RecyclerView.Adapter<OrderAdapter.OrderViewHol
         //TODO: time for order
         //holder.orderPickUpTime.setText(order.getOrderPickUpTime().toString());
         holder.totalPrice.setText(order.getTotalPrice()+"");
-        holder.image.setImageURI((null));
-        holder.confirmTheOrder.setText(order.getConfirmTheOrder()+"");
-        try {
-            final File tmpFile = File.createTempFile("img", "jpeg");
-            //  "id" is name of the image file....
-            storageReference.child("images/" +order.getImage()).getFile(tmpFile).addOnSuccessListener(new OnSuccessListener<FileDownloadTask.TaskSnapshot>() {
-                @Override
-                public void onSuccess(FileDownloadTask.TaskSnapshot taskSnapshot) {
-                    Bitmap image = BitmapFactory.decodeFile(tmpFile.getAbsolutePath());
-                    holder.image.setImageBitmap(image);
-
-                }
-            });
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+        holder.confirmTheOrder.setText(order.getConfirmTheOrder()? Global_Variable.CONFIRMED:Global_Variable.NOT_CONFIRMED);
     }
 
     @Override
@@ -80,14 +66,12 @@ public class OrderAdapter extends RecyclerView.Adapter<OrderAdapter.OrderViewHol
         public TextView shopName;
         //public TextView orderPickUpTime;
         public TextView totalPrice;
-        public ImageView image;
         public TextView confirmTheOrder;
         public OrderViewHolder(View itemView, final OrderAdapter.OnItemClickListener listener){
             super(itemView);
             shopName = itemView.findViewById(R.id.shopName);
             //orderPickUpTime = itemView.findViewById(R.id.orderPickUpTime);
             totalPrice = itemView.findViewById(R.id.totalPrice);
-            image = itemView.findViewById(R.id.imageView);
             confirmTheOrder = itemView.findViewById(R.id.confirmTheOrder);
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
