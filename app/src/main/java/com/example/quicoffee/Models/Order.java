@@ -12,7 +12,6 @@ import java.util.ArrayList;
 
 
 public class Order implements Parcelable{
-
     public String userID;
     private String shopName;
     // (product,comment) comment for specific product
@@ -50,6 +49,7 @@ public class Order implements Parcelable{
         //products = in.readParcelable(Product.class.getClassLoader());
         generalComment = in.readString();
         confirmTheOrder = in.readInt();
+        orderPickUpTime = (Time) in.readSerializable();
 
     }
 
@@ -82,6 +82,7 @@ public class Order implements Parcelable{
         dest.writeList(this.products);
         dest.writeString(generalComment);
         dest.writeInt(this.confirmTheOrder);
+        dest.writeSerializable(orderPickUpTime);
 
     }
 
