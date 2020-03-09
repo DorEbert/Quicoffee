@@ -8,6 +8,8 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import android.app.ProgressDialog;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
 import android.view.Gravity;
@@ -16,6 +18,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -34,10 +37,12 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.storage.FileDownloadTask;
 import com.google.firebase.storage.OnProgressListener;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 
+import java.io.File;
 import java.util.UUID;
 
 public class SpecificOrderActivity extends AppCompatActivity {
@@ -254,16 +259,37 @@ public class SpecificOrderActivity extends AppCompatActivity {
         payBySelfieButton = (Button) findViewById(R.id.payBySelfieButton);
         confirmTheOrderButton = (Button) findViewById(R.id.confirmTheOrderButton);
 
-        if(is_to_display_user == true){
+        if(is_to_display_user){
             confirmTheOrderButton.setVisibility(View.GONE);
             iinitPayBySelfieButtonButton();
         }
         else {
             payBySelfieButton.setVisibility(View.GONE);
             iinitConfirmTheOrderButton();
+            initImageOfOrder();
         }
-
         initDeleteOrderButton();
+    }
+
+    private void initImageOfOrder() {
+        FireBaseUtill fireBaseUtill = new FireBaseUtill();
+        StorageReference storageReference = fireBaseUtill.getStorageReference();
+        try {
+            final File tmpFile = File.createTempFile("img", "jpeg");
+            //  "id" is name of the image file....
+            storageReference.child("images/" + order.getImage()).getFile(tmpFile).addOnSuccessListener(new OnSuccessListener<FileDownloadTask.TaskSnapshot>() {
+                @Override
+                public void onSuccess(FileDownloadTask.TaskSnapshot taskSnapshot) {
+                    Bitmap imageBitMap = BitmapFactory.decodeFile(tmpFile.getAbsolutePath());
+                    ImageView image = findViewById(R.id.imageView);
+                    image.setImageURI((null));
+                    image.setImageBitmap(imageBitMap);
+
+                }
+            });
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     private void  createTextViewUITitle(TextView textView,String title){
