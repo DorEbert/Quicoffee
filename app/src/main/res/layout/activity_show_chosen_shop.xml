@@ -100,12 +100,13 @@
             android:layout_width="415dp"
             android:layout_height="wrap_content"
             tools:ignore="MissingConstraints" />
+
         <Button
             android:id="@+id/SaveOrderButton"
-            android:visibility="visible"
+            android:visibility="gone"
             android:layout_width="157dp"
-            android:layout_height="58dp"></Button>
-
+            android:layout_height="58dp">
+        </Button>
         <Button
             android:id="@+id/myOrderButton"
             android:visibility="gone"

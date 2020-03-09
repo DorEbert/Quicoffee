@@ -50,6 +50,7 @@ public class Order implements Parcelable{
         //products = in.readParcelable(Product.class.getClassLoader());
         generalComment = in.readString();
         confirmTheOrder = in.readInt();
+
     }
 
     public static final Creator<Order> CREATOR = new Creator<Order>() {
@@ -81,6 +82,7 @@ public class Order implements Parcelable{
         dest.writeList(this.products);
         dest.writeString(generalComment);
         dest.writeInt(this.confirmTheOrder);
+
     }
 
     public double getTotalPrice() {

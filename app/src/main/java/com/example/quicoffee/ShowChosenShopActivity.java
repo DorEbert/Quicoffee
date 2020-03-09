@@ -67,6 +67,7 @@ public class ShowChosenShopActivity extends AppCompatActivity {
     public String orderID;
    // public TimePicker picker;
     public TimePickerDialog picker;
+    public Button myOrderButton;
 
     //Read form firebase:
     public FirebaseDatabase mDatabase;
@@ -262,7 +263,7 @@ public class ShowChosenShopActivity extends AppCompatActivity {
     }
 
     public void iinitSaveOrderButton(){
-        saveOrderButton = (Button) findViewById(R.id.myOrderButton);
+        saveOrderButton = (Button) findViewById(R.id.SaveOrderButton);
         saveOrderButton.setText(R.string.saveButtonText);
         LinearLayout.LayoutParams saveButtonLayoutParams =
                 new LinearLayout.LayoutParams((int)(mainActivityWitdh *0.5),mainActivityHeight/20);
