@@ -87,6 +87,8 @@ public class Global_Variable {
     public static final String MY_PRODUCTS = "My products";
     public static final String CLICK_TO_TAKE_PICTURE = "Click here to take picture";
     public static final String PICTURE_SUCCEED = "Taking picture succeed";
+    public static final String PLEASE_CHOOSE_TIME = "Please choose estimated time of pickup";
+    public static final String PLEASE_CHOOSE_PRODUCT = "Please choose at least one product";
     public static int index = 10;
     // in order to save shared preferences-> used to login only once
     public static final String PREFS_NAME = "MyPrefsFile";
