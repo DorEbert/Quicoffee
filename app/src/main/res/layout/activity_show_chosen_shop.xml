@@ -30,8 +30,8 @@
             android:id="@+id/getDateButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="10dp"
-            android:layout_marginLeft="160dp"
+            android:layout_marginTop="2dp"
+            android:gravity="center"
             android:text="Get Date" />
         <TextView
             android:id="@+id/shopNameTextView"
@@ -90,7 +90,7 @@
             android:layout_height="wrap_content"
             android:textSize="15dp"
             android:textColor="@color/colorBlack"
-            android:paddingBottom="7dp"
+            android:paddingBottom="2dp"
             android:paddingTop="7dp"
             android:paddingLeft="15dp">
         </TextView>

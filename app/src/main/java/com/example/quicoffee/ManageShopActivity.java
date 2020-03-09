@@ -254,9 +254,9 @@ public class ManageShopActivity extends AppCompatActivity {
                 new LinearLayout.LayoutParams((int)(mainActivityWitdh *0.5),mainActivityHeight/20);
         loginButtonLayoutParams.gravity = Gravity.CENTER;
         loginButtonLayoutParams.setMargins(0
-                ,mainActivityHeight/20
+                ,mainActivityHeight/40
                 ,0
-                ,mainActivityHeight/40);
+                ,mainActivityHeight/60);
         button.setLayoutParams(loginButtonLayoutParams);
         button.setBackgroundResource(R.color.colorCoffee);
         button.setTextColor(getApplication().getResources().getColor(R.color.textViewColor));
