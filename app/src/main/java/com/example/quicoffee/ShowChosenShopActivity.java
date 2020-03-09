@@ -10,6 +10,7 @@ import android.app.TimePickerDialog;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.Menu;
@@ -278,8 +279,16 @@ public class ShowChosenShopActivity extends AppCompatActivity {
         saveOrderButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Toast.makeText(ShowChosenShopActivity.this , "Your order is saves :)!", Toast.LENGTH_SHORT).show();
+                if (order.getOrderPickUpTime() == null) {
+                    Toast.makeText(getApplicationContext(), Global_Variable.PLEASE_CHOOSE_TIME, Toast.LENGTH_SHORT).show();
+                    return;
+                }
+                if (order.getProducts().size() == 0) {
+                    Toast.makeText(getApplicationContext(), Global_Variable.PLEASE_CHOOSE_PRODUCT, Toast.LENGTH_SHORT).show();
+                    return;
+                }
                 saveOrderToDB(order,user);
+                Toast.makeText(ShowChosenShopActivity.this , "Your order is saves :)!", Toast.LENGTH_SHORT).show();
                 showAllDetailsOfTheOrder();
                 //delete all the table:
                 //DatabaseReference refForDeleteOrder=FirebaseDatabase.getInstance().getReference();
@@ -295,9 +304,9 @@ public class ShowChosenShopActivity extends AppCompatActivity {
                 new LinearLayout.LayoutParams((int)(mainActivityWitdh *0.5),mainActivityHeight/20);
         getDateButtonLayoutParams.gravity = Gravity.CENTER;
         getDateButtonLayoutParams.setMargins(0
-                ,mainActivityHeight/20
+                ,mainActivityHeight/50
                 ,0
-                ,mainActivityHeight/40);
+                ,mainActivityHeight/60);
         getDateButton.setLayoutParams(getDateButtonLayoutParams);
         getDateButton.setBackgroundResource(R.color.colorCoffee);
         getDateButton.setTextColor(getApplication().getResources().getColor(R.color.textViewColor));
@@ -355,7 +364,8 @@ public class ShowChosenShopActivity extends AppCompatActivity {
         else{ // update:
             orderID = indexOrderExist;
             order.setUserID(user.getUid());
-            dataSnapshot.getRef().child(indexOrderExist).setValue(order);
+            //todo sometimes raise an excpetion
+            //dataSnapshot.getRef().child(indexOrderExist).setValue(order);
         }
         //Log.e("orderID",orderID);
     }

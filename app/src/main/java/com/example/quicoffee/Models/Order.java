@@ -150,6 +150,8 @@ public class Order implements Parcelable{
     }
 
     public ArrayList<Product> getProducts() {
+        if(products == null)
+            products = new ArrayList<>();
         return products;
     }
 
