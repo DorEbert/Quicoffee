@@ -24,6 +24,7 @@ import com.example.quicoffee.Models.OrderAdapter;
 import com.example.quicoffee.Models.Shop;
 import com.example.quicoffee.Models.UserLocation;
 import com.firebase.ui.auth.AuthUI;
+import com.google.android.gms.common.util.Strings;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseUser;
@@ -37,6 +38,8 @@ import com.google.firebase.database.ValueEventListener;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+
+import static com.google.android.gms.common.util.Strings.*;
 
 public class MyOrdersActivity extends AppCompatActivity {
     private int mainActivityWitdh;
@@ -157,10 +160,10 @@ public class MyOrdersActivity extends AppCompatActivity {
                     else{
                         //found shops by shops id for seller:
                         if(someOrder.getIdShop().equals(shopId)){
-                            arrayToShowOnTheScreen.add(someOrder);
+                            if (!Strings.isEmptyOrWhitespace(someOrder.getImage()))
+                                arrayToShowOnTheScreen.add(someOrder);
+                            }
                         }
-                    }
-
                 }
                 Collections.reverse(arrayToShowOnTheScreen);
                 recyclerView = (RecyclerView) findViewById(R.id.my_recycler_view);
