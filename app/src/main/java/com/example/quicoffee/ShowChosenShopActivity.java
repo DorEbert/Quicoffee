@@ -47,6 +47,7 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.GregorianCalendar;
 import java.util.List;
 import java.util.TimeZone;
 
@@ -281,17 +282,16 @@ public class ShowChosenShopActivity extends AppCompatActivity {
         saveOrderButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-               // if (order.getOrderPickUpTime() == null) {
-               //     Toast.makeText(getApplicationContext(), Global_Variable.PLEASE_CHOOSE_TIME, Toast.LENGTH_SHORT).show();
-              //      return;
-             //   }
+                if (order.getOrderPickUpTime() == null) {
+                    Toast.makeText(getApplicationContext(), Global_Variable.PLEASE_CHOOSE_TIME, Toast.LENGTH_SHORT).show();
+                    return;
+                }
                 if (order.getProducts().size() == 0) {
                     Toast.makeText(getApplicationContext(), Global_Variable.PLEASE_CHOOSE_PRODUCT, Toast.LENGTH_SHORT).show();
                     return;
                 }
-                FireBaseUtill fireBaseUtill = new FireBaseUtill();
                 saveOrderToDB(order,user);
-                Toast.makeText(ShowChosenShopActivity.this , "Your order is saves :)!", Toast.LENGTH_SHORT).show();
+                Toast.makeText(ShowChosenShopActivity.this , "Your order is saved:)!", Toast.LENGTH_SHORT).show();
                 showAllDetailsOfTheOrder();
                 //delete all the table:
                 //DatabaseReference refForDeleteOrder=FirebaseDatabase.getInstance().getReference();
@@ -316,9 +316,9 @@ public class ShowChosenShopActivity extends AppCompatActivity {
         getDateButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                final Calendar cldr = Calendar.getInstance();
-                TimeZone timeZone = TimeZone.getTimeZone("Israel");
-                cldr.setTimeZone(timeZone);
+                final Calendar cldr = new GregorianCalendar(TimeZone.getTimeZone("Asia/Jerusalem"));
+                //TimeZone timeZone = TimeZone.getTimeZone("Asia/Jerusalem");
+                //cldr.setTimeZone(timeZone);
                 int hour = cldr.get(Calendar.HOUR_OF_DAY);
                 int minutes = cldr.get(Calendar.MINUTE);
                 // time picker dialog

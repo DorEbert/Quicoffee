@@ -109,7 +109,6 @@ public class SpecificOrderActivity extends AppCompatActivity {
         }
         confirmTheOrderButton.setVisibility(View.GONE);
         payBySelfieButton.setVisibility(View.GONE);
-        finish();
     }
 
 
@@ -273,6 +272,7 @@ public class SpecificOrderActivity extends AppCompatActivity {
 
     private void initImageOfOrder() {
         FireBaseUtill fireBaseUtill = new FireBaseUtill();
+        final ImageView image = new ImageView(this);
         StorageReference storageReference = fireBaseUtill.getStorageReference();
         try {
             final File tmpFile = File.createTempFile("img", "jpeg");
@@ -281,10 +281,9 @@ public class SpecificOrderActivity extends AppCompatActivity {
                 @Override
                 public void onSuccess(FileDownloadTask.TaskSnapshot taskSnapshot) {
                     Bitmap imageBitMap = BitmapFactory.decodeFile(tmpFile.getAbsolutePath());
-                    ImageView image = findViewById(R.id.imageView);
                     image.setImageURI((null));
                     image.setImageBitmap(imageBitMap);
-
+                    linearLayout.addView(image);
                 }
             });
         } catch (Exception e) {

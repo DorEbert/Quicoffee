@@ -17,6 +17,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="10dp"
+                android:layout_marginRight="40dp"
                 android:layout_alignParentTop="true"
                 android:text="Title"
                 android:textColor="@color/colorBlack"
@@ -25,18 +26,20 @@
                 android:id="@+id/shopName"
                 android:layout_width="wrap_content"
                 android:layout_marginLeft="10dp"
+                android:layout_marginRight="40dp"
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/orderPickUpTime"
                 android:text="Description"/>
             <TextView
                 android:id="@+id/confirmTheOrder"
-                android:text="text"
+                android:text="texssst"
                 android:layout_width="match_parent"
                 android:layout_marginTop="10dp"
                 android:textSize="20dp"
+                android:layout_centerHorizontal="true"
                 android:layout_toRightOf="@+id/shopName"
                 android:layout_marginBottom="5dp"
-                android:layout_marginLeft="20dp"
+                android:layout_marginLeft="30dp"
                 android:layout_height="match_parent" />
             <TextView
                 android:id="@+id/totalPrice"
