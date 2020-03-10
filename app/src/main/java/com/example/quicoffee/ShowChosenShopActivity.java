@@ -42,11 +42,13 @@ import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 
 import java.sql.Time;
+import java.text.DateFormat;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.TimeZone;
 
 public class ShowChosenShopActivity extends AppCompatActivity {
     private int mainActivityWitdh;
@@ -279,10 +281,10 @@ public class ShowChosenShopActivity extends AppCompatActivity {
         saveOrderButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (order.getOrderPickUpTime() == null) {
-                    Toast.makeText(getApplicationContext(), Global_Variable.PLEASE_CHOOSE_TIME, Toast.LENGTH_SHORT).show();
-                    return;
-                }
+               // if (order.getOrderPickUpTime() == null) {
+               //     Toast.makeText(getApplicationContext(), Global_Variable.PLEASE_CHOOSE_TIME, Toast.LENGTH_SHORT).show();
+              //      return;
+             //   }
                 if (order.getProducts().size() == 0) {
                     Toast.makeText(getApplicationContext(), Global_Variable.PLEASE_CHOOSE_PRODUCT, Toast.LENGTH_SHORT).show();
                     return;
@@ -315,6 +317,8 @@ public class ShowChosenShopActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 final Calendar cldr = Calendar.getInstance();
+                TimeZone timeZone = TimeZone.getTimeZone("Israel");
+                cldr.setTimeZone(timeZone);
                 int hour = cldr.get(Calendar.HOUR_OF_DAY);
                 int minutes = cldr.get(Calendar.MINUTE);
                 // time picker dialog
@@ -323,10 +327,12 @@ public class ShowChosenShopActivity extends AppCompatActivity {
                             @Override
                             public void onTimeSet(TimePicker tp, int sHour, int sMinute) {
                                 //eText.setText(sHour + ":" + sMinute);
-                                Log.e("ORDERTIME","ORDER TIME "+sHour);
+                                //Log.e("ORDERTIME","ORDER TIME "+sHour);
                                 Time t = new Time(sHour);
                                 t.setMinutes(sMinute);
-                                order.setOrderPickUpTime(t);
+                                String date = DateFormat.getTimeInstance().format(t);
+                                Log.e("picker","picker date "+ date);
+                                order.setOrderPickUpTime(date);
                             }
                         }, hour, minutes, true);
                 picker.show();
@@ -366,11 +372,13 @@ public class ShowChosenShopActivity extends AppCompatActivity {
             orderID = indexOrderExist;
             order.setUserID(user.getUid());
             //todo sometimes raise an excpetion
-            try{
-                dataSnapshot.getRef().child(indexOrderExist).setValue(order);
-            }catch (Exception ex){
-                Log.e("EXCPETION ",ex.toString());
-            }
+           // try{
+            Log.e("indexOrderExist","indexOrderExist "+orderID);
+            Log.e("indexOrderExist","indexOrderExist "+indexOrderExist);
+            dataSnapshot.getRef().child(indexOrderExist).setValue(order);
+          //  }catch (Exception ex){
+          //      Log.e("EXCPETION ",ex.toString());
+           // }
         }
         //Log.e("orderID",orderID);
     }

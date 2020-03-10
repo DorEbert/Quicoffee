@@ -17,7 +17,7 @@ public class Order implements Parcelable{
     // (product,comment) comment for specific product
     private ArrayList<Product> products;
     private String generalComment;
-    private Time orderPickUpTime;
+    private String orderPickUpTime;
     private double totalPrice;
     private String idShop;
     private String image;
@@ -49,8 +49,8 @@ public class Order implements Parcelable{
         //products = in.readParcelable(Product.class.getClassLoader());
         generalComment = in.readString();
         confirmTheOrder = in.readInt();
-        orderPickUpTime = (Time) in.readSerializable();
-
+      //  orderPickUpTime = (Time) in.readSerializable();
+        orderPickUpTime = in.readString();
     }
 
     public static final Creator<Order> CREATOR = new Creator<Order>() {
@@ -82,8 +82,8 @@ public class Order implements Parcelable{
         dest.writeList(this.products);
         dest.writeString(generalComment);
         dest.writeInt(this.confirmTheOrder);
-        dest.writeSerializable(orderPickUpTime);
-
+      //  dest.writeSerializable(orderPickUpTime);
+        dest.writeString(this.orderPickUpTime);
     }
 
     public double getTotalPrice() {
@@ -136,11 +136,11 @@ public class Order implements Parcelable{
         this.generalComment = generalComment;
     }
 
-    public void setOrderPickUpTime(Time orderPickUpTime) {
+    public void setOrderPickUpTime(String orderPickUpTime) {
         this.orderPickUpTime = orderPickUpTime;
     }
 
-    public Time getOrderPickUpTime() {
+    public String getOrderPickUpTime() {
         return orderPickUpTime;
     }
     public void setImage(String image) {

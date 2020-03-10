@@ -51,8 +51,7 @@ public class OrderAdapter extends RecyclerView.Adapter<OrderAdapter.OrderViewHol
     public void onBindViewHolder(@NonNull final OrderAdapter.OrderViewHolder holder, int position) {
         Order order = mOrders.get(position);
         holder.shopName.setText(order.getShopName());
-        //TODO: time for order
-        //holder.orderPickUpTime.setText(order.getOrderPickUpTime().toString());
+        holder.orderPickUpTime.setText(order.getOrderPickUpTime());
         holder.totalPrice.setText(order.getTotalPrice()+"");
         holder.confirmTheOrder.setText(order.getConfirmTheOrder()? Global_Variable.CONFIRMED:Global_Variable.NOT_CONFIRMED);
     }
@@ -64,13 +63,13 @@ public class OrderAdapter extends RecyclerView.Adapter<OrderAdapter.OrderViewHol
 
     public static class OrderViewHolder extends RecyclerView.ViewHolder{
         public TextView shopName;
-        //public TextView orderPickUpTime;
+        public TextView orderPickUpTime;
         public TextView totalPrice;
         public TextView confirmTheOrder;
         public OrderViewHolder(View itemView, final OrderAdapter.OnItemClickListener listener){
             super(itemView);
             shopName = itemView.findViewById(R.id.shopName);
-            //orderPickUpTime = itemView.findViewById(R.id.orderPickUpTime);
+            orderPickUpTime = itemView.findViewById(R.id.orderPickUpTime);
             totalPrice = itemView.findViewById(R.id.totalPrice);
             confirmTheOrder = itemView.findViewById(R.id.confirmTheOrder);
             itemView.setOnClickListener(new View.OnClickListener() {
