@@ -76,10 +76,6 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content">
         </TextView>
-        <ImageView
-            android:id="@+id/imageView"
-            android:layout_width="100dp"
-            android:padding="2dp"
-            android:layout_height="100dp" />
+
     </LinearLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>
