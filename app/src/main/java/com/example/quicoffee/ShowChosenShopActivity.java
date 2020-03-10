@@ -376,6 +376,7 @@ public class ShowChosenShopActivity extends AppCompatActivity {
     }
 
     public String checkIfOrderExist(DataSnapshot dataSnapshot) {
+        //todo getChildren return >0  even when we create new order
         if (dataSnapshot.getChildrenCount() == 0 ){
             return Global_Variable.ORDER_NOT_EXIST;
         }
