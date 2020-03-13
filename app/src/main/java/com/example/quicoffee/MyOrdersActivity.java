@@ -142,6 +142,12 @@ public class MyOrdersActivity extends AppCompatActivity {
 
     }
 
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        findShops();
+    }
+
     public void readOrders(){//final DataStatus dataStatus){
         arrayToShowOnTheScreen.clear();
         keys.clear();
@@ -206,9 +212,9 @@ public class MyOrdersActivity extends AppCompatActivity {
     private void showAllDetailsOfTheOrder(){
         Intent myIntent = new Intent(MyOrdersActivity.this,
                 SpecificOrderActivity.class);
-        myIntent.putExtra(Global_Variable.IS_TO_DISPLAY_USER_MOVE_INTENT ,is_to_display_user);
+        Global_Variable.IS_TO_DISPLAY_USER = is_to_display_user;//myIntent.putExtra(Global_Variable.IS_TO_DISPLAY_USER_MOVE_INTENT ,is_to_display_user);
         myIntent.putExtra(Global_Variable.ORDER_ID_MOVE_INTENT, this.orderID);
-        myIntent.putExtra(Global_Variable.ORDER_MOVE_INTENT, this.chosenOrder);
+        Global_Variable.ORDER_MOVE_INTENT =this.chosenOrder;// myIntent.putExtra(Global_Variable.ORDER_MOVE_INTENT, this.chosenOrder);
         myIntent.putExtra(Global_Variable.USER_FOR_MOVE_INTENT,this.user);
         myIntent.putExtra(Global_Variable.FAVORITE_COFFEE_MOVE_INTENT, this.favoriteCoffee);
         bundle.putDouble(Global_Variable.USER_LOCATION_MOVE_INTENT_LONGITUDE, this.userLocation.getX());
@@ -216,7 +222,6 @@ public class MyOrdersActivity extends AppCompatActivity {
         myIntent.putExtras(bundle);
         myIntent.putExtra(Global_Variable.USER_FOR_MOVE_INTENT,this.user);
         startActivity(myIntent);
-        finish();
     }
 
     private void  createTextViewUITitle(TextView textView,String title){
@@ -316,6 +321,7 @@ public class MyOrdersActivity extends AppCompatActivity {
         Intent myIntent = new Intent(MyOrdersActivity.this,
                 FindShopsActivity.class);
         myIntent.putExtra(Global_Variable.USER_FOR_MOVE_INTENT,this.user);
+        myIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
         bundle.putDouble(Global_Variable.USER_LOCATION_MOVE_INTENT_LONGITUDE, this.userLocation.getX());
         bundle.putDouble(Global_Variable.USER_LOCATION_MOVE_INTENT_LATITUDE, this.userLocation.getY());
         myIntent.putExtras(bundle);

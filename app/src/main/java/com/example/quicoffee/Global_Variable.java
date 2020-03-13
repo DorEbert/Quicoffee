@@ -1,6 +1,7 @@
 package com.example.quicoffee;
 
 import com.example.quicoffee.Models.FavoriteCoffee;
+import com.example.quicoffee.Models.Order;
 import com.example.quicoffee.Models.Shop;
 import com.firebase.ui.auth.data.model.User;
 
@@ -89,6 +90,7 @@ public class Global_Variable {
     public static final String PICTURE_SUCCEED = "Taking picture succeed";
     public static final String PLEASE_CHOOSE_TIME = "Please choose estimated time of pickup";
     public static final String PLEASE_CHOOSE_PRODUCT = "Please choose at least one product";
+    public static final String CHOOSE_FUTURE_TIME = "Please choose future time";
     public static final String NOT_CONFIRMED = "Order Not Confirmed";
     public static final String CONFIRMED = "Order Confirmed";
     public static int index = 10;
@@ -132,8 +134,9 @@ public class Global_Variable {
     public static final String SHOP_NAME_MOVE_INTENT = "shopNameMoveIntent";
     public static final String FAVORITE_COFFEE_MOVE_INTENT = "favoriteCoffeeIntent";
     public static final String ORDER_ID_MOVE_INTENT = "orderIdMoveIntent";
-    public static final String ORDER_MOVE_INTENT = "orderMoveIntent";
-    public static final String IS_TO_DISPLAY_USER_MOVE_INTENT = "isToDisplayUserMoveIntent";
+
+    //Manage Order process
+    public static Order ORDER_MOVE_INTENT;// = "orderMoveIntent";
 
     //temp:
     public static boolean IS_TO_DISPLAY_USER = true;
