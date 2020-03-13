@@ -388,6 +388,7 @@ public class SpecificOrderActivity extends AppCompatActivity {
                 StorageReference storageReference = fireBaseUtill.getStorageReference().child("images/" +order.getImage());
                 storageReference.delete();
                 showMyOrders();
+                Global_Variable.ORDER_MOVE_INTENT = null;
             }
         });
     }
