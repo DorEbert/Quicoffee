@@ -4,6 +4,7 @@ import android.location.Location;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import com.example.quicoffee.Global_Variable;
 import com.google.android.gms.maps.model.LatLng;
 
 import java.util.ArrayList;
@@ -191,5 +192,33 @@ public class Shop implements Parcelable {
         return longitude;
     }
 
+    public boolean isShopContainsFavoriteCoffee(FavoriteCoffee favoriteCoffee) {
+        boolean isContain = false;
+
+        if(ingredients == null)
+            return false;
+        if(products == null)
+            return false;
+
+        for(int index = 0;index<products.size();index++) {
+            if(products.get(index).getProductName().equalsIgnoreCase(favoriteCoffee.amountOfEspresso)
+                || favoriteCoffee.amountOfEspresso.equalsIgnoreCase(products.get(index).getProductName()))
+            isContain = true;
+            break;
+        }
+
+        if(!isContain){
+            return false;
+        }
+        if(favoriteCoffee.typesOfMilk.equalsIgnoreCase(Global_Variable.NONE))
+            return true;
+        for(int index = 0;index<ingredients.size();index++){
+            if(ingredients.get(index).equalsIgnoreCase(favoriteCoffee.typesOfMilk)
+                || favoriteCoffee.typesOfMilk.equalsIgnoreCase(ingredients.get(index)))
+                return true;
+        }
+
+        return false;
+    }
 
 }

@@ -124,9 +124,8 @@ public class FindShopsActivity extends AppCompatActivity {
                     //In case of my favorite coffee
                     if (checkBox.isChecked()){
                             if(favoriteCoffee != null
-                                    &&someShop.getIngredients() != null
                                     &&favoriteCoffee.getTypesOfMilk() != null)
-                            if (someShop.getIngredients().contains(favoriteCoffee.typesOfMilk))
+                             if (someShop.isShopContainsFavoriteCoffee(favoriteCoffee))
                                 arrayToShowOnTheScreen.add(someShop);
                     }
                     //add all shops

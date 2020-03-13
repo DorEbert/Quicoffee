@@ -93,6 +93,7 @@ public class Global_Variable {
     public static final String CHOOSE_FUTURE_TIME = "Please choose future time";
     public static final String NOT_CONFIRMED = "Order Not Confirmed";
     public static final String CONFIRMED = "Order Confirmed";
+    public static final String NONE = "None";
     public static int index = 10;
     // in order to save shared preferences-> used to login only once
     public static final String PREFS_NAME = "MyPrefsFile";
@@ -113,11 +114,11 @@ public class Global_Variable {
     //    public String withFoam;
     public static final String SIZE_OF_CUP = "Size Of Cup";
     public static final String MILK = "Types Of Milk";
-    public static final String ESPRESSO = "Amount Of Espresso";
+    public static final String ESPRESSO = "Type Of Coffee";
     public static final String FOAM = "With Foam";
 
     public static final String[] SIZE_OF_COFFEE = new String[]{"Small", "Medium", "Large"};
-    public static final String[] TYPES_OF_MILK = new String[]{"Regular milk", "soy milk", "almond milk", "low fat milk"};
+    public static final String[] TYPES_OF_MILK = new String[]{"Regular milk", "soy milk", "almond milk", "low fat milk",NONE};
     public static final String[] AMOUNT_OF_ESPRESSO = new String[]{"Short espresso" ,"Long espresso", "Double short espresso" ,
             "Double long espresso", "black coffee" , "Instant Coffee", "cappuccino"};
     public static final String[] WITH_FOAM = new String[]{"Yes", "No"};
