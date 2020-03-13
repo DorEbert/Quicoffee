@@ -31,6 +31,7 @@ import com.example.quicoffee.Models.Product;
 import com.example.quicoffee.Models.ProductAdapter;
 import com.example.quicoffee.Models.UserLocation;
 import com.firebase.ui.auth.AuthUI;
+import com.google.android.gms.common.util.Strings;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseUser;
@@ -69,7 +70,7 @@ public class ShowChosenShopActivity extends AppCompatActivity {
     public Button saveOrderButton;
     public Button getDateButton;
     public String orderID;
-   // public TimePicker picker;
+    // public TimePicker picker;
     public TimePickerDialog picker;
     public Button myOrderButton;
 
@@ -112,12 +113,12 @@ public class ShowChosenShopActivity extends AppCompatActivity {
     }
 
 
-   // @Override
-   // protected void onNewIntent(Intent intent) {
+    // @Override
+    // protected void onNewIntent(Intent intent) {
     //    super.onNewIntent(intent);
 // getIntent() should always return the most recent
     //    setIntent(intent);
-   // }
+    // }
 
     @Override
     public void onResume() {
@@ -136,11 +137,10 @@ public class ShowChosenShopActivity extends AppCompatActivity {
         keys.clear();
         shopsRef.removeEventListener(postListener);
         if(saveOrderListener != null ){
-                orderRef.removeEventListener(saveOrderListener);
-                //updateOrderListener init only if the user click on "save"
-                //so we have to check this :)
+            orderRef.removeEventListener(saveOrderListener);
+            //updateOrderListener init only if the user click on "save"
+            //so we have to check this :)
         }
-        finish();
     }
 
 
@@ -282,7 +282,7 @@ public class ShowChosenShopActivity extends AppCompatActivity {
         saveOrderButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (order.getOrderPickUpTime() == null) {
+                if (Strings.isEmptyOrWhitespace(order.getOrderPickUpTime())) {
                     Toast.makeText(getApplicationContext(), Global_Variable.PLEASE_CHOOSE_TIME, Toast.LENGTH_SHORT).show();
                     return;
                 }
@@ -317,8 +317,6 @@ public class ShowChosenShopActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 final Calendar cldr = new GregorianCalendar(TimeZone.getTimeZone("Asia/Jerusalem"));
-                //TimeZone timeZone = TimeZone.getTimeZone("Asia/Jerusalem");
-                //cldr.setTimeZone(timeZone);
                 int hour = cldr.get(Calendar.HOUR_OF_DAY);
                 int minutes = cldr.get(Calendar.MINUTE);
                 // time picker dialog
@@ -326,13 +324,44 @@ public class ShowChosenShopActivity extends AppCompatActivity {
                         new TimePickerDialog.OnTimeSetListener() {
                             @Override
                             public void onTimeSet(TimePicker tp, int sHour, int sMinute) {
-                                //eText.setText(sHour + ":" + sMinute);
-                                //Log.e("ORDERTIME","ORDER TIME "+sHour);
-                                Time t = new Time(sHour);
-                                t.setMinutes(sMinute);
-                                String date = DateFormat.getTimeInstance().format(t);
-                                Log.e("picker","picker date "+ date);
-                                order.setOrderPickUpTime(date);
+                                String AM_PM;
+                                String hourAsString;
+                                String minutesAsString;
+                                Calendar chosenTime = Calendar.getInstance();
+                                Calendar currentTime = Calendar.getInstance();
+                                chosenTime.set(Calendar.HOUR_OF_DAY, sHour);
+                                chosenTime.set(Calendar.MINUTE, sMinute);
+                                //In case chosen time is past time
+                                if (chosenTime.getTimeInMillis() < currentTime.getTimeInMillis()) {
+                                    order.setOrderPickUpTime("");
+                                    Toast.makeText(getApplicationContext(), Global_Variable.CHOOSE_FUTURE_TIME, Toast.LENGTH_SHORT).show();
+                                    return;
+                                }
+
+                                if (sHour < 12) {
+                                    AM_PM = "AM";
+                                } else {
+                                    AM_PM = "PM";
+                                }
+
+                                if (sHour == 0)
+                                    hourAsString = "00";
+                                    //In case of <10 to display 0X (05,09..)
+                                else if (sHour < 10)
+                                    hourAsString = "0" + sHour;
+                                else
+                                    hourAsString = sHour + "";
+
+                                if (sMinute == 0)
+                                    minutesAsString = "00";
+                                    //In case of <10 to display 0X (05,09..)
+                                else if (sMinute < 10)
+                                    minutesAsString = "0" + sMinute;
+                                else
+                                    minutesAsString = sMinute + "";
+
+                                Log.e("picker", hourAsString + ":" + minutesAsString + " " + AM_PM);
+                                order.setOrderPickUpTime(hourAsString + ":" + minutesAsString + " " + AM_PM);
                             }
                         }, hour, minutes, true);
                 picker.show();
@@ -372,13 +401,13 @@ public class ShowChosenShopActivity extends AppCompatActivity {
             orderID = indexOrderExist;
             order.setUserID(user.getUid());
             //todo sometimes raise an excpetion
-           // try{
+            // try{
             Log.e("indexOrderExist","indexOrderExist "+orderID);
             Log.e("indexOrderExist","indexOrderExist "+indexOrderExist);
             dataSnapshot.getRef().child(indexOrderExist).setValue(order);
-          //  }catch (Exception ex){
-          //      Log.e("EXCPETION ",ex.toString());
-           // }
+            //  }catch (Exception ex){
+            //      Log.e("EXCPETION ",ex.toString());
+            // }
         }
         //Log.e("orderID",orderID);
     }
@@ -391,7 +420,7 @@ public class ShowChosenShopActivity extends AppCompatActivity {
         for (DataSnapshot postSnapshot: dataSnapshot.getChildren()) {
             OrderFromDataSnapshot = postSnapshot.getValue(Order.class);
             //Log.e("checkIfOrderExist", "checkIfUserExist: OrderFromDataSnapshot.getUserID() "+OrderFromDataSnapshot.getUserID());
-           //  Log.e("checkIfOrderExist", "checkIfUserExist: user.getUid() "+user.getUid());
+            //  Log.e("checkIfOrderExist", "checkIfUserExist: user.getUid() "+user.getUid());
             if (OrderFromDataSnapshot.getUserID().equals(user.getUid())
                     && OrderFromDataSnapshot.getShopName().equals(nameShop)) {
                 return postSnapshot.getKey();
@@ -402,8 +431,9 @@ public class ShowChosenShopActivity extends AppCompatActivity {
 
     private void showAllDetailsOfTheOrder(){
         Intent myIntent = new Intent(ShowChosenShopActivity.this,SpecificOrderActivity.class);
-        myIntent.putExtra(Global_Variable.ORDER_MOVE_INTENT, this.order);
+        Global_Variable.ORDER_MOVE_INTENT = this.order;//myIntent.putExtra(Global_Variable.ORDER_MOVE_INTENT, this.order);
         myIntent.putExtra(Global_Variable.ORDER_ID_MOVE_INTENT, this.orderID);
+        Global_Variable.IS_TO_DISPLAY_USER = true;
         myIntent.putExtra(Global_Variable.USER_FOR_MOVE_INTENT,this.user);
         myIntent.putExtra(Global_Variable.FAVORITE_COFFEE_MOVE_INTENT, this.favoriteCoffee);
         bundle.putDouble(Global_Variable.USER_LOCATION_MOVE_INTENT_LONGITUDE, this.userLocation.getX());
@@ -411,7 +441,6 @@ public class ShowChosenShopActivity extends AppCompatActivity {
         myIntent.putExtras(bundle);
         myIntent.putExtra(Global_Variable.USER_FOR_MOVE_INTENT,this.user);
         startActivity(myIntent);
-        finish();
     }
 
     @Override
@@ -452,6 +481,7 @@ public class ShowChosenShopActivity extends AppCompatActivity {
         Intent myIntent = new Intent(ShowChosenShopActivity.this,
                 FindShopsActivity.class);
         myIntent.setFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
+        myIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
         myIntent.putExtra(Global_Variable.USER_FOR_MOVE_INTENT,this.user);
         bundle.putDouble(Global_Variable.USER_LOCATION_MOVE_INTENT_LONGITUDE, this.userLocation.getX());
         bundle.putDouble(Global_Variable.USER_LOCATION_MOVE_INTENT_LATITUDE, this.userLocation.getY());
