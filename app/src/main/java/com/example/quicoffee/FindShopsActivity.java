@@ -141,7 +141,6 @@ public class FindShopsActivity extends AppCompatActivity {
                 LinearLayoutManager linearLayoutManager =  new LinearLayoutManager(FindShopsActivity.this);
                 linearLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
                 recyclerView.setLayoutManager(linearLayoutManager);
-
                 shopAdapter = new ShopAdapter(arrayToShowOnTheScreen,userLocation.getX(),userLocation.getY());
                 shopAdapter.SetOnItemClickListener(new ShopAdapter.OnItemClickListener() {
                     @Override
@@ -187,13 +186,10 @@ public class FindShopsActivity extends AppCompatActivity {
         for (DataSnapshot postSnapshot: dataSnapshot.getChildren()) {
             Shop someShop = postSnapshot.getValue(Shop.class);
             if(someShop.getShopName().equals(nameOfShop)){
+                Global_Variable.ORDER_MOVE_INTENT = null;
                 idShop = postSnapshot.getKey();
-                //TODO: remove this!:
                 Global_Variable.ID_SHOP_TEMP = idShop;
             }
-           // if(someShop.getID().equals(idToFind)){
-          //         idShop = postSnapshot.getKey();
-           //  }
         }
         showAShop();
     }
