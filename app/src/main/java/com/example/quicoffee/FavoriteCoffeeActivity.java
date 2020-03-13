@@ -106,6 +106,11 @@ public class FavoriteCoffeeActivity extends AppCompatActivity  {
 
     }
 
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        findShops();
+    }
 
     @Override
     public void onStop() {
@@ -338,6 +343,7 @@ public class FavoriteCoffeeActivity extends AppCompatActivity  {
         bundle.putDouble(Global_Variable.USER_LOCATION_MOVE_INTENT_LATITUDE, this.userLocation.getY());
         myIntent.putExtras(bundle);
         startActivity(myIntent);
+        finish();
     }
 
     public void AddShopActivity(){
@@ -348,6 +354,7 @@ public class FavoriteCoffeeActivity extends AppCompatActivity  {
         myIntent.putExtras(bundle);
         myIntent.putExtra(Global_Variable.USER_FOR_MOVE_INTENT,this.user);
         startActivity(myIntent);
+        finish();
     }
     public void favoriteCoffee(){
         Intent myIntent = new Intent(FavoriteCoffeeActivity.this,
@@ -357,6 +364,7 @@ public class FavoriteCoffeeActivity extends AppCompatActivity  {
         bundle.putDouble(Global_Variable.USER_LOCATION_MOVE_INTENT_LATITUDE, this.userLocation.getY());
         myIntent.putExtras(bundle);
         startActivity(myIntent);
+        finish();
     }
 
     public void showMyOrders(){
@@ -367,6 +375,7 @@ public class FavoriteCoffeeActivity extends AppCompatActivity  {
         bundle.putDouble(Global_Variable.USER_LOCATION_MOVE_INTENT_LATITUDE, this.userLocation.getY());
         myIntent.putExtras(bundle);
         startActivity(myIntent);
+        finish();
     }
 
     public void logOut(){

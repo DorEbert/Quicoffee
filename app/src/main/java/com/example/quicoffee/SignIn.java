@@ -118,6 +118,7 @@ public class SignIn extends AppCompatActivity {
         bundle.putDouble(Global_Variable.USER_LOCATION_MOVE_INTENT_LATITUDE, this.userLocation.getY());
         myIntent.putExtras(bundle);
         startActivity(myIntent);
+        finish();
     }
 
 
@@ -126,6 +127,7 @@ public class SignIn extends AppCompatActivity {
                 FavoriteCoffeeActivity.class);
         myIntent.putExtra(Global_Variable.USER_FOR_MOVE_INTENT, this.user);
         startActivity(myIntent);
+        finish();
     }
 
 

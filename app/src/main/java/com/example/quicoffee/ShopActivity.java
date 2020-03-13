@@ -199,10 +199,12 @@ public class ShopActivity extends AppCompatActivity implements OnMapReadyCallbac
         shopButtonID = Global_Variable.GetID();
         shopButton.setId(shopButtonID);
         shopButton.setOnClickListener(this);
+
         if(this.shop != null)
             shopButton.setText(Global_Variable.UPDATE_SHOP);
         else
             shopButton.setText(Global_Variable.ADD_SHOP);
+
         LinearLayout.LayoutParams loginButtonLayoutParams =
                 new LinearLayout.LayoutParams((int)(mainActivityWitdh *0.5),mainActivityHeight/20);
         loginButtonLayoutParams.gravity = Gravity.CENTER;

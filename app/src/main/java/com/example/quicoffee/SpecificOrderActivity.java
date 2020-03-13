@@ -17,6 +17,7 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -97,6 +98,8 @@ public class SpecificOrderActivity extends AppCompatActivity {
     @Override
     public void onResume() {
         super.onResume();
+        //In case of resume, validate if its a buyer or seller
+        is_to_display_user=  Global_Variable.IS_TO_DISPLAY_USER;
     }
 
     @Override
@@ -115,6 +118,9 @@ public class SpecificOrderActivity extends AppCompatActivity {
     public void showTheOrderOnTheScreen(){
         recyclerView = (RecyclerView) findViewById(R.id.my_recycler_view);
         recyclerView.setHasFixedSize(true);
+        ViewGroup.LayoutParams params= recyclerView.getLayoutParams();
+        params.height= (int) (mainActivityHeight*0.35);
+        recyclerView.setLayoutParams(params);
         recyclerView.setLayoutManager(new LinearLayoutManager(SpecificOrderActivity.this));
         productAdapter = new ProductAdapter(order.getProducts());
         productAdapter.SetOnItemClickListener(new ProductAdapter.OnItemClickListener() {
@@ -230,12 +236,10 @@ public class SpecificOrderActivity extends AppCompatActivity {
         y = bundle.getDouble(Global_Variable.USER_LOCATION_MOVE_INTENT_LATITUDE);
         userLocation = new UserLocation(x,y);
         orderID = getIntent().getStringExtra(Global_Variable.ORDER_ID_MOVE_INTENT);
-        order = (Order)bundle.getParcelable(Global_Variable.ORDER_MOVE_INTENT);
+        order = Global_Variable.ORDER_MOVE_INTENT;//(Order)bundle.getParcelable(Global_Variable.ORDER_MOVE_INTENT);
 
         //is_to_display_user = false; -> for a seller
         //is_to_display_user = true; -> for a buyer
-        //TODO: remove this!:
-        is_to_display_user = getIntent().getExtras().getBoolean(Global_Variable.IS_TO_DISPLAY_USER_MOVE_INTENT);
         is_to_display_user = Global_Variable.IS_TO_DISPLAY_USER;
 
         nameShop = order.getShopName();
@@ -264,7 +268,7 @@ public class SpecificOrderActivity extends AppCompatActivity {
         }
         else {
             payBySelfieButton.setVisibility(View.GONE);
-            iinitConfirmTheOrderButton();
+            initConfirmTheOrderButton();
             initImageOfOrder();
         }
         initDeleteOrderButton();
@@ -305,7 +309,7 @@ public class SpecificOrderActivity extends AppCompatActivity {
         textView.setPadding(15,7,0,7);
     }
 
-    private void iinitConfirmTheOrderButton(){
+    private void initConfirmTheOrderButton(){
         confirmTheOrderButton.setVisibility(Button.VISIBLE);
         confirmTheOrderButton.setText(R.string.confirmTheOrderButtonText);
         LinearLayout.LayoutParams confirmTheOrderButtonLayoutParams =
@@ -383,15 +387,9 @@ public class SpecificOrderActivity extends AppCompatActivity {
                 refForDeleteOrder.child(Global_Variable.TABLE_ORDERS).child(orderID).removeValue();
                 StorageReference storageReference = fireBaseUtill.getStorageReference().child("images/" +order.getImage());
                 storageReference.delete();
-
+                showMyOrders();
             }
         });
-    }
-
-    @Override
-    public void onBackPressed() {
-        super.onBackPressed();
-        showMyOrders();
     }
 
     private void deleteTheOrderUI(){

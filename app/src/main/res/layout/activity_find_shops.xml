@@ -4,7 +4,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".FindShopsActivity">
+    tools:context=".FindShopsActivity"
+    android:noHistory="true">
     <LinearLayout
         android:id="@+id/linear_layout"
         android:layout_width="match_parent"
