@@ -91,7 +91,7 @@ public class SpecificOrderActivity extends AppCompatActivity {
         setContentView(R.layout.activity_specific_order);
         Toolbar myToolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(myToolbar);
-        InititalVariablesOfLocalActivity();
+        initVariablesOfLocalActivity();
         showTheOrderOnTheScreen();
     }
 
@@ -133,7 +133,6 @@ public class SpecificOrderActivity extends AppCompatActivity {
 
 
     // the function upload to storage the picture and save the URi to order
-    //TODO: call to upload image
     private void uploadImage(final Order order, Uri filePath) {
         if (filePath != null) {
             final ProgressDialog progressDialog = new ProgressDialog(this);
@@ -179,8 +178,15 @@ public class SpecificOrderActivity extends AppCompatActivity {
         updateOrderListener = new ValueEventListener(){
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                order.setUserID(user.getUid());
-                writeOrder(order,user,dataSnapshot);
+                if(is_to_display_user == true ){
+                    order.setUserID(user.getUid());
+                    writeOrder(order,user,dataSnapshot);
+                }
+                else{
+                    confirmTheOrder(order,user,dataSnapshot);
+                    showMyOrders();
+                }
+
             }
             @Override
             public void onCancelled(@NonNull DatabaseError databaseError) {
@@ -190,6 +196,16 @@ public class SpecificOrderActivity extends AppCompatActivity {
         orderRef.addValueEventListener(updateOrderListener);
     }
 
+    private void confirmTheOrder(Order order, FirebaseUser user, DataSnapshot dataSnapshot) {
+        indexOrderExist = orderID;
+        someOrder = new Order(nameShop);
+        //someOrder.setUserID(user.getUid());
+        someOrder.setIdShop(this.idShop);
+        orderID = indexOrderExist;
+        //order.setUserID(user.getUid());
+        dataSnapshot.getRef().child(indexOrderExist).setValue(order);
+        //Log.e("orderID",orderID);
+    }
 
     private void writeOrder(Order order, FirebaseUser user, DataSnapshot dataSnapshot) {
         indexOrderExist = checkIfOrderExist(dataSnapshot);
@@ -222,7 +238,7 @@ public class SpecificOrderActivity extends AppCompatActivity {
     }
 
 
-    private void InititalVariablesOfLocalActivity(){
+    private void initVariablesOfLocalActivity(){
         mainActivityWitdh = getResources().getDisplayMetrics().widthPixels;
         mainActivityHeight = getResources().getDisplayMetrics().heightPixels;
         linearLayout = findViewById(R.id.linear_layout);
@@ -327,7 +343,8 @@ public class SpecificOrderActivity extends AppCompatActivity {
             public void onClick(View v) {
                 order.setConfirmTheOrder(true);
                 updateTheOrder(order,user);
-                showMyOrders();
+
+                //showMyOrders();
             }
         });
     }

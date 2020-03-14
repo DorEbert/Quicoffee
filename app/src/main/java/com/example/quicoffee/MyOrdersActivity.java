@@ -165,6 +165,9 @@ public class MyOrdersActivity extends AppCompatActivity {
                     }
                     else{
                         //found shops by shops id for seller:
+                        foundShopID();
+                        arrayToShowOnTheScreen.clear();
+                        keys.clear();
                         if(someOrder.getIdShop().equals(shopId)){
                             if (!Strings.isEmptyOrWhitespace(someOrder.getImage()))
                                 arrayToShowOnTheScreen.add(someOrder);
