@@ -6,7 +6,7 @@ import android.os.Parcelable;
 public class FavoriteCoffee implements Parcelable {
     public String sizeOfCup;
     public String typesOfMilk;
-    public String amountOfEspresso;
+    public String typeOfCoffee;
     public String withFoam;
     public String userID;
 
@@ -14,7 +14,7 @@ public class FavoriteCoffee implements Parcelable {
     public FavoriteCoffee(String sizeOfCup, String typeOfMile, String amountOfEspresso, String with_Form, String userID) {
         this.sizeOfCup = sizeOfCup;
         this.typesOfMilk = typeOfMile;
-        this.amountOfEspresso = amountOfEspresso;
+        this.typeOfCoffee = amountOfEspresso;
         this.withFoam = with_Form;
         this.userID = userID;
     }
@@ -25,7 +25,7 @@ public class FavoriteCoffee implements Parcelable {
     protected FavoriteCoffee(Parcel in) {
         sizeOfCup = in.readString();
         typesOfMilk = in.readString();
-        amountOfEspresso = in.readString();
+        typeOfCoffee = in.readString();
         withFoam = in.readString();
         userID = in.readString();
     }
@@ -50,8 +50,8 @@ public class FavoriteCoffee implements Parcelable {
         return typesOfMilk;
     }
 
-    public String getAmountOfEspresso() {
-        return amountOfEspresso;
+    public String getTypeOfCoffee() {
+        return typeOfCoffee;
     }
 
     public String getWithFoam() {
@@ -74,8 +74,8 @@ public class FavoriteCoffee implements Parcelable {
         this.typesOfMilk = typeOfMile;
     }
 
-    public void setAmountOfEspresso(String amountOfEspresso) {
-        this.amountOfEspresso = amountOfEspresso;
+    public void setTypeOfCoffee(String typeOfCoffee) {
+        this.typeOfCoffee = typeOfCoffee;
     }
 
     public void setWithFoam(String withFoam) {
@@ -92,7 +92,7 @@ public class FavoriteCoffee implements Parcelable {
     public void writeToParcel(Parcel out, int flags) {
         out.writeString(sizeOfCup);
         out.writeString(typesOfMilk);
-        out.writeString(amountOfEspresso);
+        out.writeString(typeOfCoffee);
         out.writeString(withFoam);
         out.writeString(userID);
     }

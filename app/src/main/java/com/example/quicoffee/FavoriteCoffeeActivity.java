@@ -7,7 +7,6 @@ import androidx.appcompat.widget.Toolbar;
 import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -79,13 +78,26 @@ public class FavoriteCoffeeActivity extends AppCompatActivity  {
         y = bundle.getDouble(Global_Variable.USER_LOCATION_MOVE_INTENT_LATITUDE);
         userLocation = new UserLocation(x,y);
 
-        inititalVariablesOfLocalActivity();
+        initVariablesOfLocalActivity();
         favoriteCoffee = bundle.getParcelable(Global_Variable.FAVORITE_COFFEE_MOVE_INTENT);
         initAttributesForCoffee(Global_Variable.SIZE_OF_CUP, Global_Variable.SIZE_OF_COFFEE);
         initAttributesForCoffee(Global_Variable.MILK, Global_Variable.TYPES_OF_MILK);
         initAttributesForCoffee(Global_Variable.ESPRESSO, Global_Variable.AMOUNT_OF_ESPRESSO);
         initAttributesForCoffee(Global_Variable.FOAM, Global_Variable.WITH_FOAM);
         addSaveButton();
+
+        if(Global_Variable.FC_TEMP != null){
+            favoriteCoffee = Global_Variable.FC_TEMP;
+            try {
+                putAttributesFCFromDB();
+            } catch (NoSuchMethodException e) {
+                e.printStackTrace();
+            } catch (InvocationTargetException e) {
+                e.printStackTrace();
+            } catch (IllegalAccessException e) {
+                e.printStackTrace();
+            }
+        }
 
         if (favoriteCoffee != null){ //findShops read FC from the DB
             //TODO: remove this!:
@@ -193,9 +205,9 @@ public class FavoriteCoffeeActivity extends AppCompatActivity  {
         saveListener = new ValueEventListener(){
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                writeFavoriteCoffee(favoriteCoffee,user,dataSnapshot);
                 //TODO: remove this!:
                 Global_Variable.FC_TEMP = someFavoriteCoffee;
+                writeFavoriteCoffee(favoriteCoffee,user,dataSnapshot);
             }
             @Override
             public void onCancelled(@NonNull DatabaseError databaseError) {
@@ -209,7 +221,7 @@ public class FavoriteCoffeeActivity extends AppCompatActivity  {
     private void writeFavoriteCoffee(FavoriteCoffee favoriteCoffee, FirebaseUser user, DataSnapshot dataSnapshot) {
         indexUserExist = checkIfUserExist(dataSnapshot);
         someFavoriteCoffee = new FavoriteCoffee(favoriteCoffee.getSizeOfCup(),favoriteCoffee.getTypesOfMilk(),
-                favoriteCoffee.getAmountOfEspresso(),favoriteCoffee.getWithFoam(),user.getUid());
+                favoriteCoffee.getTypeOfCoffee(),favoriteCoffee.getWithFoam(),user.getUid());
         //Log.e("writeFavoriteCoffee ","writeFavoriteCoffee get form?  : "+ favoriteCoffee.getWithFoam());
         if(indexUserExist.equals(Global_Variable.USER_NOT_EXIST)){
             idForPushFCToDB = favoriteCoffeeRef.push().getKey();
@@ -264,7 +276,7 @@ public class FavoriteCoffeeActivity extends AppCompatActivity  {
                     favoriteCoffee.setTypeOfMile(itemValue);
                 }
                 else if (attribute.equals(Global_Variable.ESPRESSO)){
-                    favoriteCoffee.setAmountOfEspresso(itemValue);
+                    favoriteCoffee.setTypeOfCoffee(itemValue);
                 }
                 else {
                     favoriteCoffee.setWithFoam(itemValue);
@@ -292,7 +304,7 @@ public class FavoriteCoffeeActivity extends AppCompatActivity  {
         return textView;
     }
 
-    private void inititalVariablesOfLocalActivity(){
+    private void initVariablesOfLocalActivity(){
         mainActivityWitdh = getResources().getDisplayMetrics().widthPixels;
         mainActivityHeight = getResources().getDisplayMetrics().heightPixels;
         linearLayout = findViewById(R.id.linear_layout);

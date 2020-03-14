@@ -1,6 +1,5 @@
 package com.example.quicoffee.Models;
 
-import android.location.Location;
 import android.os.Parcel;
 import android.os.Parcelable;
 
@@ -201,8 +200,8 @@ public class Shop implements Parcelable {
             return false;
 
         for(int index = 0;index<products.size();index++) {
-            if(products.get(index).getProductName().equalsIgnoreCase(favoriteCoffee.amountOfEspresso)
-                || favoriteCoffee.amountOfEspresso.equalsIgnoreCase(products.get(index).getProductName()))
+            if(products.get(index).getProductName().equalsIgnoreCase(favoriteCoffee.typeOfCoffee)
+                || favoriteCoffee.typeOfCoffee.equalsIgnoreCase(products.get(index).getProductName()))
             isContain = true;
             break;
         }

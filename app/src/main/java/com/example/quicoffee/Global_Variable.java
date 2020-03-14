@@ -110,7 +110,7 @@ public class Global_Variable {
     //the same value at class FC:
     //    public String sizeOfCup;
     //    public String typesOfMilk;
-    //    public String amountOfEspresso;
+    //    public String typeOfCoffee;
     //    public String withFoam;
     public static final String SIZE_OF_CUP = "Size Of Cup";
     public static final String MILK = "Types Of Milk";
